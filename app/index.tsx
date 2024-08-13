@@ -26,6 +26,7 @@ export default function Index() {
           <SendAnswerButton />
         </View>
       </View>
+
       <View
         style={{
           flex: 0.5,
