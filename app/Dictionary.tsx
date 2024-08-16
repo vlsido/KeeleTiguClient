@@ -23,7 +23,7 @@ function Dictionary() {
         // Assuming your XML file is in the assets folder
 
 
-        const request = await fetch("http://localhost:3000/dict", {
+        const request = await fetch("http://192.168.8.110:3000/dict", {
           method: "GET",
           headers: {
             Accept: "application/json",
@@ -71,7 +71,7 @@ function Dictionary() {
   });
 
   async function goToPage(pageNumber: number) {
-    const request = await fetch(`http://localhost:3000/dict/${pageNumber}`, {
+    const request = await fetch(`http://192.168.8.110:3000/dict/${pageNumber}`, {
       method: "GET",
       headers: {
         Accept: "application/json",

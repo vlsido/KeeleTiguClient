@@ -6,6 +6,14 @@
 const tintColorLight = '#0a7ea4';
 const tintColorDark = '#fff';
 
+export const CommonColors = {
+  white: "#F3FFF3",
+  black: "#212221",
+  green: "#7FEB75",
+  yellow: "#EBA575",
+  purple: "#8375EB",
+}
+
 export const Colors = {
   light: {
     text: '#11181C',
