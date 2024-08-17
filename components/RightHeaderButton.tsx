@@ -11,15 +11,20 @@ function RightHeaderButton() {
     router.replace("/");
   }
 
+  console.log(auth.currentUser);
+
   if (auth.currentUser && !auth.currentUser.isAnonymous) {
     return (
-      <TextButton
-        onPress={handleLogout}
-        text="Logout"
-        style={styles.logoutContainer}
-        textStyle={styles.logoutText}
-        label="Login"
-      />
+      <View style={{ flexDirection: "row", alignItems: "center" }}>
+        <Text style={{ color: CommonColors.white, marginRight: 15 }}>Tere, {auth.currentUser.displayName}!</Text>
+        <TextButton
+          onPress={handleLogout}
+          text="Logout"
+          style={styles.logoutContainer}
+          textStyle={styles.logoutText}
+          label="Login"
+        />
+      </View>
     );
   }
 

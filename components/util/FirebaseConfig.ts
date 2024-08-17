@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFunctions } from "firebase/functions";
+import { getFirestore } from "firebase/firestore";
 import { ReCaptchaEnterpriseProvider, initializeAppCheck } from "firebase/app-check";
 
 const firebaseConfig = {
@@ -30,6 +31,7 @@ export const app = initializeApp(firebaseConfig);
 //
 export const auth = getAuth(app);
 
+export const firestore = getFirestore(app);
 
 export const functions = getFunctions(app);
 

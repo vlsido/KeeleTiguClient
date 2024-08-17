@@ -2,8 +2,16 @@ import { Pressable, StyleSheet, Text, View, ViewStyle } from "react-native";
 import MaterialIconButton from "./MaterialIconButton";
 import { MaterialIcons } from "@expo/vector-icons";
 import Animated, { useAnimatedReaction, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
+import { CommonColors } from "@/constants/Colors";
+import { signal } from "@preact/signals-react";
 
-function SendAnswerButton() {
+interface SendAnswerButtonProps {
+  onPress: () => void;
+}
+
+export const sendAnswerButtonWidth = signal<number>(0);
+
+function SendAnswerButton(props: SendAnswerButtonProps) {
   const pressableOpacity = useSharedValue<number>(1);
 
   const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -18,6 +26,8 @@ function SendAnswerButton() {
     pressableOpacity.value = withTiming(0.5, { duration: 100 }, () => {
       pressableOpacity.value = withTiming(1, { duration: 100 });
     });
+
+    props.onPress();
   }
 
   return (
@@ -25,12 +35,12 @@ function SendAnswerButton() {
       style={[animatedStyle, styles.container]}
       hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
       onPress={onPress}
+      onLayout={(event) => { sendAnswerButtonWidth.value = event.nativeEvent.layout.width }}
     >
-      <Text style={styles.text}>DONE</Text>
       <MaterialIcons
         name="arrow-forward"
         size={24}
-        color="#007AFF"
+        color={CommonColors.white}
 
       />
     </AnimatedPressable>
@@ -41,17 +51,11 @@ export default SendAnswerButton;
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#00FFA1",
-    borderRadius: 5,
-    borderColor: "#007AFF",
-    borderWidth: 1,
-    margin: 10
+    marginLeft: 10,
   },
   text: {
     fontSize: 16,
-    fontWeight: "bold"
+    fontWeight: "bold",
+    color: CommonColors.white,
   }
 });

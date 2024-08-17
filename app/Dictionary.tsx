@@ -1,8 +1,33 @@
 import MaterialIconButton from "@/components/MaterialIconButton";
 import Forms from "@/components/text_components/Forms";
+import { callCloudFunction } from "@/components/util/CloudFunctions";
+import { CommonColors } from "@/constants/Colors";
 import { useSignal, useSignalEffect } from "@preact/signals-react";
 import { useEffect } from "react";
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
+
+
+export interface DictionaryRequest {
+  page: number;
+}
+
+export interface RandomWordsResponse {
+  randomWords: Word[];
+}
+
+
+export interface Word {
+  word: string;
+  definition?: string;
+  type?: string;
+  forms?: string;
+  russianTranslation: string;
+}
+
+
+export interface DictionaryResponse {
+  dictionary: DictionaryWord[];
+}
 
 interface DictionaryWord {
   word: string;
@@ -15,48 +40,23 @@ interface DictionaryWord {
 function Dictionary() {
   const dictionaryWords = useSignal<DictionaryWord[]>([]);
   const isLoading = useSignal<boolean>(true);
-  const count = useSignal<number>(0);
+
+
+  async function getDictionary(page: number) {
+    const data: DictionaryRequest = {
+      page: page
+    }
+
+    const responseData = await callCloudFunction("GetDictionary_Node", data) as DictionaryResponse | undefined;
+
+    if (responseData != null) {
+      dictionaryWords.value = responseData.dictionary;
+    }
+
+  };
 
   useEffect(() => {
-    async function getDictionary() {
-      try {
-        // Assuming your XML file is in the assets folder
-
-
-        const request = await fetch("http://192.168.8.110:3000/dict", {
-          method: "GET",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json"
-          }
-        })
-        const response = await request.text();
-
-        console.log("Responsea", response);
-
-        const json = JSON.parse(response);
-
-        dictionaryWords.value = json;
-
-
-        // .then(async (response) => {
-        //   const text = await response.text();
-        //   console.log("Response text", text);
-        //   const json = JSON.parse(text);
-        //
-        //   console.log("Response json", json);
-        //   dictionaryWords.value = json;
-        //
-        //
-        // });
-
-
-      } catch (error) {
-        console.error('Error reading or parsing XML file:', error);
-      }
-    };
-
-    getDictionary();
+    getDictionary(1);
   }, []);
 
   useSignalEffect(() => {
@@ -70,32 +70,19 @@ function Dictionary() {
     }
   });
 
-  async function goToPage(pageNumber: number) {
-    const request = await fetch(`http://192.168.8.110:3000/dict/${pageNumber}`, {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json"
-      },
-    });
-
-
-    const response = await request.text();
-
-    console.log("Responseaaa", response);
-
-    const json = JSON.parse(response);
-
-    dictionaryWords.value = json;
-  }
 
   if (isLoading.value === true) {
-    return <Text>Loading...</Text>;
+
+    return (
+      <View style={styles.container}>
+        <Text style={styles.loadingText}>Loading...</Text>
+      </View>
+    );
   }
 
   return (
     <View style={styles.container}>
-      <Pressable onPress={() => goToPage(2)} style={{ backgroundColor: "white", margin: 10, height: 40, width: 40 }} />
+      <Pressable onPress={() => getDictionary(3)} style={{ backgroundColor: "white", margin: 10, height: 40, width: 40 }} />
       <FlatList
         data={dictionaryWords.value}
         keyExtractor={(item) => `word-${dictionaryWords.value.indexOf(item)}`}
@@ -131,9 +118,6 @@ function DictionaryItem({ word, type, forms, definition, russian }: DictionaryWo
     </View>
   );
 }
-// <Text style={styles.russianText}>{russianTextBeforeAccentAndStartingWithAccent.at(0)}
-// <Text style={{ color: "red" }}>{russianTextBeforeAccentAndStartingWithAccent[1]}</Text>
-// </Text>
 
 export default Dictionary;
 
@@ -144,6 +128,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "column",
     backgroundColor: "#222322"
+  },
+  loadingText: {
+    color: CommonColors.white,
   },
   addContainer: {
     backgroundColor: "#f3f3f3",

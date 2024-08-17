@@ -6,39 +6,12 @@ import { useSignal } from "@preact/signals-react";
 import { Link, router } from "expo-router";
 import { auth } from "@/components/util/FirebaseConfig";
 import Animated, { useAnimatedStyle, useSharedValue } from "react-native-reanimated";
+import LoginButton from "@/components/LoginButton";
 
 function Login() {
   const email = useSignal<string>("");
   const password = useSignal<string>("");
-
-
-  async function handleLogin() {
-    if (email.value === "" || password.value === "") {
-      if (email.value === "") {
-        emailBorderColor.value = "red";
-      }
-      if (password.value === "") {
-        passwordBorderColor.value = "red";
-      }
-      return;
-    }
-    await loginUser(email.value, password.value).then(() => {
-      if (auth.currentUser && !auth.currentUser.isAnonymous) {
-        router.replace("/");
-      }
-    }).catch((error) => {
-      alert(error.message);
-    });
-  }
-
-  function onChangeEmail(event: NativeSyntheticEvent<TextInputChangeEventData>) {
-    email.value = event.nativeEvent.text;
-  }
-
-  function onChangePassword(event: NativeSyntheticEvent<TextInputChangeEventData>) {
-    password.value = event.nativeEvent.text;
-  }
-
+  const isProcessing = useSignal<boolean>(false);
   const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
 
   const emailBorderColor = useSharedValue<string>("gray");
@@ -57,6 +30,39 @@ function Login() {
     };
   });
 
+  async function handleLogin() {
+    if (email.value === "" || password.value === "") {
+      if (email.value === "") {
+        emailBorderColor.value = "red";
+      }
+      if (password.value === "") {
+        passwordBorderColor.value = "red";
+      }
+      return;
+    }
+    isProcessing.value = true;
+    await loginUser(email.value, password.value).catch((error) => {
+      alert(error.message);
+      isProcessing.value = false;
+    });
+
+
+    isProcessing.value = false;
+    if (auth.currentUser && !auth.currentUser.isAnonymous) {
+      router.replace("/");
+    }
+  }
+
+  function onChangeEmail(event: NativeSyntheticEvent<TextInputChangeEventData>) {
+    email.value = event.nativeEvent.text;
+  }
+
+  function onChangePassword(event: NativeSyntheticEvent<TextInputChangeEventData>) {
+    password.value = event.nativeEvent.text;
+  }
+
+
+
   return (
     <View style={styles.container}>
       <View style={styles.textField}>
@@ -67,14 +73,7 @@ function Login() {
         <Text style={styles.textInputName}>Password</Text>
         <AnimatedTextInput style={[{ paddingLeft: 10, height: 40, borderWidth: 1, borderRadius: 3, color: CommonColors.white }, passwordAnimatedTextInputStyle]} onChange={onChangePassword} textContentType="password" secureTextEntry={true} onFocus={() => passwordBorderColor.value = "gray"} />
       </View>
-
-      <TextButton
-        text="Login"
-        style={styles.loginContainer}
-        textStyle={styles.loginText}
-        label="Login"
-        onPress={handleLogin}
-      />
+      <LoginButton onPress={handleLogin} isProcessing={isProcessing} />
       <Link
         style={styles.registerContainer}
         href="/register"
@@ -101,19 +100,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginVertical: 20,
     color: CommonColors.white,
-  },
-  loginContainer: {
-    borderRadius: 3,
-    borderWidth: 1,
-    borderColor: CommonColors.black,
-    padding: 10,
-    backgroundColor: CommonColors.green,
-    marginTop: 10,
-    marginBottom: 20
-  },
-  loginText: {
-    fontSize: 20,
-    color: CommonColors.black,
   },
   registerContainer: {
     borderRadius: 3,

@@ -6,7 +6,7 @@ import { SignupData } from "@/constants/ApiTypes";
 import { CommonColors } from "@/constants/Colors";
 import { useSignal } from "@preact/signals-react";
 import { Link, router } from "expo-router";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { UserCredential, createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { useEffect } from "react";
 import { NativeSyntheticEvent, StyleSheet, Text, TextInput, TextInputChangeEventData, View, ViewStyle } from "react-native";
 import Animated, { useAnimatedStyle, useSharedValue } from "react-native-reanimated";
@@ -25,7 +25,7 @@ function Register() {
     return {
       borderColor: emailBorderColor.value,
     };
-  });
+  }); w
 
 
   const nicknameBorderColor = useSharedValue<string>("gray");
@@ -44,13 +44,9 @@ function Register() {
     };
   });
 
-
-
   async function handleRegister() {
     await handleSignup(email.value, password.value, nickname.value);
   }
-
-
 
   async function handleSignup(
     email: string,
@@ -71,7 +67,8 @@ function Register() {
     }
 
     isProcessing.value = true;
-    const newCredential = await createUserWithEmailAndPassword(auth, email, password).catch((error) => {
+
+    await createUserWithEmailAndPassword(auth, email, password).catch((error) => {
       alert(error.message);
       isProcessing.value = false;
     });
@@ -82,7 +79,17 @@ function Register() {
       nickname: nickname,
     };
 
-    await callCloudFunction("StoreSignupData_Node", data, true);
+    await callCloudFunction("StoreSignupData_Node", data);
+
+    if (auth.currentUser === null) {
+      throw new Error("auth.currentUser is null");
+    }
+
+    updateProfile(auth.currentUser, { displayName: nickname }).then(() => {
+      console.log("Nickname set to", nickname);
+    }).catch((error) => {
+      console.error("Failed to set nickname", error);
+    });
 
     // console.log("response", response);
     isProcessing.value = false;
