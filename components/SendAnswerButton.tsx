@@ -37,12 +37,7 @@ function SendAnswerButton(props: SendAnswerButtonProps) {
       onPress={onPress}
       onLayout={(event) => { sendAnswerButtonWidth.value = event.nativeEvent.layout.width }}
     >
-      <MaterialIcons
-        name="arrow-forward"
-        size={24}
-        color={CommonColors.white}
-
-      />
+      <Text style={styles.text}>{"VASTA"}</Text>
     </AnimatedPressable>
   );
 }
@@ -52,10 +47,12 @@ export default SendAnswerButton;
 const styles = StyleSheet.create({
   container: {
     marginLeft: 10,
+    backgroundColor: CommonColors.white,
+    padding: 5,
+    borderRadius: 5,
   },
   text: {
-    fontSize: 16,
     fontWeight: "bold",
-    color: CommonColors.white,
+    color: CommonColors.black,
   }
 });

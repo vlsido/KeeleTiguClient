@@ -3,11 +3,13 @@ import { Signal, useSignalEffect } from "@preact/signals-react";
 import { StyleSheet, TextInput, TextStyle, View, ViewStyle } from "react-native";
 import Animated, { useAnimatedStyle, useSharedValue } from "react-native-reanimated";
 import { sendAnswerButtonWidth } from "./SendAnswerButton";
+import { useRef } from "react";
 
 interface TextAnswerFieldProps {
   answer: Signal<string>;
   isValid: Signal<boolean>;
   onSubmit: () => void;
+  textInputRef: React.RefObject<TextInput>;
 }
 
 function TextAnswerField(props: TextAnswerFieldProps) {
@@ -43,16 +45,23 @@ function TextAnswerField(props: TextAnswerFieldProps) {
     }
   });
 
+
+  function onSumbit() {
+    props.onSubmit();
+
+  }
+
   return (
     <View
       style={styles.container}
     >
       <AnimatedTextInput
+        ref={props.textInputRef}
         style={[styles.inputText, animatedStyle]}
         placeholder="Kirjuta vastust siia..."
         onFocus={() => props.isValid.value = true}
         onChange={(event) => onChange(event.nativeEvent.text)}
-        onSubmitEditing={props.onSubmit}
+        onSubmitEditing={onSumbit}
       />
     </View>
   )

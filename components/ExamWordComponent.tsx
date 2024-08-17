@@ -1,7 +1,7 @@
 import { CommonColors } from "@/constants/Colors";
 import { Signal, useComputed, useSignalEffect } from "@preact/signals-react";
 import { Fragment } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 
 export interface ExamWord {
   word: string;
@@ -15,70 +15,69 @@ interface ExamWordComponentProps {
 
 function ExamWordComponent(props: ExamWordComponentProps) {
   const currentWord = useComputed<React.JSX.Element[]>(() => {
-    const word = props.examWords.value.at(0);
     const wordElements: React.JSX.Element[] = [];
+    if (props.examWords.value != null) {
+      const word = props.examWords.value.at(0);
 
-    if (word != null) {
-      const wordParts = word.russianTranslation.split("\"");
+      if (word != null) {
+        const wordParts = word.russianTranslation.split("\"");
 
-      // Array to hold the word parts with the accent letter styled
-      const wordElements = [];
-
-      // Iterate over the word parts and style the accented letter
-      for (let i = 0; i < wordParts.length; i++) {
-        if (i === 0) {
-          // The first part before the first quote is normal
-          wordElements.push(<Text key={`current-word-part-${i}`} style={styles.normalText}>{wordParts[i]}</Text>);
-        } else {
-          // The part after the quote, where the first letter is the accent
-          wordElements.push(
-            <Text key={`current-word-part-${i}`} style={styles.accentedText}>{wordParts[i][0]}</Text>,
-            <Text key={`current-word-part-${i}-rest`} style={styles.normalText}>{wordParts[i].slice(1)}</Text>
-          );
+        // Iterate over the word parts and style the accented letter
+        for (let i = 0; i < wordParts.length; i++) {
+          if (i === 0) {
+            // The first part before the first quote is normal
+            wordElements.push(<Text key={`current-word-part-${i}`} style={styles.normalText}>{wordParts[i]}</Text>);
+          } else {
+            // The part after the quote, where the first letter is the accent
+            wordElements.push(
+              <Text key={`current-word-part-${i}`} style={styles.accentedText}>{wordParts[i][0]}</Text>,
+              <Text key={`current-word-part-${i}-rest`} style={styles.normalText}>{wordParts[i].slice(1)}</Text>
+            );
+          }
         }
+
+        return wordElements;
       }
-
-      return wordElements;
     }
-
+    wordElements.push(<ActivityIndicator key={"activity-indicator"} size={32} color={CommonColors.white} />);
     return wordElements;
   });
 
   const currentAnswer = useComputed<React.JSX.Element[]>(() => {
-    const word = props.examWords.value.at(0);
     const wordElements: React.JSX.Element[] = [];
+    if (props.examWords.value != null) {
+      const word = props.examWords.value.at(0);
+      if (word != null) {
+        const wordParts = word.word.split("+");
 
-    if (word != null) {
-      const wordParts = word.word.split("+");
+        if (wordParts.length === 1) {
+          wordElements.push(<Text key={"whole-word"} style={styles.normalText}>{word.word}</Text>);
+          return wordElements;
+        }
 
-      if (wordParts.length === 1) {
-        wordElements.push(<Text key={"whole-word"} style={styles.normalText}>{word.word}</Text>);
+        const wholeWord = wordParts.join("");
+
+
+        wordElements.push(<Text key="whole-word" style={styles.normalText}>{wholeWord}</Text>);
+
+        for (let i = 0; i < wordParts.length; i++) {
+          if (i === 0) {
+            wordElements.push(<Text key={`answer-part-${i}-parentheses`} style={styles.smallText}> (<Text key={`answer-part-${i}`} style={styles.smallAccentedText}>{wordParts[i]}</Text></Text>);
+
+          } else if (i !== 0 && i !== wordParts.length - 1) {
+            wordElements.push(
+              <Text key={`answer-part-${i}`} style={styles.smallText}>{wordParts[i]}</Text>
+            );
+          } else if (i === wordParts.length - 1) {
+            wordElements.push(
+              <Text key={`answer-part-${i}`} style={styles.smallText}>+{wordParts[i]})</Text>
+            );
+          }
+        }
+
         return wordElements;
       }
-
-      const wholeWord = wordParts.join("");
-
-
-      wordElements.push(<Text key="whole-word" style={styles.normalText}>{wholeWord}</Text>);
-
-      for (let i = 0; i < wordParts.length; i++) {
-        if (i === 0) {
-          wordElements.push(<Text key={`answer-part-${i}-parentheses`} style={styles.smallText}> (<Text key={`answer-part-${i}`} style={styles.smallAccentedText}>{wordParts[i]}</Text></Text>);
-
-        } else if (i !== 0 && i !== wordParts.length - 1) {
-          wordElements.push(
-            <Text key={`answer-part-${i}`} style={styles.smallText}>{wordParts[i]}</Text>
-          );
-        } else if (i === wordParts.length - 1) {
-          wordElements.push(
-            <Text key={`answer-part-${i}`} style={styles.smallText}>+{wordParts[i]})</Text>
-          );
-        }
-      }
-
-      return wordElements;
     }
-
     return wordElements;
   });
 

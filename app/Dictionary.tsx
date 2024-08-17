@@ -75,7 +75,7 @@ function Dictionary() {
 
     return (
       <View style={styles.container}>
-        <Text style={styles.loadingText}>Loading...</Text>
+        <Text style={styles.loadingText}>Siin pole midagi. Proovi uuesti hiljem.</Text>
       </View>
     );
   }
@@ -130,6 +130,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#222322"
   },
   loadingText: {
+    fontSize: 20,
     color: CommonColors.white,
   },
   addContainer: {

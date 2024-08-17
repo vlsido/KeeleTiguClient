@@ -1,8 +1,8 @@
 import SendAnswerButton from "@/components/SendAnswerButton";
 import TextAnswerField from "@/components/TextAnswerField";
 import { CommonColors } from "@/constants/Colors";
-import { useEffect } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { useEffect, useRef } from "react";
+import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { DictionaryRequest, RandomWordsResponse, Word } from "./dictionary";
 import { callCloudFunction } from "@/components/util/CloudFunctions";
 import { batch, useSignal, useSignalEffect } from "@preact/signals-react";
@@ -49,34 +49,50 @@ export default function Index() {
     }
   });
 
+  const lastIncorrectWord = useSignal<string>("");
+
+  const textInputRef = useRef<TextInput>(null);
+
   function checkAnswer() {
     if (answer.value === "") {
       return;
     }
-    const currentWord = examWords.value[0].word.split("+").join("");
-    console.log("check answer, currentWord", currentWord);
-    console.log("answer", answer.value);
-    if (currentWord === answer.value) {
+    const currentWordLowercase = examWords.value[0].word.split("+").join("");
+    const answerLowercase = answer.value.toLowerCase();
+
+    if (currentWordLowercase === answerLowercase) {
       console.log("Correct!");
       isAnswerVisible.value = false;
       batch(() => {
         examWords.value = examWords.value.slice(1);
         correctCount.value += 1;
+        answer.value = "";
       });
     } else {
       console.log("Incorrect!");
+      if (lastIncorrectWord.value !== currentWordLowercase) {
+        batch(() => {
+          lastIncorrectWord.value = currentWordLowercase;
+          incorrectCount.value += 1;
+        });
+      }
+
       batch(() => {
-        answer.value = "";
         isAnswerValid.value = false;
         isAnswerVisible.value = true;
-        incorrectCount.value += 1;
       });
     }
   }
 
   function skipWord() {
-    examWords.value = examWords.value.slice(1);
+    batch(() => {
+      isAnswerVisible.value = false;
+      examWords.value = examWords.value.slice(1);
+      answer.value = "";
+    });
+    textInputRef.current?.focus();
   }
+
 
   return (
     <View
@@ -104,10 +120,10 @@ export default function Index() {
       <ExamWordComponent examWords={examWords} isAnswerVisible={isAnswerVisible} />
       <View style={styles.separator} />
       <View style={{ flexDirection: "row", alignItems: "center" }}>
-        <TextAnswerField answer={answer} isValid={isAnswerValid} onSubmit={checkAnswer} />
+        <TextAnswerField answer={answer} isValid={isAnswerValid} onSubmit={checkAnswer} textInputRef={textInputRef} />
         <SendAnswerButton onPress={checkAnswer} />
       </View>
-      <TextButton onPress={skipWord} style={styles.skipWordContainer} textStyle={styles.skipWordText} text="EDASI" label="Next" />
+      <TextButton onPress={skipWord} style={styles.skipWordContainer} textStyle={styles.skipWordText} text="JÄRGMINE" label="Next" />
     </View>
 
   );
