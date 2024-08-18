@@ -21,7 +21,11 @@ export interface Word {
   definition?: string;
   type?: string;
   forms?: string;
-  russianTranslation: string;
+  russianTranslations: string[];
+  examples?: {
+    estonianExample: string;
+    russianTranslation: string[];
+  }
 }
 
 

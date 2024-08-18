@@ -6,7 +6,7 @@ function ExamLink() {
 
   return (
     <Link href="/" style={styles.examLink}>
-      <Text style={styles.examText}>Eksaam</Text>
+      <Text style={styles.examText}>Eksam</Text>
     </Link>
   )
 }

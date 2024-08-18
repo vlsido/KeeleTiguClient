@@ -1,16 +1,18 @@
 import SendAnswerButton from "@/components/SendAnswerButton";
 import TextAnswerField from "@/components/TextAnswerField";
 import { CommonColors } from "@/constants/Colors";
-import { useEffect, useRef } from "react";
-import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
-import { DictionaryRequest, RandomWordsResponse, Word } from "./dictionary";
+import { useRef } from "react";
+import { StyleSheet, Text, TextInput, View } from "react-native";
+import { RandomWordsResponse, Word } from "./dictionary";
 import { callCloudFunction } from "@/components/util/CloudFunctions";
 import { batch, useSignal, useSignalEffect } from "@preact/signals-react";
-import ExamWordComponent, { ExamWord } from "@/components/ExamWordComponent";
+import ExamWordComponent from "@/components/ExamWordComponent";
 import TextButton from "@/components/TextButton";
+import { randomWords } from "@/components/util/WordsUtil";
+
+
 
 export default function Index() {
-  const examWords = useSignal<ExamWord[]>([]);
   const answer = useSignal<string>("");
   const isAnswerValid = useSignal<boolean>(true);
   const isAnswerVisible = useSignal<boolean>(false);
@@ -19,7 +21,7 @@ export default function Index() {
 
   async function getRandomWords() {
     const data = {
-      numberOfWords: 10,
+      numberOfWords: 100,
     };
 
     const responseData = await callCloudFunction("GetRandomWords_Node", data) as RandomWordsResponse | null;
@@ -28,24 +30,21 @@ export default function Index() {
       const examWordsData = responseData.randomWords.map((word: Word) => {
         return {
           word: word.word,
-          russianTranslation: word.russianTranslation,
+          russianTranslations: word.russianTranslations,
         };
       });
 
 
-      examWords.value = examWordsData;
+      randomWords.value = examWordsData;
 
       console.log("respik", responseData);
-      console.log("examWords", examWords.value);
     }
 
   };
 
   useSignalEffect(() => {
-    if (examWords.value.length === 0) {
+    if (randomWords.value.length === 0) {
       getRandomWords();
-      correctCount.value = 0;
-      incorrectCount.value = 0;
     }
   });
 
@@ -57,14 +56,14 @@ export default function Index() {
     if (answer.value === "") {
       return;
     }
-    const currentWordLowercase = examWords.value[0].word.split("+").join("");
+    const currentWordLowercase = randomWords.value[0].word.split("+").join("");
     const answerLowercase = answer.value.toLowerCase();
 
     if (currentWordLowercase === answerLowercase) {
       console.log("Correct!");
       isAnswerVisible.value = false;
       batch(() => {
-        examWords.value = examWords.value.slice(1);
+        randomWords.value = randomWords.value.slice(1);
         correctCount.value += 1;
         answer.value = "";
       });
@@ -87,7 +86,7 @@ export default function Index() {
   function skipWord() {
     batch(() => {
       isAnswerVisible.value = false;
-      examWords.value = examWords.value.slice(1);
+      randomWords.value = randomWords.value.slice(1);
       answer.value = "";
     });
     textInputRef.current?.focus();
@@ -103,11 +102,8 @@ export default function Index() {
         backgroundColor: CommonColors.black,
       }}
     >
-      {examWords.value.length === 0 ? <Text style={{ color: CommonColors.white, fontSize: 20, marginTop: 10 }}>Võtame sõnad sõnastikust...</Text> :
+      {randomWords.value.length === 0 ? <Text style={{ color: CommonColors.white, fontSize: 20, marginTop: 10 }}>Võtame sõnad sõnastikust...</Text> :
         <>
-          <Text style={{ color: CommonColors.white, fontSize: 20, marginVertical: 10 }}>
-            {examWords.value.length} sõna on jäänud
-          </Text>
           <Text style={{ color: CommonColors.white, fontSize: 16 }}>
             Õige: {correctCount.value}
           </Text>
@@ -117,7 +113,7 @@ export default function Index() {
         </>
       }
 
-      <ExamWordComponent examWords={examWords} isAnswerVisible={isAnswerVisible} />
+      <ExamWordComponent isAnswerVisible={isAnswerVisible} />
       <View style={styles.separator} />
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <TextAnswerField answer={answer} isValid={isAnswerValid} onSubmit={checkAnswer} textInputRef={textInputRef} />

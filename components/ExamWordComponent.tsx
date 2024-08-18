@@ -2,39 +2,45 @@ import { CommonColors } from "@/constants/Colors";
 import { Signal, useComputed, useSignalEffect } from "@preact/signals-react";
 import { Fragment } from "react";
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import { randomWords } from "./util/WordsUtil";
 
 export interface ExamWord {
   word: string;
-  russianTranslation: string;
+  russianTranslations: string[];
 }
 
 interface ExamWordComponentProps {
-  examWords: Signal<ExamWord[]>;
   isAnswerVisible: Signal<boolean>;
 }
 
 function ExamWordComponent(props: ExamWordComponentProps) {
   const currentWord = useComputed<React.JSX.Element[]>(() => {
     const wordElements: React.JSX.Element[] = [];
-    if (props.examWords.value != null) {
-      const word = props.examWords.value.at(0);
+    if (randomWords.value.length > 0) {
+      const word = randomWords.value.at(0);
 
       if (word != null) {
-        const wordParts = word.russianTranslation.split("\"");
+        word.russianTranslations.forEach((translation, index) => {
+          const textElements: React.JSX.Element[] = [];
+          const russianTranslationWordParts = translation.split("\"");
 
-        // Iterate over the word parts and style the accented letter
-        for (let i = 0; i < wordParts.length; i++) {
-          if (i === 0) {
-            // The first part before the first quote is normal
-            wordElements.push(<Text key={`current-word-part-${i}`} style={styles.normalText}>{wordParts[i]}</Text>);
-          } else {
-            // The part after the quote, where the first letter is the accent
-            wordElements.push(
-              <Text key={`current-word-part-${i}`} style={styles.accentedText}>{wordParts[i][0]}</Text>,
-              <Text key={`current-word-part-${i}-rest`} style={styles.normalText}>{wordParts[i].slice(1)}</Text>
-            );
+          // Iterate over the word parts and style the accented letter
+          for (let i = 0; i < russianTranslationWordParts.length; i++) {
+            if (i === 0) {
+              // The first part before the first quote is normal
+              textElements.push(<Text key={`russian-${index}-current-word-part-${i}`} style={styles.normalText}>{russianTranslationWordParts[i]}</Text>);
+            } else {
+              // The part after the quote, where the first letter is the accent
+              textElements.push(
+                <Text key={`russian-${index}-current-word-part-${i}`} style={styles.accentedText}>{russianTranslationWordParts[i][0]}</Text>,
+                <Text key={`russina-${index}-current-word-part-${i}-rest`} style={styles.normalText}>{russianTranslationWordParts[i].slice(1)}</Text>
+              );
+            }
           }
-        }
+
+          wordElements.push(<View key={`russian-${index}-current-word-translation-view`} style={styles.wordPartsTogether}> {textElements} </View>);
+        });
+
 
         return wordElements;
       }
@@ -45,8 +51,8 @@ function ExamWordComponent(props: ExamWordComponentProps) {
 
   const currentAnswer = useComputed<React.JSX.Element[]>(() => {
     const wordElements: React.JSX.Element[] = [];
-    if (props.examWords.value != null) {
-      const word = props.examWords.value.at(0);
+    if (randomWords.value.length > 0) {
+      const word = randomWords.value.at(0);
       if (word != null) {
         const wordParts = word.word.split("+");
 
@@ -104,7 +110,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderRadius: 5,
     borderColor: CommonColors.white,
-    flexDirection: "row",
+    flexDirection: "column",
   },
   answerContainer: {
     flexDirection: "row",
@@ -130,5 +136,8 @@ const styles = StyleSheet.create({
   smallAccentedText: {
     fontSize: 16,
     color: CommonColors.red,
+  },
+  wordPartsTogether: {
+    flexDirection: "row",
   },
 });

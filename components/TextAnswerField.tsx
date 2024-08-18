@@ -1,7 +1,7 @@
 import { CommonColors } from "@/constants/Colors";
 import { Signal, useSignalEffect } from "@preact/signals-react";
 import { StyleSheet, TextInput, TextStyle, View, ViewStyle } from "react-native";
-import Animated, { useAnimatedStyle, useSharedValue } from "react-native-reanimated";
+import Animated, { ReduceMotion, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { sendAnswerButtonWidth } from "./SendAnswerButton";
 import { useRef } from "react";
 
@@ -41,7 +41,7 @@ function TextAnswerField(props: TextAnswerFieldProps) {
 
   useSignalEffect(() => {
     if (sendAnswerButtonWidth.value > 0) {
-      marginLeft.value = sendAnswerButtonWidth.value;
+      marginLeft.value = withTiming(sendAnswerButtonWidth.value, { duration: 100, reduceMotion: ReduceMotion.System });
     }
   });
 
@@ -77,7 +77,8 @@ const styles = StyleSheet.create({
   inputText: {
     borderWidth: 2,
     borderRadius: 5,
-    fontSize: 20,
+    paddingVertical: 10,
+    fontSize: 16,
     textAlign: "center",
     color: CommonColors.white,
   }
