@@ -1,8 +1,9 @@
 import { CommonColors } from "@/constants/Colors";
 import { Signal, useComputed, useSignalEffect } from "@preact/signals-react";
 import { Fragment } from "react";
-import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, Pressable, StyleSheet, Text, View } from "react-native";
 import { randomWords } from "./util/WordsUtil";
+import { AddToDictionaryIcon } from "./icons/AddToDictionaryIcon";
 
 export interface ExamWord {
   word: string;
@@ -95,6 +96,9 @@ function ExamWordComponent(props: ExamWordComponentProps) {
       {props.isAnswerVisible.value === true && (
         <View style={styles.answerContainer}>
           {currentAnswer.value}
+          <Pressable onPress={() => console.log("pressed siin")} style={{ backgroundColor: "rgba(21,21,20,0.9)", borderRadius: 60, padding: 5, marginLeft: 15 }}>
+            <AddToDictionaryIcon />
+          </Pressable>
         </View>
       )}
     </>
