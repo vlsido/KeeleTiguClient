@@ -4,6 +4,7 @@ import { Fragment } from "react";
 import { ActivityIndicator, Pressable, StyleSheet, Text, View } from "react-native";
 import { randomWords } from "./util/WordsUtil";
 import { AddToDictionaryIcon } from "./icons/AddToDictionaryIcon";
+import AddToDictionaryButton from "./buttons/AddToDictionaryButton";
 
 export interface ExamWord {
   word: string;
@@ -96,9 +97,7 @@ function ExamWordComponent(props: ExamWordComponentProps) {
       {props.isAnswerVisible.value === true && (
         <View style={styles.answerContainer}>
           {currentAnswer.value}
-          <Pressable onPress={() => console.log("pressed siin")} style={{ backgroundColor: "rgba(21,21,20,0.9)", borderRadius: 60, padding: 5, marginLeft: 15 }}>
-            <AddToDictionaryIcon />
-          </Pressable>
+          <AddToDictionaryButton />
         </View>
       )}
     </>
