@@ -26,6 +26,9 @@ function AddToDictionaryButton() {
       showHint("Sõnastikku lisamiseks logi sisse!", 2000);
     }
 
+    // Add to dictionary
+    showHint("Sõna lisatud sõnastikku!", 2000);
+
   }
 
   return (

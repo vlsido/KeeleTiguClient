@@ -44,7 +44,7 @@ function Hint(props: HintProps) {
           runOnJS(unmount)();
         },
       );
-    }, props.duration);
+    }, props.duration.value);
   }
 
   function unmount() {
@@ -81,6 +81,7 @@ function Hint(props: HintProps) {
           left: 0,
           bottom: 0,
           justifyContent: "center",
+          pointerEvents: "none",
         },
       ]}
     >
