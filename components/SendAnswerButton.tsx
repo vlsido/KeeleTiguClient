@@ -3,7 +3,7 @@ import MaterialIconButton from "./MaterialIconButton";
 import { MaterialIcons } from "@expo/vector-icons";
 import Animated, { useAnimatedReaction, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { CommonColors } from "@/constants/Colors";
-import { signal } from "@preact/signals-react";
+import { signal, useSignalEffect } from "@preact/signals-react";
 import { textAnswerFieldContainerWidth } from "./TextAnswerField";
 
 interface SendAnswerButtonProps {
@@ -13,11 +13,20 @@ interface SendAnswerButtonProps {
 function SendAnswerButton(props: SendAnswerButtonProps) {
   const pressableOpacity = useSharedValue<number>(1);
 
+  const left = useSharedValue<number>(0);
+
+  useSignalEffect(() => {
+    if (textAnswerFieldContainerWidth.value !== 0) {
+      left.value = textAnswerFieldContainerWidth.value;
+    }
+  });
+
   const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
   const animatedStyle = useAnimatedStyle<ViewStyle>(() => {
     return {
       opacity: pressableOpacity.value,
+      left: left.value,
     }
   });
 
@@ -35,7 +44,7 @@ function SendAnswerButton(props: SendAnswerButtonProps) {
 
   return (
     <AnimatedPressable
-      style={[animatedStyle, styles.container, { left: textAnswerFieldContainerWidth.value }]}
+      style={[animatedStyle, styles.container]}
       hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
       onPress={onPress}
     >

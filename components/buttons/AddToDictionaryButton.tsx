@@ -1,6 +1,9 @@
-import { Pressable, StyleSheet, ViewStyle } from "react-native";
+import { Alert, Pressable, StyleSheet, ViewStyle } from "react-native";
 import { AddToDictionaryIcon } from "../icons/AddToDictionaryIcon";
 import Animated, { ReduceMotion, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
+import { auth } from "../util/FirebaseConfig";
+import { useContext } from "react";
+import { HintContext } from "../store/HintContext";
 
 function AddToDictionaryButton() {
   const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -12,10 +15,17 @@ function AddToDictionaryButton() {
     }
   });
 
+  const { showHint } = useContext(HintContext);
+
   function onPress() {
     opacity.value = withTiming(0.5, { duration: 50, reduceMotion: ReduceMotion.System }, () => {
       opacity.value = withTiming(1, { duration: 100, reduceMotion: ReduceMotion.System });
     });
+
+    if (auth.currentUser?.isAnonymous) {
+      showHint("Sõnastikku lisamiseks logi sisse!", 2000);
+    }
+
   }
 
   return (

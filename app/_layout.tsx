@@ -2,18 +2,20 @@ import DictionaryLink from "@/components/DictionaryLink";
 import ExamLink from "@/components/ExamLink";
 import LeftHeaderButton from "@/components/LeftHeaderButton";
 import RightHeaderButton from "@/components/RightHeaderButton";
-import TextButton from "@/components/TextButton";
 import AuthContextProvider from "@/components/store/AuthContext";
-import { Colors, CommonColors } from "@/constants/Colors";
+import HintContextProvider from "@/components/store/HintContext";
+import { CommonColors } from "@/constants/Colors";
 import { Stack } from "expo-router";
-import { Button, StyleSheet, Text, TextInput, View } from "react-native";
 
 export default function RootLayout() {
 
   return (
-    <AuthContextProvider>
-      <RootLayoutStack />
-    </AuthContextProvider>);
+    <HintContextProvider>
+      <AuthContextProvider>
+        <RootLayoutStack />
+      </AuthContextProvider>
+    </HintContextProvider>
+  );
 
 }
 

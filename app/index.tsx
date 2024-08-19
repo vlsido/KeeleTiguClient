@@ -118,6 +118,7 @@ export default function Index() {
           <SendAnswerButton onPress={checkAnswer} />
         </View>
         <TextButton onPress={skipWord} style={styles.skipWordContainer} textStyle={styles.skipWordText} text="JÄRGMINE" label="Next" />
+
       </View>
     </View>
 
