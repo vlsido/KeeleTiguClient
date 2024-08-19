@@ -13,6 +13,7 @@ export const CommonColors = {
   yellow: "#EBA575",
   purple: "#8375EB",
   red: "#EB7575",
+  blue: "#75B2EB",
 }
 
 export const Colors = {

@@ -40,9 +40,9 @@ function RootLayoutStack() {
         name="index"
         options={({ navigation }) => ({
           title: "",
-          headerRight: () => (
-            <RightHeaderButton />
-          ),
+          // headerRight: () => (
+          //   <RightHeaderButton />
+          // ),
           headerLeft: () => (
             <DictionaryLink />
           ),

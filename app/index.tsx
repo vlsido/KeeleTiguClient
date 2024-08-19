@@ -1,8 +1,8 @@
 import SendAnswerButton from "@/components/SendAnswerButton";
 import TextAnswerField from "@/components/TextAnswerField";
 import { CommonColors } from "@/constants/Colors";
-import { useRef } from "react";
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import { useEffect, useRef } from "react";
+import { Keyboard, StyleSheet, Text, TextInput, View } from "react-native";
 import { RandomWordsResponse, Word } from "./dictionary";
 import { callCloudFunction } from "@/components/util/CloudFunctions";
 import { batch, useSignal, useSignalEffect } from "@preact/signals-react";

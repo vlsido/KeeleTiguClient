@@ -27,8 +27,8 @@ export interface Word {
   russianTranslations: string[];
   examples?: {
     estonianExample: string;
-    russianTranslation: string[];
-  }
+    russianTranslations: string[];
+  }[]
 }
 
 export interface DictionaryResponse {
@@ -53,10 +53,10 @@ function Dictionary() {
 
   return (
     <View style={styles.container}>
-      <TextButton onPress={resetCache} text="reset" textStyle={{ color: "red" }} label={"reset"} />
       <FlatList
         data={myDictionary.value}
         keyExtractor={(item) => `word-${myDictionary.value.indexOf(item)}`}
+        contentContainerStyle={{ gap: 10 }}
         renderItem={({ item, index }) => <DictionaryItem {...item} index={index + 1} />}
       />
     </View>
@@ -69,8 +69,10 @@ export default Dictionary;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    width: "100%",
+    paddingLeft: 10,
+    paddingVertical: 15,
     justifyContent: "center",
-    alignItems: "center",
     flexDirection: "column",
     backgroundColor: "#222322"
   },
