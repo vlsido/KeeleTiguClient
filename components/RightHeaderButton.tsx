@@ -19,10 +19,10 @@ function RightHeaderButton() {
         <Text style={{ color: CommonColors.white, marginRight: 15 }}>Tere, {auth.currentUser.displayName}!</Text>
         <TextButton
           onPress={handleLogout}
-          text="Logout"
+          text="Logi välja"
           style={styles.logoutContainer}
           textStyle={styles.logoutText}
-          label="Login"
+          label="Logout"
         />
       </View>
     );
@@ -31,7 +31,7 @@ function RightHeaderButton() {
   return (
     <TextButton
       onPress={() => router.replace("/login")}
-      text="Login"
+      text="Logi sisse"
       style={styles.loginContainer}
       textStyle={styles.loginText}
       label="Login"
@@ -56,7 +56,6 @@ const styles = StyleSheet.create({
   },
   loginContainer: {
     borderRadius: 3,
-    borderWidth: 1,
     borderColor: CommonColors.white,
     padding: 10,
     backgroundColor: CommonColors.green,

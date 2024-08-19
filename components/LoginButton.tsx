@@ -24,7 +24,7 @@ function LoginButton(props: LoginButtonProps) {
 
   return (
     <TextButton
-      text="Login"
+      text="Logi sisse"
       style={styles.loginContainer}
       textStyle={styles.loginText}
       label="Login"

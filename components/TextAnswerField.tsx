@@ -1,9 +1,9 @@
 import { CommonColors } from "@/constants/Colors";
-import { Signal, useSignalEffect } from "@preact/signals-react";
+import { Signal, signal, useSignalEffect } from "@preact/signals-react";
 import { StyleSheet, TextInput, TextStyle, View, ViewStyle } from "react-native";
 import Animated, { ReduceMotion, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
-import { sendAnswerButtonWidth } from "./SendAnswerButton";
-import { useRef } from "react";
+
+export const textAnswerFieldContainerWidth = signal<number>(0);
 
 interface TextAnswerFieldProps {
   answer: Signal<string>;
@@ -39,13 +39,6 @@ function TextAnswerField(props: TextAnswerFieldProps) {
     }
   });
 
-  useSignalEffect(() => {
-    if (sendAnswerButtonWidth.value > 0) {
-      marginLeft.value = withTiming(sendAnswerButtonWidth.value, { duration: 100, reduceMotion: ReduceMotion.System });
-    }
-  });
-
-
   function onSumbit() {
     props.onSubmit();
 
@@ -54,6 +47,7 @@ function TextAnswerField(props: TextAnswerFieldProps) {
   return (
     <View
       style={styles.container}
+      onLayout={(event) => textAnswerFieldContainerWidth.value = event.nativeEvent.layout.width}
     >
       <AnimatedTextInput
         ref={props.textInputRef}

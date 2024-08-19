@@ -1,6 +1,6 @@
 import { Pressable, StyleSheet, ViewStyle } from "react-native";
 import { AddToDictionaryIcon } from "../icons/AddToDictionaryIcon";
-import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
+import Animated, { ReduceMotion, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 
 function AddToDictionaryButton() {
   const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -13,12 +13,10 @@ function AddToDictionaryButton() {
   });
 
   function onPress() {
-    opacity.value = withTiming(0.5, { duration: 50 }, () => {
-      opacity.value = withTiming(1, { duration: 100 });
+    opacity.value = withTiming(0.5, { duration: 50, reduceMotion: ReduceMotion.System }, () => {
+      opacity.value = withTiming(1, { duration: 100, reduceMotion: ReduceMotion.System });
     });
   }
-
-
 
   return (
     <AnimatedPressable onPress={onPress}

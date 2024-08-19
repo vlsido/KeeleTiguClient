@@ -4,12 +4,11 @@ import { MaterialIcons } from "@expo/vector-icons";
 import Animated, { useAnimatedReaction, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { CommonColors } from "@/constants/Colors";
 import { signal } from "@preact/signals-react";
+import { textAnswerFieldContainerWidth } from "./TextAnswerField";
 
 interface SendAnswerButtonProps {
   onPress: () => void;
 }
-
-export const sendAnswerButtonWidth = signal<number>(0);
 
 function SendAnswerButton(props: SendAnswerButtonProps) {
   const pressableOpacity = useSharedValue<number>(1);
@@ -30,12 +29,15 @@ function SendAnswerButton(props: SendAnswerButtonProps) {
     props.onPress();
   }
 
+  if (textAnswerFieldContainerWidth.value === 0) {
+    return null;
+  }
+
   return (
     <AnimatedPressable
-      style={[animatedStyle, styles.container]}
+      style={[animatedStyle, styles.container, { left: textAnswerFieldContainerWidth.value }]}
       hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
       onPress={onPress}
-      onLayout={(event) => { sendAnswerButtonWidth.value = event.nativeEvent.layout.width }}
     >
       <Text style={styles.text}>{"VASTA"}</Text>
     </AnimatedPressable>
@@ -50,6 +52,7 @@ const styles = StyleSheet.create({
     backgroundColor: CommonColors.white,
     padding: 5,
     borderRadius: 5,
+    position: "absolute",
   },
   text: {
     fontWeight: "bold",

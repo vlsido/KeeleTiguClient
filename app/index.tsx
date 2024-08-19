@@ -95,39 +95,49 @@ export default function Index() {
 
   return (
     <View
-      style={{
-        alignItems: "center",
-        flex: 1,
-        flexDirection: "column",
-        backgroundColor: CommonColors.black,
-      }}
+      style={styles.constainer}
     >
-      {randomWords.value.length === 0 ? <Text style={{ color: CommonColors.white, fontSize: 20, marginTop: 10 }}>Võtame sõnad sõnastikust...</Text> :
-        <>
-          <Text style={{ color: CommonColors.white, fontSize: 16 }}>
-            Õige: {correctCount.value}
-          </Text>
-          <Text style={{ color: CommonColors.white, fontSize: 16 }}>
-            Vale: {incorrectCount.value}
-          </Text>
-        </>
-      }
+      <View style={styles.topContainer}>
+        {
+          randomWords.value.length === 0 ? <Text style={{ color: CommonColors.white, fontSize: 20, marginTop: 10 }}>Võtame sõnad sõnastikust...</Text> :
+            <>
+              <Text style={{ color: CommonColors.white, fontSize: 16 }}>
+                Õige: {correctCount.value}
+              </Text>
+              <Text style={{ color: CommonColors.white, fontSize: 16 }}>
+                Vale: {incorrectCount.value}
+              </Text>
+            </>
+        }
 
-      <ExamWordComponent isAnswerVisible={isAnswerVisible} />
-      <View style={styles.separator} />
-      <View style={{ flexDirection: "row", alignItems: "center" }}>
-        <TextAnswerField answer={answer} isValid={isAnswerValid} onSubmit={checkAnswer} textInputRef={textInputRef} />
-        <SendAnswerButton onPress={checkAnswer} />
+        < ExamWordComponent isAnswerVisible={isAnswerVisible} />
       </View>
-      <TextButton onPress={skipWord} style={styles.skipWordContainer} textStyle={styles.skipWordText} text="JÄRGMINE" label="Next" />
+      <View style={styles.bottomContainer} >
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <TextAnswerField answer={answer} isValid={isAnswerValid} onSubmit={checkAnswer} textInputRef={textInputRef} />
+          <SendAnswerButton onPress={checkAnswer} />
+        </View>
+        <TextButton onPress={skipWord} style={styles.skipWordContainer} textStyle={styles.skipWordText} text="JÄRGMINE" label="Next" />
+      </View>
     </View>
 
   );
 }
 
 const styles = StyleSheet.create({
-  separator: {
+  constainer: {
     flex: 1,
+    flexDirection: "column",
+    justifyContent: "space-between",
+    alignItems: "center",
+    backgroundColor: CommonColors.black,
+    paddingVertical: 10
+  },
+  topContainer: {
+    alignItems: "center",
+  },
+  bottomContainer: {
+    alignItems: "center",
   },
   skipWordContainer: {
     backgroundColor: CommonColors.white,
@@ -136,7 +146,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: CommonColors.white,
     marginTop: 10,
-    marginBottom: 50,
+    marginBottom: 10,
   },
   skipWordText: {
     color: CommonColors.black,

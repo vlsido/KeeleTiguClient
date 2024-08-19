@@ -9,10 +9,10 @@ function LeftHeaderButton() {
   return (
     <TextButton
       onPress={() => router.replace("/")}
-      text="Back"
+      text="Tagasi"
       style={styles.backContainer}
       textStyle={styles.backText}
-      label="Back"
+      label="Tagasi"
     />
   );
 }

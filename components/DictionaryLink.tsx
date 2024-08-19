@@ -6,7 +6,7 @@ function DictionaryLink() {
 
   return (
     <Link href="/dictionary" style={styles.dictionaryLink}>
-      <Text style={styles.dictionaryText}>Sõnastik</Text>
+      <Text style={styles.dictionaryText}>Minu Sõnastik</Text>
     </Link>
   )
 }
@@ -16,7 +16,7 @@ export default DictionaryLink;
 const styles = StyleSheet.create({
   dictionaryLink: {
     marginLeft: 20,
-    borderRadius: 3,
+    borderRadius: 10,
     borderWidth: 1,
     borderColor: CommonColors.white,
     padding: 10,

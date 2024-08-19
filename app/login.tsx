@@ -1,7 +1,7 @@
 import TextButton from "@/components/TextButton";
 import { loginUser } from "@/components/util/FirebaseUtil";
 import { CommonColors } from "@/constants/Colors";
-import { NativeSyntheticEvent, StyleSheet, Text, TextInput, TextInputChangeEventData, View, ViewStyle } from "react-native";
+import { KeyboardAvoidingView, NativeSyntheticEvent, StyleSheet, Text, TextInput, TextInputChangeEventData, View, ViewStyle } from "react-native";
 import { useSignal } from "@preact/signals-react";
 import { Link, router } from "expo-router";
 import { auth } from "@/components/util/FirebaseConfig";
@@ -64,13 +64,13 @@ function Login() {
 
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView style={styles.container}>
       <View style={styles.textField}>
-        <Text style={styles.textInputName}>Email</Text>
+        <Text style={styles.textInputName}>E-mail</Text>
         <AnimatedTextInput style={[{ paddingLeft: 10, height: 40, borderWidth: 1, borderRadius: 3, color: CommonColors.white }, emailAnimatedTextInputStyle]} onChange={onChangeEmail} onFocus={() => emailBorderColor.value = "gray"} />
       </View>
       <View style={styles.textField}>
-        <Text style={styles.textInputName}>Password</Text>
+        <Text style={styles.textInputName}>Parool</Text>
         <AnimatedTextInput style={[{ paddingLeft: 10, height: 40, borderWidth: 1, borderRadius: 3, color: CommonColors.white }, passwordAnimatedTextInputStyle]} onChange={onChangePassword} textContentType="password" secureTextEntry={true} onFocus={() => passwordBorderColor.value = "gray"} />
       </View>
       <LoginButton onPress={handleLogin} isProcessing={isProcessing} />
@@ -78,9 +78,9 @@ function Login() {
         style={styles.registerContainer}
         href="/register"
       >
-        <Text style={styles.registerText}>Don't have an account?</Text>
+        <Text style={styles.registerText}>Pole kontot? Registreeru!</Text>
       </Link>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -103,13 +103,13 @@ const styles = StyleSheet.create({
   },
   registerContainer: {
     borderRadius: 3,
-    borderWidth: 1,
+    backgroundColor: CommonColors.yellow,
     borderColor: CommonColors.white,
     padding: 10,
   },
   registerText: {
-    fontSize: 20,
-    color: CommonColors.white,
+    fontSize: 18,
+    color: CommonColors.black,
   },
   textInputName: {
     fontSize: 14,
