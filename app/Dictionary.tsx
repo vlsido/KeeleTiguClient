@@ -1,6 +1,9 @@
 import MaterialIconButton from "@/components/MaterialIconButton";
+import TextButton from "@/components/TextButton";
+import DictionaryItem from "@/components/dictionary/DictionaryItem";
 import Forms from "@/components/text_components/Forms";
 import { callCloudFunction } from "@/components/util/CloudFunctions";
+import { myDictionary } from "@/components/util/WordsUtil";
 import { CommonColors } from "@/constants/Colors";
 import { useSignal, useSignalEffect } from "@preact/signals-react";
 import { useEffect } from "react";
@@ -28,54 +31,13 @@ export interface Word {
   }
 }
 
-
 export interface DictionaryResponse {
-  dictionary: DictionaryWord[];
-}
-
-interface DictionaryWord {
-  word: string;
-  type: string;
-  forms: string;
-  definition: string;
-  russian?: string;
+  dictionary: Word[];
 }
 
 function Dictionary() {
-  const dictionaryWords = useSignal<DictionaryWord[]>([]);
-  const isLoading = useSignal<boolean>(true);
 
-
-  async function getDictionary(page: number) {
-    const data: DictionaryRequest = {
-      page: page
-    }
-
-    const responseData = await callCloudFunction("GetDictionary_Node", data) as DictionaryResponse | undefined;
-
-    if (responseData != null) {
-      dictionaryWords.value = responseData.dictionary;
-    }
-
-  };
-
-  useEffect(() => {
-    getDictionary(1);
-  }, []);
-
-  useSignalEffect(() => {
-    if (dictionaryWords.value.length === 0) {
-      isLoading.value = true;
-    }
-
-    if (dictionaryWords.value.length > 0) {
-      console.log("Dictionary words changed", dictionaryWords.value);
-      isLoading.value = false;
-    }
-  });
-
-
-  if (isLoading.value === true) {
+  if (myDictionary.value.length === 0) {
 
     return (
       <View style={styles.container}>
@@ -84,44 +46,23 @@ function Dictionary() {
     );
   }
 
+  function resetCache() {
+    localStorage.removeItem("myDictionary");
+    myDictionary.value = [];
+  }
+
   return (
     <View style={styles.container}>
-      <Pressable onPress={() => getDictionary(3)} style={{ backgroundColor: "white", margin: 10, height: 40, width: 40 }} />
+      <TextButton onPress={resetCache} text="reset" textStyle={{ color: "red" }} label={"reset"} />
       <FlatList
-        data={dictionaryWords.value}
-        keyExtractor={(item) => `word-${dictionaryWords.value.indexOf(item)}`}
-        renderItem={({ item }) => <DictionaryItem {...item} />}
+        data={myDictionary.value}
+        keyExtractor={(item) => `word-${myDictionary.value.indexOf(item)}`}
+        renderItem={({ item, index }) => <DictionaryItem {...item} index={index + 1} />}
       />
     </View>
   );
 }
 
-function DictionaryItem({ word, type, forms, definition, russian }: DictionaryWord) {
-  const russianTextSplit = russian?.split("\"");
-  const accent = russianTextSplit?.at(1)?.slice(0, 1);
-  const russianTextBeforeAccent = russianTextSplit?.at(0);
-  const russianTextAfterAccent = russianTextSplit?.at(1)?.slice(1);
-
-  return (
-    <View style={{ flexDirection: "row" }}>
-      <MaterialIconButton name="add" onPress={() => console.log(accent)} containerStyle={styles.addContainer} accessibilityLabel="Word" color={"black"} size={32} />
-      <View>
-        <Text style={styles.wordText} >{word}
-        </Text>
-        <Text style={styles.typeText} >{type}
-        </Text>
-        <Forms forms={forms} />
-        <Text style={styles.definitionText}>{definition}</Text>
-        <Text style={styles.russianText}>{russianTextBeforeAccent}
-          <Text style={styles.russianAccentText}>{accent}
-            <Text style={styles.russianText}>{russianTextAfterAccent}</Text>
-          </Text>
-        </Text>
-
-      </View>
-    </View>
-  );
-}
 
 export default Dictionary;
 
@@ -146,27 +87,4 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 20
   },
-  wordText: {
-    color: "white",
-    fontSize: 20,
-    fontWeight: "bold"
-  },
-  typeText: {
-    color: "white",
-    fontSize: 20
-  },
-  definitionText: {
-    color: "white",
-    fontSize: 20
-  },
-  russianText: {
-    color: "#004fff",
-    fontSize: 20,
-    fontWeight: "bold"
-  },
-  russianAccentText: {
-    color: "red",
-    fontSize: 20,
-    fontWeight: "bold"
-  }
 });

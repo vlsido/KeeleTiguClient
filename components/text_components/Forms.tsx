@@ -20,7 +20,7 @@ export default Forms;
 
 const styles = StyleSheet.create({
   formsText: {
-    color: "white",
-    fontSize: 20
+    color: "rgba(255, 255, 255, 0.7)",
+    fontSize: 16
   },
 });

@@ -6,3 +6,5 @@ export const randomWords = signal<Word[]>([]);
 effect(() => {
   console.log("[CHANGED] Current Random Words", randomWords);
 });
+
+export const myDictionary = signal<Word[]>([]);

@@ -114,7 +114,6 @@ const styles = StyleSheet.create({
     padding: 15,
   },
   hintText: {
-    fontFamily: "Roboto_Regular",
     fontSize: 14,
     textAlign: "center",
   },

@@ -4,6 +4,7 @@ import Animated, { ReduceMotion, useAnimatedStyle, useSharedValue, withTiming } 
 import { auth } from "../util/FirebaseConfig";
 import { useContext } from "react";
 import { HintContext } from "../store/HintContext";
+import { myDictionary, randomWords } from "../util/WordsUtil";
 
 function AddToDictionaryButton() {
   const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -24,10 +25,25 @@ function AddToDictionaryButton() {
 
     if (auth.currentUser?.isAnonymous) {
       showHint("Sõnastikku lisamiseks logi sisse!", 2000);
+      return;
     }
 
-    // Add to dictionary
-    showHint("Sõna lisatud sõnastikku!", 2000);
+
+    const currentWord = randomWords.value.at(0);
+
+    if (currentWord !== undefined) {
+      console.log("Add to dictionary", auth.currentUser);
+
+      if (myDictionary.value.find((word) => word.word === currentWord.word)) {
+        showHint("Sõna on juba sõnastikus!", 500);
+        return;
+      }
+
+      myDictionary.value = [...myDictionary.value, currentWord];
+
+      // Add to dictionary
+      showHint("Lisatud!", 500);
+    }
 
   }
 

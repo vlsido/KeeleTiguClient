@@ -6,15 +6,19 @@ import AuthContextProvider from "@/components/store/AuthContext";
 import HintContextProvider from "@/components/store/HintContext";
 import { CommonColors } from "@/constants/Colors";
 import { Stack } from "expo-router";
+import WordsContextProvider from "@/components/store/WordsContext";
 
 export default function RootLayout() {
+
 
   return (
     <HintContextProvider>
       <AuthContextProvider>
-        <RootLayoutStack />
+        <WordsContextProvider>
+          <RootLayoutStack />
+        </WordsContextProvider>
       </AuthContextProvider>
-    </HintContextProvider>
+    </HintContextProvider >
   );
 
 }
