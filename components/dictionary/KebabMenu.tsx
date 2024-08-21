@@ -74,7 +74,7 @@ function KebabMenu(props: KebabMenuProps) {
       onPress={handleClose}
     >
       <TextButton
-        text={"Eemaldama"}
+        text={"Eemalda"}
         onPress={onRemoveWord}
         style={styles.removeButtonContainer}
         label={"Remove word from dictionary"}

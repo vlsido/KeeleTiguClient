@@ -40,19 +40,15 @@ function Dictionary() {
   if (myDictionary.value.length === 0) {
 
     return (
-      <View style={styles.container}>
-        <Text style={styles.loadingText}>Siin pole midagi. Proovi uuesti hiljem.</Text>
+      <View style={styles.noWordsContainer}>
+        <Text style={styles.loadingText}>Siin pole midagi. Lisa uued sõnad eksami leheküljel.</Text>
       </View>
     );
   }
 
-  function resetCache() {
-    localStorage.removeItem("myDictionary");
-    myDictionary.value = [];
-  }
-
   return (
     <View style={styles.container}>
+      <Text style={styles.text}>Sõnastikus on {myDictionary.value.length} sõnad</Text>
       <FlatList
         data={myDictionary.value}
         keyExtractor={(item) => `word-${myDictionary.value.indexOf(item)}`}
@@ -67,6 +63,16 @@ function Dictionary() {
 export default Dictionary;
 
 const styles = StyleSheet.create({
+  noWordsContainer: {
+    flex: 1,
+    width: "100%",
+    paddingLeft: 10,
+    paddingVertical: 15,
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "column",
+    backgroundColor: "#222322"
+  },
   container: {
     flex: 1,
     width: "100%",
@@ -79,6 +85,7 @@ const styles = StyleSheet.create({
   loadingText: {
     fontSize: 20,
     color: CommonColors.white,
+    textAlign: "center"
   },
   addContainer: {
     backgroundColor: "#f3f3f3",

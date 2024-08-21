@@ -16,7 +16,7 @@ export default ExamLink;
 const styles = StyleSheet.create({
   examLink: {
     marginLeft: 20,
-    borderRadius: 3,
+    borderRadius: 10,
     borderWidth: 1,
     borderColor: CommonColors.white,
     padding: 10,

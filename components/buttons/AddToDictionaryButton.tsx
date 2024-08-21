@@ -23,12 +23,6 @@ function AddToDictionaryButton() {
       opacity.value = withTiming(1, { duration: 100, reduceMotion: ReduceMotion.System });
     });
 
-    // if (auth.currentUser?.isAnonymous) {
-    //   showHint("Sõnastikku lisamiseks logi sisse!", 2000);
-    //   return;
-    // }
-
-
     const currentWord = randomWords.value.at(0);
 
     if (currentWord !== undefined) {
