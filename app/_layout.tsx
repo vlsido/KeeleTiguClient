@@ -13,7 +13,7 @@ import ru from "@/components/store/translations/ru.json"
 import DictionaryLink from "@/components/links/DictionaryLink";
 import SearchLink from "@/components/links/SearchLink";
 import { View } from "react-native";
-import { allWords, myDictionaryHistory } from "@/components/util/WordsUtil";
+import { allWords, myDictionary, myDictionaryHistory } from "@/components/util/WordsUtil";
 import { callCloudFunction } from "@/components/util/CloudFunctions";
 import { useSignalEffect } from "@preact/signals-react";
 import { OnlyWordsResponse } from "./dictionary";
@@ -28,6 +28,9 @@ export default function RootLayout() {
   function removeCache() {
     localStorage.removeItem("allWords");
     localStorage.removeItem("myDictionaryHistory");
+    allWords.value = [];
+    myDictionary.value = [];
+    myDictionaryHistory.value = [];
   }
 
   useSignalEffect(() => {

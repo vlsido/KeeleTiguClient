@@ -1,5 +1,5 @@
 import { useSignal, useSignalEffect } from "@preact/signals-react";
-import { FlatList, StyleSheet, TextInput, View } from "react-native";
+import { Dimensions, FlatList, StyleSheet, TextInput, View } from "react-native";
 import { WordWithoutData, allWords } from "@/components/util/WordsUtil";
 import { CommonColors } from "@/constants/Colors";
 import SearchItem from "@/components/search/SearchItem";
@@ -19,13 +19,14 @@ function Search() {
       return;
     }
     console.log("allWords", allWords.value);
-    searchResults.value = allWords.value.filter((word) => word.word.includes(text));
+    const textLowerCase = text.toLowerCase();
+    searchResults.value = allWords.value.filter((word) => word.word.toLowerCase().includes(textLowerCase));
 
   }
 
   return (
     <View style={styles.container}>
-      <View style={styles.searchContainer}>
+      <View style={[styles.searchContainer, Dimensions.get("window").width > Dimensions.get("window").height ? { width: "50%" } : { width: "90%" }]}>
         <TextInput placeholder="Otsi..." style={styles.searchInput} onChange={(event) => onChange(event.nativeEvent.text)} />
         <FlatList
           data={searchResults.value}
@@ -49,7 +50,6 @@ const styles = StyleSheet.create({
   },
   searchContainer: {
     flex: 1,
-    width: "25%",
     padding: 10,
   },
   searchInput: {

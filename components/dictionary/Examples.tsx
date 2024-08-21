@@ -50,29 +50,28 @@ function Examples(props: ExamplesProps) {
               const russianTranslationWordParts = russianTranslation.split("\"");
 
               // Iterate over the word parts and style the accented letter
-              for (let i = 0; i < russianTranslationWordParts.length; i++) {
-                if (i === 0) {
+              russianTranslationWordParts.forEach((part, index) => {
+                if (index === 0) {
                   // The first part before the first quote is normal
-                  russianTextElements.push(<Text key={`russian-translation-${index}-current-word-part-${i}`} style={styles.russianExample}>{russianTranslationWordParts[i]}</Text>);
+                  russianTextElements.push(<Text key={`russian-translation-${index}-current-word-part-${index}`} style={styles.russianExample}>{part}</Text>);
 
                 } else {
                   // The part after the quote, where the first letter is the accent
                   russianTextElements.push(
-                    <Text key={`russian-translation-${index}-current-word-part-${i}`} style={styles.russianExampleAccented}>{russianTranslationWordParts[i][0]}</Text>,
-                    <Text key={`russian-translation-${index}-current-word-part-${i}-rest`} style={styles.russianExample}>{russianTranslationWordParts[i].slice(1)}</Text>
+                    <Text key={`russian-translation-${index}-current-word-part-${index}`} style={styles.russianExampleAccented}>{part[0]}
+                    </Text>,
+                    <Text key={`russian-translation-${index}-current-word-part-${index}-rest`} style={styles.russianExample}>{part.slice(1)}</Text>
                   );
                 }
-              }
+              });
 
-              russianWordsElements.push(<View key={`russian-translation-${index}-current-word-translation-view`} style={{ flexDirection: "row" }}> {russianTextElements} </View>);
+              russianWordsElements.push(<View key={`russian-translation-${index}-current-word-translation-view`} style={{ flexDirection: "row", width: "100%" }}> {russianTextElements} </View>);
 
             });
 
-
-
             return (
-              <View key={`example-${index}`}>
-                <Text style={styles.estonianExample}>{example.estonianExample}</Text>
+              <View style={{ flexDirection: "column", width: "100%" }} key={`example-${index}`}>
+                <Text style={styles.estonianExample} >{example.estonianExample}</Text>
                 {russianWordsElements}
               </View>
             );
@@ -98,7 +97,9 @@ const styles = StyleSheet.create({
   },
   russianExample: {
     color: CommonColors.white,
-    fontSize: 16
+    fontSize: 16,
+    fontWeight: "thin"
+
   },
   russianExampleAccented: {
     color: CommonColors.red,
