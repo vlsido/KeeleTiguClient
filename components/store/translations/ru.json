@@ -1,0 +1,10 @@
+{
+  "ru": {
+    "count_words_in_dictionary": {
+      "one": "В словаре %{count} слово",
+      "few": "В словаре %{count} слова",
+      "many": "В словаре %{count} слов",
+      "other": "В словаре %{count} слов"
+    }
+  }
+}

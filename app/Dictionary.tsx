@@ -1,6 +1,7 @@
 import MaterialIconButton from "@/components/MaterialIconButton";
 import TextButton from "@/components/TextButton";
 import DictionaryItem from "@/components/dictionary/DictionaryItem";
+import { i18n } from "@/components/store/i18n";
 import Forms from "@/components/text_components/Forms";
 import { callCloudFunction } from "@/components/util/CloudFunctions";
 import { myDictionary } from "@/components/util/WordsUtil";
@@ -48,7 +49,12 @@ function Dictionary() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Sõnastikus on {myDictionary.value.length} sõnad</Text>
+      <Text style={styles.text}>
+        {i18n.t("count_words_in_dictionary", {
+          defaultValue: "Sõnastikus on %{count} sõnad",
+          count: myDictionary.value.length,
+        })}
+      </Text>
       <FlatList
         data={myDictionary.value}
         keyExtractor={(item) => `word-${myDictionary.value.indexOf(item)}`}
@@ -58,7 +64,6 @@ function Dictionary() {
     </View>
   );
 }
-
 
 export default Dictionary;
 

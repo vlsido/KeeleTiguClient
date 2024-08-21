@@ -1,0 +1,8 @@
+{
+  "ee": {
+    "count_words_in_dictionary": {
+      "one": "Sõnastikus on %{count} sõna",
+      "other": "Sõnastikus on %{count} sõnad"
+    }
+  }
+}
