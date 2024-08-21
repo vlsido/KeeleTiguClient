@@ -1,4 +1,3 @@
-import DictionaryLink from "@/components/DictionaryLink";
 import ExamLink from "@/components/ExamLink";
 import LeftHeaderButton from "@/components/LeftHeaderButton";
 import RightHeaderButton from "@/components/RightHeaderButton";
@@ -11,8 +10,36 @@ import { useEffect } from "react";
 import { i18n } from "@/components/store/i18n";
 import ee from "@/components/store/translations/ee.json"
 import ru from "@/components/store/translations/ru.json"
+import DictionaryLink from "@/components/links/DictionaryLink";
+import SearchLink from "@/components/links/SearchLink";
+import { View } from "react-native";
+import { allWords } from "@/components/util/WordsUtil";
+import { callCloudFunction } from "@/components/util/CloudFunctions";
+import { useSignalEffect } from "@preact/signals-react";
+import { AllWordsResponse } from "./dictionary";
 
 export default function RootLayout() {
+
+  async function getAllWords() {
+    if (localStorage.getItem("allWords") != null) {
+      allWords.value = JSON.parse(localStorage.getItem("allWords") as string);
+      return;
+    }
+
+    const response = await callCloudFunction("GetDictionary_Node", {}) as AllWordsResponse | null;
+
+    if (response != null) {
+      allWords.value = response.dictionary;
+      localStorage.setItem("allWords", JSON.stringify(allWords.value));
+    }
+  }
+
+  useSignalEffect(() => {
+    if (allWords.value.length === 0) {
+      getAllWords();
+    }
+  });
+
   useEffect(() => {
     const unsubscribe = i18n.onChange(() => {
       console.log("I18n has changed!");
@@ -31,6 +58,8 @@ export default function RootLayout() {
 
     i18n.store(ee);
   }
+
+
 
   return (
     <HintContextProvider>
@@ -65,23 +94,27 @@ function RootLayoutStack() {
           //   <RightHeaderButton />
           // ),
           headerLeft: () => (
-            <DictionaryLink />
+            <View style={{ flexDirection: "row" }}>
+              <DictionaryLink />
+              <SearchLink />
+            </View>
           ),
         })} />
-      < Stack.Screen name="login" options={{
+      <Stack.Screen name="login" options={{
         title: "", headerBackVisible: true,
 
         headerLeft: () => (
           <LeftHeaderButton />
         )
       }} />
-      < Stack.Screen name="register" options={{ title: "" }} />
-      < Stack.Screen name="dictionary" options={{
+      <Stack.Screen name="register" options={{ title: "" }} />
+      <Stack.Screen name="dictionary" options={{
         title: "",
         headerLeft: () => (
           <ExamLink />
         )
       }} />
+      <Stack.Screen name="search" options={{ title: "" }} />
     </Stack >
   );
 }

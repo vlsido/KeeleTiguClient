@@ -20,10 +20,14 @@ export interface RandomWordsResponse {
 }
 
 
+export interface AllWordsResponse {
+  dictionary: Word[];
+}
+
 export interface Word {
   word: string;
   definition?: string;
-  type?: string;
+  type?: "s" | "v" | "adj" | "adv" | undefined;
   forms?: string;
   russianTranslations: string[];
   examples?: {
@@ -99,6 +103,6 @@ const styles = StyleSheet.create({
   },
   text: {
     color: "white",
-    fontSize: 20
+    fontSize: 16
   },
 });

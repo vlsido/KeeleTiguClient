@@ -1,14 +1,14 @@
 import SendAnswerButton from "@/components/SendAnswerButton";
 import TextAnswerField from "@/components/TextAnswerField";
 import { CommonColors } from "@/constants/Colors";
-import { useEffect, useRef } from "react";
-import { Keyboard, StyleSheet, Text, TextInput, View } from "react-native";
-import { RandomWordsResponse, Word } from "./dictionary";
+import { useRef } from "react";
+import { StyleSheet, Text, TextInput, View } from "react-native";
+import { AllWordsResponse, RandomWordsResponse, Word } from "./dictionary";
 import { callCloudFunction } from "@/components/util/CloudFunctions";
 import { batch, useSignal, useSignalEffect } from "@preact/signals-react";
 import ExamWordComponent from "@/components/ExamWordComponent";
 import TextButton from "@/components/TextButton";
-import { randomWords } from "@/components/util/WordsUtil";
+import { allWords, randomWords } from "@/components/util/WordsUtil";
 
 
 
@@ -46,11 +46,14 @@ export default function Index() {
 
   };
 
+
   useSignalEffect(() => {
     if (randomWords.value.length === 0) {
       getRandomWords();
     }
   });
+
+
 
   const lastIncorrectWord = useSignal<string>("");
 
