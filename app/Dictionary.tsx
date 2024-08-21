@@ -4,7 +4,7 @@ import DictionaryItem from "@/components/dictionary/DictionaryItem";
 import { i18n } from "@/components/store/i18n";
 import Forms from "@/components/text_components/Forms";
 import { callCloudFunction } from "@/components/util/CloudFunctions";
-import { myDictionary } from "@/components/util/WordsUtil";
+import { WordWithoutData, myDictionary } from "@/components/util/WordsUtil";
 import { CommonColors } from "@/constants/Colors";
 import { useSignal, useSignalEffect } from "@preact/signals-react";
 import { useEffect } from "react";
@@ -22,6 +22,11 @@ export interface RandomWordsResponse {
 
 export interface AllWordsResponse {
   dictionary: Word[];
+}
+
+
+export interface OnlyWordsResponse {
+  dictionary: WordWithoutData[];
 }
 
 export interface Word {

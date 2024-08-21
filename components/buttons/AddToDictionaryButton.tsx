@@ -37,6 +37,9 @@ function AddToDictionaryButton() {
 
       // Add to dictionary
       showHint("Lisatud!", 500);
+    } else {
+
+      showHint("Error! No words loaded.", 500);
     }
 
   }

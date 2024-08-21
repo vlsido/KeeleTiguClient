@@ -13,30 +13,32 @@ import ru from "@/components/store/translations/ru.json"
 import DictionaryLink from "@/components/links/DictionaryLink";
 import SearchLink from "@/components/links/SearchLink";
 import { View } from "react-native";
-import { allWords } from "@/components/util/WordsUtil";
+import { allWords, myDictionaryHistory } from "@/components/util/WordsUtil";
 import { callCloudFunction } from "@/components/util/CloudFunctions";
 import { useSignalEffect } from "@preact/signals-react";
-import { AllWordsResponse } from "./dictionary";
+import { OnlyWordsResponse } from "./dictionary";
 
 export default function RootLayout() {
+  useEffect(() => {
+    getDictionaryHistory();
+    loadTranslations("ee");
+    // removeCache();
+  }, []);
 
-  async function getAllWords() {
-    if (localStorage.getItem("allWords") != null) {
-      allWords.value = JSON.parse(localStorage.getItem("allWords") as string);
-      return;
-    }
-
-    const response = await callCloudFunction("GetDictionary_Node", {}) as AllWordsResponse | null;
-
-    if (response != null) {
-      allWords.value = response.dictionary;
-      localStorage.setItem("allWords", JSON.stringify(allWords.value));
-    }
+  function removeCache() {
+    localStorage.removeItem("allWords");
+    localStorage.removeItem("myDictionaryHistory");
   }
 
   useSignalEffect(() => {
     if (allWords.value.length === 0) {
       getAllWords();
+    }
+  });
+
+  useSignalEffect(() => {
+    if (myDictionaryHistory.value.length > 0) {
+      localStorage.setItem("myDictionaryHistory", JSON.stringify(myDictionaryHistory.value));
     }
   });
 
@@ -48,9 +50,26 @@ export default function RootLayout() {
     return unsubscribe;
   }, []);
 
-  useEffect(() => {
-    loadTranslations("ee");
-  }, []);
+  function getDictionaryHistory() {
+    if (localStorage.getItem("myDictionaryHistory") != null) {
+      myDictionaryHistory.value = JSON.parse(localStorage.getItem("myDictionaryHistory") as string);
+      return;
+    }
+  }
+
+  async function getAllWords() {
+    if (localStorage.getItem("allWords") != null) {
+      allWords.value = JSON.parse(localStorage.getItem("allWords") as string);
+      return;
+    }
+
+    const response = await callCloudFunction("GetDictionaryWordsOnly_Node", {}) as OnlyWordsResponse | null;
+
+    if (response != null) {
+      allWords.value = response.dictionary;
+      localStorage.setItem("allWords", JSON.stringify(allWords.value));
+    }
+  }
 
   async function loadTranslations(locale: string) {
     i18n.defaultLocale = "ee";
@@ -85,6 +104,14 @@ function RootLayoutStack() {
         headerTitleStyle: {
           fontWeight: 'bold',
         },
+        headerLeft: () => (
+          <View style={{ flexDirection: "row" }}>
+            <ExamLink />
+            <DictionaryLink />
+            <SearchLink />
+          </View>
+
+        ),
       }}>
       <Stack.Screen
         name="index"
@@ -93,16 +120,9 @@ function RootLayoutStack() {
           // headerRight: () => (
           //   <RightHeaderButton />
           // ),
-          headerLeft: () => (
-            <View style={{ flexDirection: "row" }}>
-              <DictionaryLink />
-              <SearchLink />
-            </View>
-          ),
         })} />
       <Stack.Screen name="login" options={{
         title: "", headerBackVisible: true,
-
         headerLeft: () => (
           <LeftHeaderButton />
         )
@@ -110,11 +130,13 @@ function RootLayoutStack() {
       <Stack.Screen name="register" options={{ title: "" }} />
       <Stack.Screen name="dictionary" options={{
         title: "",
-        headerLeft: () => (
-          <ExamLink />
-        )
       }} />
-      <Stack.Screen name="search" options={{ title: "" }} />
+      <Stack.Screen name="search" options={{
+        title: "",
+      }} />
+      <Stack.Screen name="word_data" options={{
+        title: "",
+      }} />
     </Stack >
   );
 }

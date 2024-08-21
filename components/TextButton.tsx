@@ -7,6 +7,8 @@ interface TextButtonProps {
   text: string;
   textStyle?: StyleProp<TextStyle>;
   onPress: () => void;
+  onHoverIn?: () => void;
+  onHoverOut?: () => void;
   disabledBool?: boolean;
   customActivityIndicator?: any;
   isActivityIndicatorVisible?: ReadonlySignal<boolean>;
@@ -21,34 +23,18 @@ interface TextButtonProps {
 }
 
 function TextButton(props: TextButtonProps) {
-  const {
-    style,
-    text,
-    textStyle,
-    onPress,
-    disabledBool,
-    customActivityIndicator,
-    isActivityIndicatorVisible,
-    activityIndicatorViewStyle,
-    activityIndicatorColor,
-    activityIndicatorSize,
-    label,
-    leftSideIcon,
-    leftSideIconSize,
-    leftSideIconColor,
-    numberOfLines
-  } = props;
 
-  if (isActivityIndicatorVisible && isActivityIndicatorVisible.value === true) {
-    if (customActivityIndicator) {
-      return customActivityIndicator;
+
+  if (props.isActivityIndicatorVisible && props.isActivityIndicatorVisible.value === true) {
+    if (props.customActivityIndicator) {
+      return props.customActivityIndicator;
     }
 
     return (
       <ActivityIndicator
-        style={activityIndicatorViewStyle}
-        color={activityIndicatorColor ?? "black"}
-        size={activityIndicatorSize ?? "small"}
+        style={props.activityIndicatorViewStyle}
+        color={props.activityIndicatorColor ?? "black"}
+        size={props.activityIndicatorSize ?? "small"}
       />
     );
   }
@@ -56,23 +42,25 @@ function TextButton(props: TextButtonProps) {
   return (
     <Pressable
       style={({ pressed }) => [
-        style,
+        props.style,
         { opacity: pressed ? 0.75 : 1 }, // Change opacity based on pressed state
       ]}
-      onPress={onPress}
-      disabled={disabledBool}
+      onPress={props.onPress}
+      disabled={props.disabledBool}
       hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
-      accessibilityLabel={label}
+      accessibilityLabel={props.label}
+      onHoverIn={props.onHoverIn}
+      onHoverOut={props.onHoverOut}
     >
-      {leftSideIcon && (
+      {props.leftSideIcon && (
         <MaterialIcons
-          name={leftSideIcon}
-          size={leftSideIconSize}
-          color={leftSideIconColor}
+          name={props.leftSideIcon}
+          size={props.leftSideIconSize}
+          color={props.leftSideIconColor}
         />
       )}
-      <Text numberOfLines={numberOfLines} ellipsizeMode="tail" style={textStyle}>
-        {text}
+      <Text numberOfLines={props.numberOfLines} ellipsizeMode="tail" style={props.textStyle}>
+        {props.text}
       </Text>
     </Pressable>
   );

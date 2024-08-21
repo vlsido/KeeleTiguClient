@@ -4,6 +4,6 @@
       "one": "Sõnastikus on %{count} sõna",
       "other": "Sõnastikus on %{count} sõnad"
     },
-    "add_to_dictionary": "Lisa",
+    "add_to_dictionary": "Lisa sõnastikku",
   }
 }

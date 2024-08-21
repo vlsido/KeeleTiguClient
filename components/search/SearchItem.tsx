@@ -8,76 +8,47 @@ import TextButton from "../TextButton";
 import { i18n } from "../store/i18n";
 import { useContext } from "react";
 import { HintContext } from "../store/HintContext";
-import { allWords, myDictionary } from "../util/WordsUtil";
+import { allWords, myDictionary, myDictionaryHistory } from "../util/WordsUtil";
+import { useSignal } from "@preact/signals-react";
+import { callCloudFunction } from "../util/CloudFunctions";
+import { router } from "expo-router";
 
-interface SearchItemProps extends Word {
+interface SearchItemProps {
   index: number;
+  word: string;
 }
 
 function SearchItem(props: SearchItemProps) {
   const { showHint } = useContext(HintContext);
 
-  function addToDictionary() {
-    console.log("added");
 
-    if (myDictionary.value.find((word) => word.word === props.word)) {
-      showHint("Sõna on juba sõnastikus!", 500);
-      return;
-    }
+  function openWordPage() {
+    router.push({ pathname: "/word_data", params: { word: props.word } });
+  }
 
-    const word = allWords.value.find((word) => word.word === props.word);
+  const isHoveredIn = useSignal<boolean>(false);
 
-    if (word === undefined) {
-      console.error("Word is undefined", props.word);
-      return;
-    }
+  function onHoverIn() {
+    isHoveredIn.value = true;
+  }
 
-    myDictionary.value = [...myDictionary.value, word];
-
-    // Add to dictionary
-    showHint("Lisatud!", 500);
+  function onHoverOut() {
+    isHoveredIn.value = false;
   }
 
   return (
     <View style={styles.itemContainer}>
-      <View style={styles.wordContainer}>
-        <View>
-          <Text style={styles.wordText}>
-            {props.word}{" "}
-          </Text>
-          <Forms forms={props.forms} />
-          <Type type={props.type} />
-          <Text style={styles.definitionText}>{props.definition}</Text>
-          {props.russianTranslations.map((translation, index) => {
-            const textElements: React.JSX.Element[] = [];
-            if (translation == null) {
-              console.log("Translation is null", translation);
-              return null;
-            }
-            const russianTranslationWordParts = translation.split("\"");
-
-            // Iterate over the word parts and style the accented letter
-            for (let i = 0; i < russianTranslationWordParts.length; i++) {
-              if (i === 0) {
-                // The first part before the first quote is normal
-                textElements.push(<Text key={`russian-translation-${index}-current-word-part-${i}`} style={styles.russianText}>{russianTranslationWordParts[i]}</Text>);
-              } else {
-                // The part after the quote, where the first letter is the accent
-                textElements.push(
-                  <Text key={`russian-translation-${index}-current-word-part-${i}`} style={styles.russianAccentText}>{russianTranslationWordParts[i][0]}</Text>,
-                  <Text key={`russian-translation-${index}-current-word-part-${i}-rest`} style={styles.russianText}>{russianTranslationWordParts[i].slice(1)}</Text>
-                );
-              }
-            }
-
-            return (
-              <View key={`russian-translation-${index}-current-word-translation-view`} style={styles.wordPartsTogether}> {textElements} </View>
-            )
-          })}
-          <Examples examples={props.examples} />
-        </View>
-      </View>
-      <TextButton style={styles.addToDictionaryContainer} textStyle={styles.addToDictionaryText} text={i18n.t("add_to_dictionary", { defaultValue: "Lisa" })} onPress={addToDictionary} label="Add to dictionary" />
+      <TextButton
+        style={[styles.wordContainer,
+        isHoveredIn.value === true ?
+          { backgroundColor: "rgba(223, 255, 255, 0.9)" }
+          : { backgroundColor: CommonColors.white }]}
+        text={props.word}
+        onPress={openWordPage}
+        textStyle={[styles.wordText, isHoveredIn.value === true ? { color: CommonColors.black } : { color: CommonColors.black }]}
+        label={`Word: ${props.word}. Open link.`}
+        onHoverIn={onHoverIn}
+        onHoverOut={onHoverOut} />
     </View>
   );
 }
@@ -90,19 +61,16 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     width: "100%",
     alignItems: "center",
-    borderWidth: 1,
-    borderRadius: 5,
-    borderColor: CommonColors.yellow,
-    marginVertical: 5,
-    padding: 5,
   },
   wordContainer: {
-    width: "95%",
+    width: "100%",
+    paddingHorizontal: 5,
+    paddingVertical: 2.5,
   },
   wordText: {
     color: "white",
-    fontSize: 20,
-    fontWeight: "bold"
+    fontSize: 18,
+    fontWeight: "600"
   },
   definitionText: {
     color: "rgba(243, 245, 243, 0.8)",
@@ -127,17 +95,4 @@ const styles = StyleSheet.create({
   wordPartsTogether: {
     flexDirection: "row",
   },
-  addToDictionaryContainer: {
-    justifyContent: "center",
-    alignItems: "center",
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 5,
-    borderColor: CommonColors.white,
-    borderWidth: 1,
-  },
-  addToDictionaryText: {
-    fontSize: 16,
-    color: CommonColors.white,
-  }
 });

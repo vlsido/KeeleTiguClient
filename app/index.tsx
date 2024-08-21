@@ -3,12 +3,12 @@ import TextAnswerField from "@/components/TextAnswerField";
 import { CommonColors } from "@/constants/Colors";
 import { useRef } from "react";
 import { StyleSheet, Text, TextInput, View } from "react-native";
-import { AllWordsResponse, RandomWordsResponse, Word } from "./dictionary";
+import { RandomWordsResponse, Word } from "./dictionary";
 import { callCloudFunction } from "@/components/util/CloudFunctions";
 import { batch, useSignal, useSignalEffect } from "@preact/signals-react";
 import ExamWordComponent from "@/components/ExamWordComponent";
 import TextButton from "@/components/TextButton";
-import { allWords, randomWords } from "@/components/util/WordsUtil";
+import { randomWords } from "@/components/util/WordsUtil";
 
 
 
@@ -117,7 +117,7 @@ export default function Index() {
             </>
         }
 
-        < ExamWordComponent isAnswerVisible={isAnswerVisible} />
+        <ExamWordComponent isAnswerVisible={isAnswerVisible} />
       </View>
       <View style={styles.bottomContainer} >
         <View style={{ flexDirection: "row", alignItems: "center" }}>

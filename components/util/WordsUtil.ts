@@ -10,8 +10,24 @@ effect(() => {
 
 export const myDictionary = signal<Word[]>([]);
 
-export const allWords = signal<Word[]>([]);
+export const myDictionaryHistory = signal<Word[]>([]);
+
+
+effect(() => {
+  const dictionaryLength = myDictionary.value.length;
+  console.log("[CHANGED] dictionary history", dictionaryLength);
+  if (dictionaryLength > 500) {
+    myDictionaryHistory.value = myDictionaryHistory.value.slice(dictionaryLength - 501, dictionaryLength - 1);
+  }
+});
+
+export interface WordWithoutData {
+  word: string;
+}
+
+export const allWords = signal<WordWithoutData[]>([]);
 
 effect(() => {
   console.log("[CHANGED] all words", allWords.value.length);
 });
+
