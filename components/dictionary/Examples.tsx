@@ -37,42 +37,50 @@ function Examples(props: ExamplesProps) {
     return null;
   }
 
+  interface RussianWordParts {
+    beggining: string;
+    accentedLetter: string;
+    end: string;
+  }
+
   return (
     <>
       <TextButton text="ava näited" textStyle={styles.openExamplesText} onPress={triggerExamples} label="Show examples" />
       <Animated.View style={[animatedStyle, { overflow: "hidden" }]}>
         <View onLayout={(event) => { examplesContainerHeight.value = event.nativeEvent.layout.height }}>
           {props.examples?.map((example, index) => {
-            const russianWordsElements: React.JSX.Element[] = [];
 
-            example.russianTranslations.forEach((russianTranslation, index) => {
-              const russianTextElements: React.JSX.Element[] = [];
-              const russianTranslationWordParts = russianTranslation.split("\"");
 
-              // Iterate over the word parts and style the accented letter
-              russianTranslationWordParts.forEach((part, index) => {
-                if (index === 0) {
-                  // The first part before the first quote is normal
-                  russianTextElements.push(<Text key={`russian-translation-${index}-current-word-part-${index}`} style={styles.russianExample}>{part}</Text>);
 
-                } else {
-                  // The part after the quote, where the first letter is the accent
-                  russianTextElements.push(
-                    <Text key={`russian-translation-${index}-current-word-part-${index}`} style={styles.russianExampleAccented}>{part[0]}
-                    </Text>,
-                    <Text key={`russian-translation-${index}-current-word-part-${index}-rest`} style={styles.russianExample}>{part.slice(1)}</Text>
-                  );
-                }
-              });
-
-              russianWordsElements.push(<View key={`russian-translation-${index}-current-word-translation-view`} style={{ flexDirection: "row", width: "100%" }}> {russianTextElements} </View>);
-
-            });
+            // example.russianTranslations.forEach((russianTranslation, index) => {
+            //   const russianTranslationWordParts = russianTranslation.split("\"");
+            //
+            //   // Iterate over the word parts and style the accented letter
+            //   russianTranslationWordParts.forEach((part, index) => {
+            //     let beggining = "";
+            //     if (index === 0) {
+            //       // The first part before the first quote is normal
+            //       beggining = part;
+            //
+            //     }
+            //     russianWordsParts.push({ beggining: beggining, accentedLetter: part[0], end: part.slice(1) });
+            //   });
+            //
+            //
+            // });
 
             return (
               <View style={{ flexDirection: "column", width: "100%" }} key={`example-${index}`}>
                 <Text style={styles.estonianExample} >{example.estonianExample}</Text>
-                {russianWordsElements}
+                {example.russianTranslations.map((translation, index) => {
+                  const russianTranslation: string = translation.split("\"").join("");
+
+                  return (
+                    <Text key={`russian-translation-${index}-current-word-part-${index}`} style={styles.russianExample}>
+                      {russianTranslation}
+                    </Text>
+                  )
+                })}
               </View>
             );
           })}
@@ -80,7 +88,9 @@ function Examples(props: ExamplesProps) {
       </Animated.View >
     </>
   )
-
+  // <Text key={`russian-translation-${index}-current-word-part-${index}`} style={styles.russianExampleAccented}>{part.accentedLetter !== "" ? part.accentedLetter : ""}
+  //       </Text>
+  //         <Text key={`russian-translation-${index}-current-word-part-${index}-rest`} style={styles.russianExample}>{part.end !== "" ? part.end : ""}</Text>
 }
 
 export default Examples;
@@ -96,14 +106,13 @@ const styles = StyleSheet.create({
     fontWeight: "bold"
   },
   russianExample: {
-    color: CommonColors.white,
+    color: "rgba(255, 255, 255, 0.7)",
     fontSize: 16,
-    fontWeight: "thin"
+    fontWeight: "thin",
 
   },
   russianExampleAccented: {
     color: CommonColors.red,
     fontSize: 16,
-    fontWeight: "bold"
   },
 });
