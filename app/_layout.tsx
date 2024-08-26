@@ -9,7 +9,6 @@ import WordsContextProvider from "@/components/store/WordsContext";
 import { useEffect } from "react";
 import { i18n } from "@/components/store/i18n";
 import ee from "@/components/store/translations/ee.json"
-import ru from "@/components/store/translations/ru.json"
 import DictionaryLink from "@/components/links/DictionaryLink";
 import SearchLink from "@/components/links/SearchLink";
 import { View } from "react-native";
@@ -20,9 +19,9 @@ import { OnlyWordsResponse } from "./dictionary";
 
 export default function RootLayout() {
   useEffect(() => {
-    getDictionaryHistory();
+    // getDictionaryHistory();
     loadTranslations("ee");
-    // removeCache();
+    removeCache();
   }, []);
 
   function removeCache() {

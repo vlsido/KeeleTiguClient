@@ -30,11 +30,9 @@ export default function Index() {
       const examWordsData = responseData.randomWords.map((word: Word) => {
         return {
           word: word.word,
-          russianTranslations: word.russianTranslations,
           type: word.type,
           forms: word.forms,
-          definition: word.definition,
-          examples: word.examples,
+          usages: word.usages,
         };
       });
 

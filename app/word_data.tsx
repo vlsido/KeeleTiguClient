@@ -81,34 +81,51 @@ function WordData() {
       </Text>
       <Forms forms={wordData.value.forms} />
       <Type type={wordData.value.type} />
-      <Text style={styles.definitionText}>{wordData.value.definition}</Text>
-      {wordData.value.russianTranslations.map((translation, index) => {
-        const textElements: React.JSX.Element[] = [];
-        if (translation == null) {
-          console.log("Translation is null", translation);
-          return null;
-        }
-        const russianTranslationWordParts = translation.split("\"");
-
-        // Iterate over the word parts and style the accented letter
-        for (let i = 0; i < russianTranslationWordParts.length; i++) {
-          if (i === 0) {
-            // The first part before the first quote is normal
-            textElements.push(<Text key={`russian-translation-${index}-current-word-part-${i}`} style={styles.russianText}>{russianTranslationWordParts[i]}</Text>);
-          } else {
-            // The part after the quote, where the first letter is the accent
-            textElements.push(
-              <Text key={`russian-translation-${index}-current-word-part-${i}`} style={styles.russianAccentText}>{russianTranslationWordParts[i][0]}</Text>,
-              <Text key={`russian-translation-${index}-current-word-part-${i}-rest`} style={styles.russianText}>{russianTranslationWordParts[i].slice(1)}</Text>
-            );
-          }
-        }
-
+      {wordData.value.usages.map((usage, usageIndex) => {
         return (
-          <View key={`russian-translation-${index}-current-word-translation-view`} style={styles.wordPartsTogether}> {textElements} </View>
+          <>
+            {usage.definitionData.map((definition, index) => {
+              const definitionIndexString: string = index === 0 ? `${usageIndex + 1}. ` : "\u25A0 "
+
+              return (
+                <>
+                  <Text key={`definition-${index}`} style={styles.definitionText}>{definitionIndexString}{definition.definitionText}</Text>
+                  {
+                    definition.russianTranslations.map((translation, index) => {
+                      const textElements: React.JSX.Element[] = [];
+                      if (translation == null) {
+                        console.log("Translation is null", translation);
+                        return null;
+                      }
+                      const russianTranslationWordParts = translation.split("\"");
+
+                      // Iterate over the word parts and style the accented letter
+                      for (let i = 0; i < russianTranslationWordParts.length; i++) {
+                        if (i === 0) {
+                          // The first part before the first quote is normal
+                          textElements.push(<Text key={`russian-translation-${index}-current-word-part-${i}`} style={styles.russianText}>{russianTranslationWordParts[i]}</Text>);
+                        } else {
+                          // The part after the quote, where the first letter is the accent
+                          textElements.push(
+                            <Text key={`russian-translation-${index}-current-word-part-${i}`} style={styles.russianAccentText}>{russianTranslationWordParts[i][0]}</Text>,
+                            <Text key={`russian-translation-${index}-current-word-part-${i}-rest`} style={styles.russianText}>{russianTranslationWordParts[i].slice(1)}</Text>
+                          );
+                        }
+                      }
+
+                      return (
+                        <View key={`russian-translation-${index}-current-word-translation-view`} style={styles.wordPartsTogether}> {textElements} </View>
+                      )
+                    })
+                  }
+                </>
+              )
+            })}
+            <Examples examples={usage.examples} />
+          </>
         )
+
       })}
-      <Examples examples={wordData.value.examples} />
       <TextButton style={styles.addToDictionaryContainer} textStyle={styles.addToDictionaryText} text={i18n.t("add_to_dictionary", { defaultValue: "Lisa sõnastikku" })} onPress={addToDictionary} label="Add to dictionary" />
     </ScrollView>
   );

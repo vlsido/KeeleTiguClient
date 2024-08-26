@@ -31,13 +31,17 @@ export interface OnlyWordsResponse {
 
 export interface Word {
   word: string;
-  definition?: string;
-  type?: "s" | "v" | "adj" | "adv" | undefined;
+  type?: "s" | "adj" | "adv" | "v" | undefined;
   forms?: string;
-  russianTranslations: string[];
-  examples?: {
-    estonianExample: string;
-    russianTranslations: string[];
+  usages: {
+    definitionData: {
+      definitionText?: string;
+      russianTranslations: string[];
+    }[];
+    examples?: {
+      estonianExample: string;
+      russianTranslations: string[];
+    }[];
   }[]
 }
 
