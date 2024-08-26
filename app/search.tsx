@@ -5,8 +5,10 @@ import { CommonColors } from "@/constants/Colors";
 import SearchItem from "@/components/search/SearchItem";
 import Ionicons from '@expo/vector-icons/Ionicons';
 import IconButton from "@/components/IconButton";
+import { router } from "expo-router";
 
 function Search() {
+  const searchQuery = useSignal<string>("");
   const searchResults = useSignal<WordWithoutData[]>([]);
 
   const { height, width } = useWindowDimensions();
@@ -17,33 +19,7 @@ function Search() {
     }
   });
 
-  function detectLanguage(text: string) {
-    let estonianCount = 0;
-    let cyrillicCount = 0;
 
-    for (let i = 0; i < text.length; i++) {
-      const charCode = text.charCodeAt(i);
-
-      // Check for Cyrillic characters
-      if ((charCode >= 0x0400 && charCode <= 0x04FF) ||
-        (charCode >= 0x0500 && charCode <= 0x052F)) {
-        cyrillicCount++;
-      }
-      // Check for general Latin characters (A-Z, a-z)
-      // And check for Estonian specific characters
-      else if ((charCode >= 0x0041 && charCode <= 0x005A) || (charCode >= 0x0061 && charCode <= 0x007A) || [0x00DC, 0x00FC, 0x00D5, 0x00F5, 0x00D6, 0x00F6, 0x00C4, 0x00E4, 0x017D, 0x017E, 0x0160, 0x0161].includes(charCode)) {
-        estonianCount++;
-      }
-    }
-
-    if (estonianCount > cyrillicCount) {
-      return "Estonian (Latin)";
-    } else if (cyrillicCount > estonianCount) {
-      return "Russian (Cyrillic)";
-    } else {
-      return "Unknown or Mixed";
-    }
-  }
 
   function onChange(text: string) {
     if (text === "") {
@@ -51,17 +27,18 @@ function Search() {
       return;
     }
 
-    const language = detectLanguage(text);
+    searchQuery.value = text;
 
-    console.log("language", language);
 
-    console.log("allWords", allWords.value);
     const textLowerCase = text.toLowerCase();
     searchResults.value = allWords.value.filter((word) => word.word.toLowerCase().includes(textLowerCase));
   }
 
   function searchDictionary() {
-    console.log("searchDictionary");
+    if (searchQuery.value === "") {
+      return;
+    }
+    router.push({ pathname: "/word_data", params: { word: searchQuery.value } });
   }
 
   return (
@@ -71,7 +48,9 @@ function Search() {
           <TextInput
             placeholder="Otsi..."
             style={styles.searchInput}
-            onChange={(event) => onChange(event.nativeEvent.text)} />
+            onChange={(event) => onChange(event.nativeEvent.text)}
+            onSubmitEditing={searchDictionary}
+          />
           <IconButton
             onPress={searchDictionary}
             size={24}

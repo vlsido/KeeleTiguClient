@@ -14,57 +14,93 @@ import { i18n } from "@/components/store/i18n";
 import { HintContext } from "@/components/store/HintContext";
 
 interface WordDataResponse {
-  wordData: Word;
+  queryResponse: Word[];
 }
 
 function WordData() {
   const { word } = useLocalSearchParams<{ word: string }>();
 
-  const wordData = useSignal<Word | null>(null);
+  const wordData = useSignal<Word[] | null>(null);
 
   useEffect(() => {
     getWordData();
-  });
+  }, []);
+
+  function detectLanguage() {
+    let estonianCount = 0;
+    let cyrillicCount = 0;
+
+    for (let i = 0; i < word.length; i++) {
+      const charCode = word.charCodeAt(i);
+
+      // Check for Cyrillic characters
+      if ((charCode >= 0x0400 && charCode <= 0x04FF) ||
+        (charCode >= 0x0500 && charCode <= 0x052F)) {
+        cyrillicCount++;
+      }
+      // Check for general Latin characters (A-Z, a-z)
+      // And check for Estonian specific characters
+      else if ((charCode >= 0x0041 && charCode <= 0x005A) || (charCode >= 0x0061 && charCode <= 0x007A) || [0x00DC, 0x00FC, 0x00D5, 0x00F5, 0x00D6, 0x00F6, 0x00C4, 0x00E4, 0x017D, 0x017E, 0x0160, 0x0161].includes(charCode)) {
+        estonianCount++;
+      }
+    }
+
+    if (estonianCount > cyrillicCount) {
+      return "estonian";
+    } else if (cyrillicCount > estonianCount) {
+      return "russian";
+    } else {
+      return "unknown";
+    }
+  }
 
   async function getWordData() {
     console.log("Open word", word);
     const wordDataFromHistory = myDictionaryHistory.value.find((wordData) => wordData.word === word);
 
     if (wordDataFromHistory !== undefined) {
-      wordData.value = wordDataFromHistory;
+      wordData.value = [wordDataFromHistory];
       return;
     }
 
-    const response = await callCloudFunction("GetWordData_Node", { word: word }) as WordDataResponse | undefined;
+    const language = detectLanguage();
+
+
+
+    const response = await callCloudFunction("GetWordData_Node", { word: word, language }) as WordDataResponse | undefined;
 
     if (response != null) {
       console.log("Response", response);
 
-      myDictionaryHistory.value = [...myDictionaryHistory.value, response.wordData]
-
-      wordData.value = response.wordData;
+      wordData.value = response.queryResponse;
+    } else {
+      alert("Ei leitud!");
+      wordData.value = [];
     }
   }
 
   const { showHint } = useContext(HintContext);
 
-  function addToDictionary() {
+  function addToDictionary(wordToAdd: Word) {
     if (wordData.value == null) {
       return;
     }
 
     console.log("added");
 
-    if (myDictionary.value.find((word) => word.word === wordData.value?.word)) {
+    if (myDictionary.value.find((word) => word.word === wordToAdd.word)) {
       showHint("Sõna on juba sõnastikus!", 500);
       return;
     }
 
-    myDictionary.value = [...myDictionary.value, wordData.value];
+    myDictionary.value = [...myDictionary.value, wordToAdd];
+    myDictionaryHistory.value = [...myDictionaryHistory.value, wordToAdd];
+
 
     // Add to dictionary
     showHint("Lisatud!", 500);
   }
+
 
   if (wordData.value === null) {
     return (
@@ -76,57 +112,64 @@ function WordData() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.wordText}>
-        {wordData.value.word}{" "}
-      </Text>
-      <Forms forms={wordData.value.forms} />
-      <Type type={wordData.value.type} />
-      {wordData.value.usages.map((usage, usageIndex) => {
+      {wordData.value.length > 0 ? wordData.value.map((wordData, wordDataIndex) => {
         return (
-          <>
-            {usage.definitionData.map((definition, index) => {
-              const definitionIndexString: string = index === 0 ? `${usageIndex + 1}. ` : "\u25A0 "
-
+          <View key={`wordIndex-${wordDataIndex}`}>
+            <Text key={`wordIndex-${wordDataIndex}-text`} style={styles.wordText}>
+              {wordData.word}{" "}
+            </Text>
+            <Forms key={`wordIndex-${wordDataIndex}-forms`} forms={wordData.forms} />
+            <Type key={`wordIndex-${wordDataIndex}-type`} type={wordData.type} />
+            {wordData.usages.map((usage, usageIndex) => {
               return (
-                <>
-                  <Text key={`definition-${index}`} style={styles.definitionText}>{definitionIndexString}{definition.definitionText}</Text>
-                  {
-                    definition.russianTranslations.map((translation, index) => {
-                      const textElements: React.JSX.Element[] = [];
-                      if (translation == null) {
-                        console.log("Translation is null", translation);
-                        return null;
-                      }
-                      const russianTranslationWordParts = translation.split("\"");
+                <View key={`usage-${usageIndex}`}>
+                  {usage.definitionData.map((definition, index) => {
+                    const definitionIndexString: string = index === 0 ? `${usageIndex + 1}. ` : "\u25A0 "
 
-                      // Iterate over the word parts and style the accented letter
-                      for (let i = 0; i < russianTranslationWordParts.length; i++) {
-                        if (i === 0) {
-                          // The first part before the first quote is normal
-                          textElements.push(<Text key={`russian-translation-${index}-current-word-part-${i}`} style={styles.russianText}>{russianTranslationWordParts[i]}</Text>);
-                        } else {
-                          // The part after the quote, where the first letter is the accent
-                          textElements.push(
-                            <Text key={`russian-translation-${index}-current-word-part-${i}`} style={styles.russianAccentText}>{russianTranslationWordParts[i][0]}</Text>,
-                            <Text key={`russian-translation-${index}-current-word-part-${i}-rest`} style={styles.russianText}>{russianTranslationWordParts[i].slice(1)}</Text>
-                          );
+                    return (
+                      <View key={`usage-${wordDataIndex}-definition-${index}`}>
+                        <Text key={`usage-${wordDataIndex}-definition-${index}-text`} style={styles.definitionText}>{definitionIndexString}{definition.definitionText}</Text>
+                        {
+                          definition.russianTranslations.map((translation, index) => {
+                            const textElements: React.JSX.Element[] = [];
+                            if (translation == null) {
+                              console.log("Translation is null", translation);
+                              return null;
+                            }
+                            const russianTranslationWordParts = translation.split("\"");
+
+                            // Iterate over the word parts and style the accented letter
+                            for (let i = 0; i < russianTranslationWordParts.length; i++) {
+                              if (i === 0) {
+                                // The first part before the first quote is normal
+                                textElements.push(<Text key={`usage-${wordDataIndex}-russian-translation-${index}-current-word-part-${i}`} style={styles.russianText}>{russianTranslationWordParts[i]}</Text>);
+                              } else {
+                                // The part after the quote, where the first letter is the accent
+                                textElements.push(
+                                  <Text key={`usage-${wordDataIndex}-russian-translation-${index}-current-word-part-${i}`} style={styles.russianAccentText}>{russianTranslationWordParts[i][0]}</Text>,
+                                  <Text key={`usage-${wordDataIndex}-russian-translation-${index}-current-word-part-${i}-rest`} style={styles.russianText}>{russianTranslationWordParts[i].slice(1)}</Text>
+                                );
+                              }
+                            }
+
+                            return (
+                              <View key={`usage-${wordDataIndex}-russian-translation-${index}-current-word-translation-view`} style={styles.wordPartsTogether}> {textElements} </View>
+                            )
+                          })
                         }
-                      }
-
-                      return (
-                        <View key={`russian-translation-${index}-current-word-translation-view`} style={styles.wordPartsTogether}> {textElements} </View>
-                      )
-                    })
-                  }
-                </>
+                      </View>
+                    )
+                  })}
+                  <Examples key={`wordIndex-${wordDataIndex}-examples`} examples={usage.examples} />
+                </View>
               )
-            })}
-            <Examples examples={usage.examples} />
-          </>
-        )
 
-      })}
-      <TextButton style={styles.addToDictionaryContainer} textStyle={styles.addToDictionaryText} text={i18n.t("add_to_dictionary", { defaultValue: "Lisa sõnastikku" })} onPress={addToDictionary} label="Add to dictionary" />
+
+            })}
+            <TextButton key={`wordIndex-${wordDataIndex}-add`} style={styles.addToDictionaryContainer} textStyle={styles.addToDictionaryText} text={i18n.t("add_to_dictionary", { defaultValue: "Lisa sõnastikku" })} onPress={() => addToDictionary(wordData)} label="Add to dictionary" />
+          </View>
+        );
+      }) : <Text style={styles.notFoundText}>Ei leitud!</Text>}
     </ScrollView>
   );
 }
@@ -177,7 +220,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   addToDictionaryContainer: {
-    marginTop: 20,
+    marginVertical: 20,
     marginRight: "auto",
     justifyContent: "center",
     alignItems: "center",
@@ -191,4 +234,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: CommonColors.white,
   },
+  notFoundText: {
+    color: CommonColors.white,
+    fontSize: 20,
+    fontWeight: "bold",
+    textAlign: "center"
+  }
 });

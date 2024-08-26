@@ -19,9 +19,9 @@ import { OnlyWordsResponse } from "./dictionary";
 
 export default function RootLayout() {
   useEffect(() => {
-    // getDictionaryHistory();
+    getDictionaryHistory();
     loadTranslations("ee");
-    removeCache();
+    // removeCache();
   }, []);
 
   function removeCache() {

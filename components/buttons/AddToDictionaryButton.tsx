@@ -4,7 +4,7 @@ import Animated, { ReduceMotion, useAnimatedStyle, useSharedValue, withTiming } 
 import { auth } from "../util/FirebaseConfig";
 import { useContext } from "react";
 import { HintContext } from "../store/HintContext";
-import { myDictionary, randomWords } from "../util/WordsUtil";
+import { myDictionary, myDictionaryHistory, randomWords } from "../util/WordsUtil";
 
 function AddToDictionaryButton() {
   const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -34,6 +34,7 @@ function AddToDictionaryButton() {
       }
 
       myDictionary.value = [...myDictionary.value, currentWord];
+      myDictionaryHistory.value = [...myDictionaryHistory.value, currentWord];
 
       // Add to dictionary
       showHint("Lisatud!", 500);

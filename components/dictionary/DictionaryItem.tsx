@@ -24,13 +24,13 @@ function DictionaryItem(props: DictionaryItemProps) {
           <Type type={props.type} />
           {props.usages.map((usage, usageIndex) => {
             return (
-              <>
-                {usage.definitionData.map((definition, index) => {
-                  const definitionIndexString: string = index === 0 ? `${usageIndex + 1}. ` : "\u25A0 "
+              <View key={`usage-${usageIndex}`}>
+                {usage.definitionData.map((definition, definitionIndex) => {
+                  const definitionIndexString: string = definitionIndex === 0 ? `${usageIndex + 1}. ` : "\u25A0 "
 
                   return (
-                    <>
-                      <Text key={`definition-${index}`} style={styles.definitionText}>{definitionIndexString}{definition.definitionText}</Text>
+                    <View key={`usage-${usageIndex}-definition-${definitionIndex}`}>
+                      <Text key={`usage-${usageIndex}-definition-${definitionIndex}-text`} style={styles.definitionText}>{definitionIndexString}{definition.definitionText}</Text>
                       {
                         definition.russianTranslations.map((translation, index) => {
                           const textElements: React.JSX.Element[] = [];
@@ -44,26 +44,26 @@ function DictionaryItem(props: DictionaryItemProps) {
                           for (let i = 0; i < russianTranslationWordParts.length; i++) {
                             if (i === 0) {
                               // The first part before the first quote is normal
-                              textElements.push(<Text key={`russian-translation-${index}-current-word-part-${i}`} style={styles.russianText}>{russianTranslationWordParts[i]}</Text>);
+                              textElements.push(<Text key={`usage-${usageIndex}-definition-${definitionIndex}-russian-translation-${index}-current-word-part-${i}`} style={styles.russianText}>{russianTranslationWordParts[i]}</Text>);
                             } else {
                               // The part after the quote, where the first letter is the accent
                               textElements.push(
-                                <Text key={`russian-translation-${index}-current-word-part-${i}`} style={styles.russianAccentText}>{russianTranslationWordParts[i][0]}</Text>,
-                                <Text key={`russian-translation-${index}-current-word-part-${i}-rest`} style={styles.russianText}>{russianTranslationWordParts[i].slice(1)}</Text>
+                                <Text key={`usage-${usageIndex}-definition-${definitionIndex}-russian-translation-${index}-current-word-part-${i}-accent`} style={styles.russianAccentText}>{russianTranslationWordParts[i][0]}</Text>,
+                                <Text key={`usage-${usageIndex}-definition-${definitionIndex}-russian-translation-${index}-current-word-part-${i}-rest`} style={styles.russianText}>{russianTranslationWordParts[i].slice(1)}</Text>
                               );
                             }
                           }
 
                           return (
-                            <View key={`russian-translation-${index}-current-word-translation-view`} style={styles.wordPartsTogether}> {textElements} </View>
+                            <View key={`usage-${usageIndex}-definition-${definitionIndex}-russian-translation-${index}-current-word-translation-view`} style={styles.wordPartsTogether}> {textElements} </View>
                           )
                         })
                       }
-                    </>
+                    </View>
                   )
                 })}
-                <Examples examples={usage.examples} />
-              </>
+                <Examples key={`usage-${usageIndex}-examples`} examples={usage.examples} />
+              </View>
             )
 
           })}
