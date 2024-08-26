@@ -2,6 +2,7 @@ import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFunctions } from "firebase/functions";
 import { getFirestore } from "firebase/firestore";
+import { getRemoteConfig } from "firebase/remote-config";
 import { ReCaptchaEnterpriseProvider, initializeAppCheck } from "firebase/app-check";
 
 const firebaseConfig = {
@@ -28,7 +29,7 @@ export const app = initializeApp(firebaseConfig);
 // });
 
 // const analytics = getAnalytics(app);
-//
+
 export const auth = getAuth(app);
 
 export const firestore = getFirestore(app);

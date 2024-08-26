@@ -16,15 +16,39 @@ import { allWords, myDictionary, myDictionaryHistory } from "@/components/util/W
 import { callCloudFunction } from "@/components/util/CloudFunctions";
 import { useSignalEffect } from "@preact/signals-react";
 import { OnlyWordsResponse } from "./dictionary";
+import { getRemoteConfig, getValue } from "firebase/remote-config";
+import { app } from "@/components/util/FirebaseConfig";
+
+
 
 export default function RootLayout() {
+  const remoteConfig = getRemoteConfig(app);
+
+  remoteConfig.settings.minimumFetchIntervalMillis = 300000; // 5 minutes
+
+  remoteConfig.defaultConfig = { current_build_version: "1.0.0" };
+
   useEffect(() => {
+    const currentBuildVersion = getValue(remoteConfig, "current_build_version").asString();
+    const cachedBuildVersion = localStorage.getItem("current_build_version");
+
+    if (cachedBuildVersion == null || currentBuildVersion !== cachedBuildVersion) {
+      localStorage.setItem("current_build_version", currentBuildVersion);
+      removeCache().then(() => {
+        loadTranslations("ee");
+      });
+
+      return;
+    }
+
     getDictionaryHistory();
     loadTranslations("ee");
-    // removeCache();
   }, []);
 
-  function removeCache() {
+
+
+  async function removeCache() {
+    console.log("Removing cache...");
     localStorage.removeItem("allWords");
     localStorage.removeItem("myDictionaryHistory");
     allWords.value = [];
