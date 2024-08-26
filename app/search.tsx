@@ -1,9 +1,8 @@
 import { useSignal, useSignalEffect } from "@preact/signals-react";
-import { Dimensions, FlatList, Pressable, StyleSheet, TextInput, View, useWindowDimensions } from "react-native";
+import { FlatList, StyleSheet, TextInput, View, useWindowDimensions } from "react-native";
 import { WordWithoutData, allWords } from "@/components/util/WordsUtil";
 import { CommonColors } from "@/constants/Colors";
 import SearchItem from "@/components/search/SearchItem";
-import Ionicons from '@expo/vector-icons/Ionicons';
 import IconButton from "@/components/IconButton";
 import { router } from "expo-router";
 

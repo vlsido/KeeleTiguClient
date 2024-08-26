@@ -1,13 +1,11 @@
 import RegisterButton from "@/components/RegisterButton";
-import TextButton from "@/components/TextButton";
 import { callCloudFunction } from "@/components/util/CloudFunctions";
 import { auth } from "@/components/util/FirebaseConfig";
 import { SignupData } from "@/constants/ApiTypes";
 import { CommonColors } from "@/constants/Colors";
 import { useSignal } from "@preact/signals-react";
 import { Link, router } from "expo-router";
-import { UserCredential, createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { useEffect } from "react";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { NativeSyntheticEvent, StyleSheet, Text, TextInput, TextInputChangeEventData, View, ViewStyle } from "react-native";
 import Animated, { useAnimatedStyle, useSharedValue } from "react-native-reanimated";
 
@@ -25,7 +23,7 @@ function Register() {
     return {
       borderColor: emailBorderColor.value,
     };
-  }); w
+  });
 
 
   const nicknameBorderColor = useSharedValue<string>("gray");

@@ -7,7 +7,8 @@ import { callCloudFunction } from "@/components/util/CloudFunctions";
 import { WordWithoutData, myDictionary } from "@/components/util/WordsUtil";
 import { CommonColors } from "@/constants/Colors";
 import { useSignal, useSignalEffect } from "@preact/signals-react";
-import { useEffect } from "react";
+import { router, useFocusEffect } from "expo-router";
+import { useCallback, useEffect } from "react";
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 
 
@@ -59,6 +60,7 @@ function Dictionary() {
       </View>
     );
   }
+
 
   return (
     <View style={styles.container}>

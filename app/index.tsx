@@ -13,6 +13,7 @@ import { randomWords } from "@/components/util/WordsUtil";
 
 
 export default function Index() {
+
   const answer = useSignal<string>("");
   const isAnswerValid = useSignal<boolean>(true);
   const isAnswerVisible = useSignal<boolean>(false);
@@ -96,7 +97,6 @@ export default function Index() {
     });
     textInputRef.current?.focus();
   }
-
 
   return (
     <View
