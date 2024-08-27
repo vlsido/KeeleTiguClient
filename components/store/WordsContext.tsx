@@ -1,14 +1,17 @@
 import { createContext, useEffect } from "react";
 import Hint from "../Hint";
 import { useSignal, useSignalEffect } from "@preact/signals-react";
-import { myDictionary } from "../util/WordsUtil";
+import { allWords, myDictionary, myDictionaryHistory, randomWords } from "../util/WordsUtil";
 
 interface WordsContextProps {
   cacheDictionary: () => void;
+  clearAllCache: () => void;
 }
 
 export const WordsContext = createContext<WordsContextProps>({
-  cacheDictionary: () => { return }
+  cacheDictionary: () => { return },
+  clearAllCache: async () => { return }
+
 });
 
 
@@ -39,8 +42,21 @@ function WordsContextProvider({ children }: { children: React.ReactNode }) {
     console.log("myDictionary cached!");
   }
 
+
+  function clearAllCache() {
+    randomWords.value = [];
+    myDictionary.value = [];
+    myDictionaryHistory.value = [];
+    allWords.value = [];
+
+    localStorage.removeItem("myDictionary");
+    localStorage.removeItem("myDictionaryHistory");
+    localStorage.removeItem("allWords");
+  }
+
   const value = {
     cacheDictionary,
+    clearAllCache
   }
 
   return (

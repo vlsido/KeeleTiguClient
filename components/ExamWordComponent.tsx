@@ -22,7 +22,7 @@ function ExamWordComponent(props: ExamWordComponentProps) {
       const word = randomWords.value.at(0);
 
       if (word != null) {
-        word.usages.at(0)?.definitionData.at(0)?.russianTranslations.forEach((translation, index) => {
+        word?.usages.at(0)?.definitionData.at(0)?.russianTranslations.forEach((translation, index) => {
           const textElements: React.JSX.Element[] = [];
           const russianTranslationWordParts = translation.split("\"");
 

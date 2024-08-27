@@ -1,10 +1,9 @@
 import { Pressable, StyleSheet, Text, View, ViewStyle } from "react-native";
-import MaterialIconButton from "./MaterialIconButton";
-import { MaterialIcons } from "@expo/vector-icons";
-import Animated, { useAnimatedReaction, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
+import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { CommonColors } from "@/constants/Colors";
 import { signal, useSignalEffect } from "@preact/signals-react";
-import { textAnswerFieldContainerWidth } from "./TextAnswerField";
+
+export const textAnswerFieldContainerWidth = signal<number>(0);
 
 interface SendAnswerButtonProps {
   onPress: () => void;
@@ -62,6 +61,7 @@ const styles = StyleSheet.create({
     padding: 5,
     borderRadius: 5,
     position: "absolute",
+    top: 8
   },
   text: {
     fontWeight: "bold",

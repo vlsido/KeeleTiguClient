@@ -1,10 +1,12 @@
 import { useSignal, useSignalEffect } from "@preact/signals-react";
-import { FlatList, StyleSheet, TextInput, View, useWindowDimensions } from "react-native";
+import { FlatList, Pressable, StyleSheet, TextInput, View, useWindowDimensions } from "react-native";
 import { WordWithoutData, allWords } from "@/components/util/WordsUtil";
 import { CommonColors } from "@/constants/Colors";
 import SearchItem from "@/components/search/SearchItem";
 import IconButton from "@/components/IconButton";
 import { router } from "expo-router";
+import TextButton from "@/components/TextButton";
+import { SearchIcon } from "@/components/icons/SearchIcon";
 
 function Search() {
   const searchQuery = useSignal<string>("");
@@ -50,12 +52,13 @@ function Search() {
             onChange={(event) => onChange(event.nativeEvent.text)}
             onSubmitEditing={searchDictionary}
           />
-          <IconButton
+          <Pressable
             onPress={searchDictionary}
-            size={24}
-            color={CommonColors.white}
-            style={{ padding: 10 }}
-          />
+            style={styles.searchIconContainer}
+            aria-label="Otsi sõna"
+          >
+            <SearchIcon />
+          </Pressable>
         </View>
         <FlatList
           data={searchResults.value}
@@ -65,7 +68,6 @@ function Search() {
       </View>
     </View>
   );
-
 }
 
 export default Search;
@@ -91,8 +93,15 @@ const styles = StyleSheet.create({
     padding: 10,
     borderTopRightRadius: 5,
     borderTopLeftRadius: 5,
-    backgroundColor: "white",
+    backgroundColor: CommonColors.white,
     fontSize: 16,
     width: "100%",
   },
+  searchIconContainer: {
+    backgroundColor: CommonColors.white,
+    borderRadius: 5,
+    width: 36,
+    height: 36,
+    marginLeft: 10
+  }
 });

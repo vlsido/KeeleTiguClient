@@ -29,8 +29,6 @@ export default function RootLayout() {
     }
   });
 
-
-
   async function getAllWords() {
     if (localStorage.getItem("allWords") != null) {
       allWords.value = JSON.parse(localStorage.getItem("allWords") as string);
@@ -44,9 +42,6 @@ export default function RootLayout() {
       localStorage.setItem("allWords", JSON.stringify(allWords.value));
     }
   }
-
-
-
 
   return (
     <ConfigContextProvider>
@@ -63,7 +58,8 @@ export default function RootLayout() {
 }
 
 function RootLayoutStack() {
-  const { isUnderMaintenance } = useContext(ConfigContext);
+  // const { isUnderMaintenance } = useContext(ConfigContext);
+  const isUnderMaintenance = false;
 
   return (
     <Stack

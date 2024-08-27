@@ -1,9 +1,9 @@
 import { CommonColors } from "@/constants/Colors";
 import { Signal, signal, useSignalEffect } from "@preact/signals-react";
-import { StyleSheet, TextInput, TextStyle, View, ViewStyle } from "react-native";
-import Animated, { ReduceMotion, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
+import { StyleSheet, Text, TextInput, TextStyle, View, ViewStyle } from "react-native";
+import Animated, { useAnimatedStyle, useSharedValue } from "react-native-reanimated";
+import SendAnswerButton, { textAnswerFieldContainerWidth } from "./SendAnswerButton";
 
-export const textAnswerFieldContainerWidth = signal<number>(0);
 
 interface TextAnswerFieldProps {
   answer: Signal<string>;
@@ -39,7 +39,7 @@ function TextAnswerField(props: TextAnswerFieldProps) {
     }
   });
 
-  function onSumbit() {
+  function onSubmit() {
     props.onSubmit();
 
   }
@@ -47,16 +47,20 @@ function TextAnswerField(props: TextAnswerFieldProps) {
   return (
     <View
       style={styles.container}
-      onLayout={(event) => textAnswerFieldContainerWidth.value = event.nativeEvent.layout.width}
     >
-      <AnimatedTextInput
-        ref={props.textInputRef}
-        style={[styles.inputText, animatedStyle]}
-        placeholder="Kirjuta vastust siia..."
-        onFocus={() => props.isValid.value = true}
-        onChange={(event) => onChange(event.nativeEvent.text)}
-        onSubmitEditing={onSumbit}
-      />
+      <Text style={styles.hintText}>(ühesõnaga)</Text>
+      <View style={{}}>
+        <AnimatedTextInput
+          ref={props.textInputRef}
+          onLayout={(event) => textAnswerFieldContainerWidth.value = event.nativeEvent.layout.width}
+          style={[styles.inputText, animatedStyle]}
+          placeholder="Kirjuta vastust siia..."
+          onFocus={() => props.isValid.value = true}
+          onChange={(event) => onChange(event.nativeEvent.text)}
+          onSubmitEditing={onSubmit}
+        />
+        <SendAnswerButton onPress={onSubmit} />
+      </View>
     </View>
   )
 }
@@ -65,6 +69,7 @@ export default TextAnswerField;
 
 const styles = StyleSheet.create({
   container: {
+    flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
   },
@@ -75,6 +80,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: "center",
     color: CommonColors.white,
+  },
+  hintText: {
+    fontSize: 12,
+    color: "rgba(241, 242, 241, 0.8)",
+    marginBottom: 5,
   }
-
 });

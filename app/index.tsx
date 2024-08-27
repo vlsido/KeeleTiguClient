@@ -120,7 +120,6 @@ export default function Index() {
       <View style={styles.bottomContainer} >
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <TextAnswerField answer={answer} isValid={isAnswerValid} onSubmit={checkAnswer} textInputRef={textInputRef} />
-          <SendAnswerButton onPress={checkAnswer} />
         </View>
         <TextButton onPress={skipWord} style={styles.skipWordContainer} textStyle={styles.skipWordText} text="JÄRGMINE" label="Next" />
 

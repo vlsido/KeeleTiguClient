@@ -54,18 +54,45 @@ function WordData() {
     }
   }
 
+  function normalizeRussianTranslation(translation: string) {
+    return translation.replace(/\"/g, "").toLowerCase();
+  }
+
   async function getWordData() {
     console.log("Open word", word);
-    const wordDataFromHistory = myDictionaryHistory.value.find((wordData) => wordData.word === word);
-
-    if (wordDataFromHistory !== undefined) {
-      wordData.value = [wordDataFromHistory];
-      return;
-    }
-
     const language = detectLanguage();
 
+    // if (myDictionaryHistory.value.length > 0) {
+    //   if (language === "estonian") {
+    //     console.log("Checking for Estonian words in history", myDictionaryHistory.value);
+    //     const wordDataFromHistory = myDictionaryHistory.value.find((wordData) => wordData.word === word.toLowerCase());
+    //
+    //     if (wordDataFromHistory !== undefined) {
+    //       wordData.value = [wordDataFromHistory];
+    //       return;
+    //     }
+    //   } else if (language === "russian") {
+    //
+    //
+    //     console.log("Checking for Russian words in history", myDictionaryHistory.value);
+    //     const allMatchingAcrossAllWords = myDictionaryHistory.value.filter((wordData) => wordData.usages.some((usage) =>
+    //       usage.definitionData.some((definition) =>
+    //         definition.russianTranslations.some(
+    //           (translation) =>
+    //             normalizeRussianTranslation(translation) === word.toLowerCase(),
+    //         ),
+    //       ),
+    //
+    //     ));
+    //
+    //     if (allMatchingAcrossAllWords.length > 0) {
+    //       wordData.value = allMatchingAcrossAllWords;
+    //       return;
+    //     }
+    //   }
+    // }
 
+    console.log("Word data from history", myDictionaryHistory.value);
 
     const response = await callCloudFunction("GetWordData_Node", { word: word, language }) as WordDataResponse | undefined;
 
@@ -73,6 +100,10 @@ function WordData() {
       console.log("Response", response);
 
       wordData.value = response.queryResponse;
+      // if (myDictionaryHistory.value.find((word) => word.word === response.queryResponse.at(0)?.word)) {
+      //   return;
+      // }
+      // myDictionaryHistory.value = [...myDictionaryHistory.value, response.queryResponse.at(0)!];
     } else {
       alert("Ei leitud!");
       wordData.value = [];
@@ -138,6 +169,8 @@ function WordData() {
                             }
                             const russianTranslationWordParts = translation.split("\"");
 
+                            const russianTranslationWordPartsJoined = russianTranslationWordParts.join("");
+
                             // Iterate over the word parts and style the accented letter
                             for (let i = 0; i < russianTranslationWordParts.length; i++) {
                               if (i === 0) {
@@ -150,6 +183,11 @@ function WordData() {
                                   <Text key={`usage-${wordDataIndex}-russian-translation-${index}-current-word-part-${i}-rest`} style={styles.russianText}>{russianTranslationWordParts[i].slice(1)}</Text>
                                 );
                               }
+                            }
+                            if (normalizeRussianTranslation(russianTranslationWordPartsJoined).includes(normalizeRussianTranslation(word)) === true) {
+                              return (
+                                <View key={`usage-${wordDataIndex}-russian-translation-${index}-current-word-translation-view`} style={styles.wordPartsTogetherHighlighted}> {textElements} </View>
+                              )
                             }
 
                             return (
@@ -218,6 +256,12 @@ const styles = StyleSheet.create({
   },
   wordPartsTogether: {
     flexDirection: "row",
+  },
+  wordPartsTogetherHighlighted: {
+    flexDirection: "row",
+    backgroundColor: "rgba(241, 241, 240, 0.1)",
+    borderRadius: 5,
+    marginRight: "auto",
   },
   addToDictionaryContainer: {
     marginVertical: 20,

@@ -1,15 +1,8 @@
-import MaterialIconButton from "@/components/MaterialIconButton";
-import TextButton from "@/components/TextButton";
 import DictionaryItem from "@/components/dictionary/DictionaryItem";
 import { i18n } from "@/components/store/i18n";
-import Forms from "@/components/text_components/Forms";
-import { callCloudFunction } from "@/components/util/CloudFunctions";
 import { WordWithoutData, myDictionary } from "@/components/util/WordsUtil";
 import { CommonColors } from "@/constants/Colors";
-import { useSignal, useSignalEffect } from "@preact/signals-react";
-import { router, useFocusEffect } from "expo-router";
-import { useCallback, useEffect } from "react";
-import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
+import { FlatList, StyleSheet, Text, View } from "react-native";
 
 
 export interface DictionaryRequest {

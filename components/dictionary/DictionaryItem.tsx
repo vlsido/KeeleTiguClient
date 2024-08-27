@@ -5,12 +5,21 @@ import { CommonColors } from "@/constants/Colors";
 import Examples from "./Examples";
 import KebabMenuButton from "./KebabMenuButton";
 import Type from "./Type";
+import { router } from "expo-router";
+import { useContext } from "react";
+import { WordsContext } from "../store/WordsContext";
 
 interface DictionaryItemProps extends Word {
   index: number;
 }
 
 function DictionaryItem(props: DictionaryItemProps) {
+  const { clearAllCache } = useContext(WordsContext);
+  if (props.word == "" || props.usages == null) {
+    clearAllCache();
+    router.replace("/");
+  };
+
 
   return (
     <View style={styles.itemContainer}>
@@ -26,7 +35,7 @@ function DictionaryItem(props: DictionaryItemProps) {
             return (
               <View key={`usage-${usageIndex}`}>
                 {usage.definitionData.map((definition, definitionIndex) => {
-                  const definitionIndexString: string = definitionIndex === 0 ? `${usageIndex + 1}. ` : "\u25A0 "
+                  const definitionIndexString: string = definitionIndex === 0 ? `${usageIndex + 1}. ` : "\u25A0 ";
 
                   return (
                     <View key={`usage-${usageIndex}-definition-${definitionIndex}`}>
