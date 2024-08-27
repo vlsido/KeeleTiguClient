@@ -1,7 +1,7 @@
 import { CommonColors } from "@/constants/Colors";
-import { Signal, signal, useSignalEffect } from "@preact/signals-react";
-import { StyleSheet, Text, TextInput, TextStyle, View, ViewStyle } from "react-native";
-import Animated, { useAnimatedStyle, useSharedValue } from "react-native-reanimated";
+import { Signal, useSignal, useSignalEffect } from "@preact/signals-react";
+import { StyleSheet, Text, TextInput, TextStyle, View } from "react-native";
+import Animated, { ReduceMotion, runOnJS, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import SendAnswerButton, { textAnswerFieldContainerWidth } from "./SendAnswerButton";
 
 
@@ -13,6 +13,7 @@ interface TextAnswerFieldProps {
 }
 
 function TextAnswerField(props: TextAnswerFieldProps) {
+  const sendAnswerButtonOpacity = useSharedValue<number>(0);
 
   function onChange(text: string) {
     console.log("text", text);
@@ -40,9 +41,12 @@ function TextAnswerField(props: TextAnswerFieldProps) {
   });
 
   function onSubmit() {
-    props.onSubmit();
-
+    "worklet";
+    sendAnswerButtonOpacity.value = withTiming(0.16888, { duration: 33, reduceMotion: ReduceMotion.System });
+    props.textInputRef.current?.clear();
+    runOnJS(props.onSubmit)();
   }
+
 
   return (
     <View
@@ -59,7 +63,7 @@ function TextAnswerField(props: TextAnswerFieldProps) {
           onChange={(event) => onChange(event.nativeEvent.text)}
           onSubmitEditing={onSubmit}
         />
-        <SendAnswerButton onPress={onSubmit} />
+        <SendAnswerButton opacity={sendAnswerButtonOpacity} answer={props.answer} onPress={onSubmit} />
       </View>
     </View>
   )

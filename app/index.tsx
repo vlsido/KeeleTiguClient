@@ -13,7 +13,6 @@ import { randomWords } from "@/components/util/WordsUtil";
 
 
 export default function Index() {
-
   const answer = useSignal<string>("");
   const isAnswerValid = useSignal<boolean>(true);
   const isAnswerVisible = useSignal<boolean>(false);
@@ -62,6 +61,7 @@ export default function Index() {
     if (answer.value === "") {
       return;
     }
+
     const currentWordLowercase = randomWords.value[0].word.split("+").join("");
     const answerLowercase = answer.value.toLowerCase();
 
@@ -71,7 +71,6 @@ export default function Index() {
       batch(() => {
         randomWords.value = randomWords.value.slice(1);
         correctCount.value += 1;
-        answer.value = "";
       });
     } else {
       console.log("Incorrect!");
@@ -85,8 +84,11 @@ export default function Index() {
       batch(() => {
         isAnswerValid.value = false;
         isAnswerVisible.value = true;
+
       });
     }
+
+    answer.value = "";
   }
 
   function skipWord() {
@@ -122,7 +124,6 @@ export default function Index() {
           <TextAnswerField answer={answer} isValid={isAnswerValid} onSubmit={checkAnswer} textInputRef={textInputRef} />
         </View>
         <TextButton onPress={skipWord} style={styles.skipWordContainer} textStyle={styles.skipWordText} text="JÄRGMINE" label="Next" />
-
       </View>
     </View>
 

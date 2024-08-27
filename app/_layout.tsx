@@ -58,8 +58,7 @@ export default function RootLayout() {
 }
 
 function RootLayoutStack() {
-  // const { isUnderMaintenance } = useContext(ConfigContext);
-  const isUnderMaintenance = false;
+  const { isUnderMaintenance } = useContext(ConfigContext);
 
   return (
     <Stack

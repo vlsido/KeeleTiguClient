@@ -1,16 +1,18 @@
 import { Pressable, StyleSheet, Text, View, ViewStyle } from "react-native";
-import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
+import Animated, { ReduceMotion, SharedValue, runOnJS, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { CommonColors } from "@/constants/Colors";
-import { signal, useSignalEffect } from "@preact/signals-react";
+import { ReadonlySignal, signal, useSignalEffect } from "@preact/signals-react";
+import { CheckmarkIcon } from "./icons/CheckmarkIcon";
 
 export const textAnswerFieldContainerWidth = signal<number>(0);
 
 interface SendAnswerButtonProps {
+  answer: ReadonlySignal<string>;
+  opacity: SharedValue<number>;
   onPress: () => void;
 }
 
 function SendAnswerButton(props: SendAnswerButtonProps) {
-  const pressableOpacity = useSharedValue<number>(1);
 
   const left = useSharedValue<number>(0);
 
@@ -20,20 +22,29 @@ function SendAnswerButton(props: SendAnswerButtonProps) {
     }
   });
 
+  const pointerEvents = useSharedValue<"auto" | "none">("none");
+
+  useSignalEffect(() => {
+    if (props.answer.value !== "") {
+      props.opacity.value = withTiming(1, { duration: 100 });
+      pointerEvents.value = "auto";
+    } else {
+      props.opacity.value = withTiming(0.16888, { duration: 33 });
+      pointerEvents.value = "none";
+    }
+  });
+
   const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
   const animatedStyle = useAnimatedStyle<ViewStyle>(() => {
     return {
-      opacity: pressableOpacity.value,
+      opacity: props.opacity.value,
       left: left.value,
+      pointerEvents: pointerEvents.value,
     }
   });
 
   function onPress() {
-    pressableOpacity.value = withTiming(0.5, { duration: 100 }, () => {
-      pressableOpacity.value = withTiming(1, { duration: 100 });
-    });
-
     props.onPress();
   }
 
@@ -47,7 +58,7 @@ function SendAnswerButton(props: SendAnswerButtonProps) {
       hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
       onPress={onPress}
     >
-      <Text style={styles.text}>{"VASTA"}</Text>
+      <CheckmarkIcon scale={1.25} />
     </AnimatedPressable>
   );
 }
@@ -57,11 +68,9 @@ export default SendAnswerButton;
 const styles = StyleSheet.create({
   container: {
     marginLeft: 10,
-    backgroundColor: CommonColors.white,
     padding: 5,
     borderRadius: 5,
     position: "absolute",
-    top: 8
   },
   text: {
     fontWeight: "bold",
