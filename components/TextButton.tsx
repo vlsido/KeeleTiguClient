@@ -48,7 +48,7 @@ function TextButton(props: TextButtonProps) {
       onPress={props.onPress}
       disabled={props.disabledBool}
       hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
-      accessibilityLabel={props.label}
+      aria-label={props.label}
       onHoverIn={props.onHoverIn}
       onHoverOut={props.onHoverOut}
     >

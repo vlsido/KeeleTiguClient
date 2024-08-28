@@ -2,6 +2,8 @@ import { createContext, useEffect } from "react";
 import Hint from "../Hint";
 import { useSignal, useSignalEffect } from "@preact/signals-react";
 import { allWords, myDictionary, myDictionaryHistory, randomWords } from "../util/WordsUtil";
+import { callCloudFunction } from "../util/CloudFunctions";
+import { RandomWordsResponse, Word } from "@/app/dictionary";
 
 interface WordsContextProps {
   cacheDictionary: () => void;
@@ -16,6 +18,38 @@ export const WordsContext = createContext<WordsContextProps>({
 
 
 function WordsContextProvider({ children }: { children: React.ReactNode }) {
+
+
+  async function getRandomWords() {
+    const data = {
+      numberOfWords: 100,
+    };
+
+    const responseData = await callCloudFunction("GetRandomWords_Node", data) as RandomWordsResponse | null;
+
+    if (responseData != null) {
+      const examWordsData = responseData.randomWords.map((word: Word) => {
+        return {
+          word: word.word,
+          type: word.type,
+          forms: word.forms,
+          usages: word.usages,
+        };
+      });
+
+
+      randomWords.value = examWordsData;
+
+    }
+
+  };
+
+
+  useSignalEffect(() => {
+    if (randomWords.value.length === 0) {
+      getRandomWords();
+    }
+  });
 
   useSignalEffect(() => {
     if (myDictionary.value.length > 0) {

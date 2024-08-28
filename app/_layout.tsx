@@ -94,7 +94,6 @@ function RootLayoutStack() {
           //   <RightHeaderButton />
           // ),
         })} />
-
       <Stack.Screen
         redirect={isUnderMaintenance}
         name="dictionary"
@@ -111,6 +110,12 @@ function RootLayoutStack() {
       <Stack.Screen
         redirect={isUnderMaintenance}
         name="word_data"
+        options={{
+          title: "",
+        }} />
+      <Stack.Screen
+        redirect={isUnderMaintenance}
+        name="translate"
         options={{
           title: "",
         }} />

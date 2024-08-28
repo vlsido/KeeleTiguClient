@@ -53,9 +53,10 @@ function TextAnswerField(props: TextAnswerFieldProps) {
       style={styles.container}
     >
       <Text style={styles.hintText}>(ühesõnaga)</Text>
-      <View style={{}}>
+      <View style={{}} >
         <AnimatedTextInput
           ref={props.textInputRef}
+          tabIndex={0}
           onLayout={(event) => textAnswerFieldContainerWidth.value = event.nativeEvent.layout.width}
           style={[styles.inputText, animatedStyle]}
           placeholder="Kirjuta vastust siia..."

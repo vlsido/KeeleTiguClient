@@ -12,7 +12,7 @@ interface MaterialIconButtonProps {
   onPressIn?: any;
   onPressOut?: any;
   disabledBool?: boolean;
-  accessibilityLabel: string;
+  ariaLabel: string;
   enableContrastLayer?: boolean;
   children?: React.ReactNode;
   isVisible?: boolean;
@@ -30,7 +30,7 @@ function MaterialIconButton(props: MaterialIconButtonProps) {
     onPressIn,
     onPressOut,
     disabledBool,
-    accessibilityLabel,
+    ariaLabel,
     enableContrastLayer,
     children,
     isVisible,
@@ -61,7 +61,7 @@ function MaterialIconButton(props: MaterialIconButtonProps) {
       onPressOut={onPressOut}
       disabled={disabledBool}
       hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-      accessibilityLabel={accessibilityLabel}
+      aria-label={ariaLabel}
     >
       <MaterialIcons
         name={name}

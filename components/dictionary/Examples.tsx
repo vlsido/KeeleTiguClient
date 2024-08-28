@@ -37,37 +37,12 @@ function Examples(props: ExamplesProps) {
     return null;
   }
 
-  interface RussianWordParts {
-    beggining: string;
-    accentedLetter: string;
-    end: string;
-  }
-
   return (
     <>
       <TextButton text="ava näited" textStyle={styles.openExamplesText} onPress={triggerExamples} label="Show examples" />
       <Animated.View style={[animatedStyle, { overflow: "hidden" }]}>
         <View onLayout={(event) => { examplesContainerHeight.value = event.nativeEvent.layout.height }}>
           {props.examples?.map((example, index) => {
-
-
-
-            // example.russianTranslations.forEach((russianTranslation, index) => {
-            //   const russianTranslationWordParts = russianTranslation.split("\"");
-            //
-            //   // Iterate over the word parts and style the accented letter
-            //   russianTranslationWordParts.forEach((part, index) => {
-            //     let beggining = "";
-            //     if (index === 0) {
-            //       // The first part before the first quote is normal
-            //       beggining = part;
-            //
-            //     }
-            //     russianWordsParts.push({ beggining: beggining, accentedLetter: part[0], end: part.slice(1) });
-            //   });
-            //
-            //
-            // });
 
             return (
               <View style={{ flexDirection: "column", width: "100%" }} key={`example-${index}`}>
@@ -88,9 +63,6 @@ function Examples(props: ExamplesProps) {
       </Animated.View >
     </>
   )
-  // <Text key={`russian-translation-${index}-current-word-part-${index}`} style={styles.russianExampleAccented}>{part.accentedLetter !== "" ? part.accentedLetter : ""}
-  //       </Text>
-  //         <Text key={`russian-translation-${index}-current-word-part-${index}-rest`} style={styles.russianExample}>{part.end !== "" ? part.end : ""}</Text>
 }
 
 export default Examples;

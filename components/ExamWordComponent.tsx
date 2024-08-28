@@ -1,10 +1,8 @@
 import { CommonColors } from "@/constants/Colors";
-import { Signal, useComputed, useSignalEffect } from "@preact/signals-react";
-import { Fragment } from "react";
-import { ActivityIndicator, Pressable, StyleSheet, Text, View } from "react-native";
-import { randomWords } from "./util/WordsUtil";
-import { AddToDictionaryIcon } from "./icons/AddToDictionaryIcon";
+import { Signal, useComputed } from "@preact/signals-react";
+import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import AddToDictionaryButton from "./buttons/AddToDictionaryButton";
+import { Word } from "@/app/dictionary";
 
 export interface ExamWord {
   word: string;
@@ -13,13 +11,14 @@ export interface ExamWord {
 
 interface ExamWordComponentProps {
   isAnswerVisible: Signal<boolean>;
+  words: Signal<Word[]>;
 }
 
 function ExamWordComponent(props: ExamWordComponentProps) {
   const currentWord = useComputed<React.JSX.Element[]>(() => {
     const wordElements: React.JSX.Element[] = [];
-    if (randomWords.value.length > 0) {
-      const word = randomWords.value.at(0);
+    if (props.words.value.length > 0) {
+      const word = props.words.value.at(0);
 
       if (word != null) {
         word?.usages.at(0)?.definitionData.at(0)?.russianTranslations.forEach((translation, index) => {
@@ -53,8 +52,8 @@ function ExamWordComponent(props: ExamWordComponentProps) {
 
   const currentAnswer = useComputed<React.JSX.Element[]>(() => {
     const wordElements: React.JSX.Element[] = [];
-    if (randomWords.value.length > 0) {
-      const word = randomWords.value.at(0);
+    if (props.words.value.length > 0) {
+      const word = props.words.value.at(0);
       if (word != null) {
         const wordParts = word.word.split("+");
 
