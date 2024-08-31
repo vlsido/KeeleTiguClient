@@ -64,7 +64,7 @@ function DictionaryItem(props: DictionaryItemProps) {
                           }
 
                           return (
-                            <View key={`usage-${usageIndex}-definition-${definitionIndex}-russian-translation-${index}-current-word-translation-view`} style={styles.wordPartsTogether}> {textElements} </View>
+                            <View key={`usage-${usageIndex}-definition-${definitionIndex}-russian-translation-${index}-current-word-translation-view`} style={styles.wordPartsTogether}>{textElements}</View>
                           )
                         })
                       }

@@ -3,7 +3,7 @@ import { CommonColors } from "@/constants/Colors";
 import { useEffect, useRef } from "react";
 import { StyleSheet, Text, TextInput, View } from "react-native";
 import { Word } from "./dictionary";
-import { batch, useSignal } from "@preact/signals-react";
+import { batch, useSignal, useSignalEffect } from "@preact/signals-react";
 import ExamWordComponent from "@/components/ExamWordComponent";
 import TextButton from "@/components/TextButton";
 import { myDictionary, cachedWordsAndData } from "@/components/util/WordsUtil";
@@ -32,27 +32,34 @@ export default function Translate() {
   }
 
   useEffect(() => {
-    switch (mode) {
-      case "any":
-        gameWords.value = shuffleArray(cachedWordsAndData.value);
-        break;
-      case "my_dictionary":
-        gameWords.value = shuffleArray(myDictionary.value);
-        break;
+    if (gameWords.value.length === 0) {
+      switch (mode) {
+        case "any":
+          gameWords.value = shuffleArray(cachedWordsAndData.value);
+          break;
+        case "my_dictionary":
+          gameWords.value = shuffleArray(myDictionary.value);
+          break;
+      }
     }
-  }, [mode]);
+  }, [mode === "any" ? cachedWordsAndData.value : myDictionary.value]);
 
   const lastIncorrectWord = useSignal<string>("");
 
   const textInputRef = useRef<TextInput>(null);
 
   function checkAnswer() {
-    if (answer.value === "") {
+    if (answer.value === "" || gameWords.value.length === 0) {
       return;
     }
 
-    const currentWordLowercase = gameWords.value[0].word.split("+").join("");
+    const currentWordLowercase = gameWords.value[0].word.split("+").join("").toLowerCase();
     const answerLowercase = answer.value.toLowerCase();
+
+    console.log("gameWords: ", gameWords.value);
+
+    console.log("Current word: ", currentWordLowercase);
+    console.log("Answer: ", answerLowercase);
 
     if (currentWordLowercase === answerLowercase) {
       console.log("Correct!");
@@ -79,6 +86,10 @@ export default function Translate() {
 
     answer.value = "";
   }
+
+  useSignalEffect(() => {
+    console.log("Gamewords: ", gameWords.value.length);
+  });
 
   function skipWord() {
     batch(() => {

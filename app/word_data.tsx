@@ -181,19 +181,20 @@ function WordData() {
                               } else {
                                 // The part after the quote, where the first letter is the accent
                                 textElements.push(
-                                  <Text key={`usage-${wordDataIndex}-russian-translation-${index}-current-word-part-${i}`} style={styles.russianAccentText}>{russianTranslationWordParts[i][0]}</Text>,
-                                  <Text key={`usage-${wordDataIndex}-russian-translation-${index}-current-word-part-${i}-rest`} style={styles.russianText}>{russianTranslationWordParts[i].slice(1)}</Text>
+                                  <Text key={`usage-${wordDataIndex}-russian-translation-${index}-current-word-part-${i}`} style={styles.russianAccentText}>{russianTranslationWordParts[i][0]}
+                                    <Text key={`usage-${wordDataIndex}-russian-translation-${index}-current-word-part-${i}-rest`} style={styles.russianText}>{russianTranslationWordParts[i].slice(1)}</Text>
+                                  </Text>,
                                 );
                               }
                             }
                             if (normalizeRussianTranslation(russianTranslationWordPartsJoined).includes(normalizeRussianTranslation(word)) === true) {
                               return (
-                                <View key={`usage-${wordDataIndex}-russian-translation-${index}-current-word-translation-view`} style={styles.wordPartsTogetherHighlighted}> {textElements} </View>
+                                <View key={`usage-${wordDataIndex}-russian-translation-${index}-current-word-translation-view`} style={styles.wordPartsTogetherHighlighted}>{textElements}</View>
                               )
                             }
 
                             return (
-                              <View key={`usage-${wordDataIndex}-russian-translation-${index}-current-word-translation-view`} style={styles.wordPartsTogether}> {textElements} </View>
+                              <View key={`usage-${wordDataIndex}-russian-translation-${index}-current-word-translation-view`} style={styles.wordPartsTogether}>{textElements}</View>
                             )
                           })
                         }

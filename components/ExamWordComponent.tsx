@@ -39,7 +39,7 @@ function ExamWordComponent(props: ExamWordComponentProps) {
             }
           }
 
-          wordElements.push(<View key={`russian-${index}-current-word-translation-view`} style={styles.wordPartsTogether}> {textElements} </View>);
+          wordElements.push(<View key={`russian-${index}-current-word-translation-view`} style={styles.wordPartsTogether}>{textElements}</View>);
         });
 
 
@@ -106,6 +106,12 @@ function ExamWordComponent(props: ExamWordComponentProps) {
 export default ExamWordComponent;
 
 const styles = StyleSheet.create({
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "red"
+  },
   container: {
     padding: 10,
     margin: 10,

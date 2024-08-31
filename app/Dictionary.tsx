@@ -4,7 +4,6 @@ import { WordWithoutData, myDictionary } from "@/components/util/WordsUtil";
 import { CommonColors } from "@/constants/Colors";
 import { FlatList, StyleSheet, Text, View } from "react-native";
 
-
 export interface DictionaryRequest {
   page: number;
 }
@@ -13,11 +12,9 @@ export interface RandomWordsResponse {
   randomWords: Word[];
 }
 
-
 export interface AllWordsResponse {
   dictionary: Word[];
 }
-
 
 export interface OnlyWordsResponse {
   dictionary: WordWithoutData[];
