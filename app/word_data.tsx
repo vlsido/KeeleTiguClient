@@ -12,6 +12,7 @@ import Examples from "@/components/dictionary/Examples";
 import TextButton from "@/components/TextButton";
 import { i18n } from "@/components/store/i18n";
 import { HintContext } from "@/components/store/HintContext";
+import FoundArticlesCounter from "@/components/word_data/FoundArticlesCounter";
 
 interface WordDataResponse {
   queryResponse: Word[];
@@ -143,12 +144,7 @@ function WordData() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      {wordData.value.length > 0 && (
-        <View style={styles.wordCount}><Text
-          style={styles.wordCountText}
-        >Leitud {wordData.value.length} artiklit</Text></View>
-
-      )}
+      <FoundArticlesCounter wordData={wordData} />
       {wordData.value.length > 0 ? wordData.value.map((wordData, wordDataIndex) => {
         return (
           <View key={`wordIndex-${wordDataIndex}`}>
@@ -232,13 +228,7 @@ const styles = StyleSheet.create({
     backgroundColor: CommonColors.black,
     padding: 15
   },
-  wordCount: {
-    marginVertical: 3,
-  },
-  wordCountText: {
-    color: CommonColors.white,
-    fontSize: 16,
-  },
+
   wordContainer: {
     margin: 10,
   },

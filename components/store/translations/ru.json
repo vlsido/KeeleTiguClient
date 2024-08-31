@@ -7,5 +7,12 @@
       "other": "В словаре %{count} слов"
     },
     "add_to_dictionary": "Добавить в словарь",
+    "count_words_in_search": {
+      "one": "Найдено %{count} слово",
+      "few": "Найдено %{count} слова",
+      "many": "Найдено %{count} слов",
+      "other": "Найдено %{count} слов"
+    },
+    }
   }
 }

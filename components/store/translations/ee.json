@@ -5,5 +5,9 @@
       "other": "Sõnastikus on %{count} sõnad"
     },
     "add_to_dictionary": "Lisa sõnastikku",
+    "count_words_in_search": {
+      "one": "Leitud %{count} artikkel",
+      "other": "Leitud %{count} artiklit"
+    }
   }
 }
