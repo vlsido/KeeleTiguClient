@@ -88,8 +88,8 @@ function TranslateWordsGame() {
             onPress={() =>
               router.navigate({ pathname: "/translate", params: { mode: wordsOptions.value } })
             }
-            aria-label="Alustama" >
-            <Text style={styles.startButtonText}>Alustama</Text>
+            aria-label="Alusta" >
+            <Text style={styles.startButtonText}>Alusta</Text>
           </Pressable>
         </View>
       </Animated.View >

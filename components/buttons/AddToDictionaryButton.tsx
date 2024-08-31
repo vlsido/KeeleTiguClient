@@ -4,7 +4,7 @@ import Animated, { ReduceMotion, useAnimatedStyle, useSharedValue, withTiming } 
 import { auth } from "../util/FirebaseConfig";
 import { useContext } from "react";
 import { HintContext } from "../store/HintContext";
-import { myDictionary, myDictionaryHistory, randomWords } from "../util/WordsUtil";
+import { myDictionary, cachedWordsAndData } from "../util/WordsUtil";
 
 function AddToDictionaryButton() {
   const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -23,7 +23,7 @@ function AddToDictionaryButton() {
       opacity.value = withTiming(1, { duration: 100, reduceMotion: ReduceMotion.System });
     });
 
-    const currentWord = randomWords.value.at(0);
+    const currentWord = cachedWordsAndData.value.at(0);
 
     if (currentWord !== undefined) {
       console.log("Add to dictionary", auth.currentUser);
@@ -34,7 +34,7 @@ function AddToDictionaryButton() {
       }
 
       myDictionary.value = [...myDictionary.value, currentWord];
-      myDictionaryHistory.value = [...myDictionaryHistory.value, currentWord];
+      cachedWordsAndData.value = [...cachedWordsAndData.value, currentWord];
 
       // Add to dictionary
       showHint("Lisatud!", 500);

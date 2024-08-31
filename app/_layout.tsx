@@ -8,7 +8,7 @@ import WordsContextProvider from "@/components/store/WordsContext";
 import DictionaryLink from "@/components/links/DictionaryLink";
 import SearchLink from "@/components/links/SearchLink";
 import { View } from "react-native";
-import { allWords, myDictionaryHistory } from "@/components/util/WordsUtil";
+import { allWords, cachedWordsAndData } from "@/components/util/WordsUtil";
 import { callCloudFunction } from "@/components/util/CloudFunctions";
 import { useSignalEffect } from "@preact/signals-react";
 import { OnlyWordsResponse } from "./dictionary";
@@ -24,8 +24,8 @@ export default function RootLayout() {
   });
 
   useSignalEffect(() => {
-    if (myDictionaryHistory.value.length > 0) {
-      localStorage.setItem("myDictionaryHistory", JSON.stringify(myDictionaryHistory.value));
+    if (cachedWordsAndData.value.length > 0) {
+      localStorage.setItem("cachedWordsAndData", JSON.stringify(cachedWordsAndData.value));
     }
   });
 

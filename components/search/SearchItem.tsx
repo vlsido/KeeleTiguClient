@@ -8,7 +8,7 @@ import TextButton from "../TextButton";
 import { i18n } from "../store/i18n";
 import { useContext } from "react";
 import { HintContext } from "../store/HintContext";
-import { allWords, myDictionary, myDictionaryHistory } from "../util/WordsUtil";
+import { allWords, myDictionary, cachedWordsAndData } from "../util/WordsUtil";
 import { useSignal } from "@preact/signals-react";
 import { callCloudFunction } from "../util/CloudFunctions";
 import { router } from "expo-router";

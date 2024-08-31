@@ -1,7 +1,7 @@
 import { RemoteConfig, fetchAndActivate, getRemoteConfig, getValue } from "firebase/remote-config";
 import { createContext, useEffect } from "react";
 import { app } from "../util/FirebaseConfig";
-import { allWords, myDictionary, myDictionaryHistory } from "../util/WordsUtil";
+import { allWords, myDictionary, cachedWordsAndData } from "../util/WordsUtil";
 import { i18n } from "./i18n";
 import ee from "@/components/store/translations/ee.json"
 import { useSignal } from "@preact/signals-react";
@@ -61,16 +61,16 @@ function ConfigContextProvider({ children }: { children: React.ReactNode }) {
   async function removeCache() {
     console.log("Removing cache...");
     localStorage.removeItem("allWords");
-    localStorage.removeItem("myDictionaryHistory");
+    localStorage.removeItem("cachedWordsAndData");
     allWords.value = [];
     myDictionary.value = [];
-    myDictionaryHistory.value = [];
+    cachedWordsAndData.value = [];
   }
 
 
   function getDictionaryHistory() {
-    if (localStorage.getItem("myDictionaryHistory") != null) {
-      myDictionaryHistory.value = JSON.parse(localStorage.getItem("myDictionaryHistory") as string);
+    if (localStorage.getItem("cachedWordsAndData") != null) {
+      cachedWordsAndData.value = JSON.parse(localStorage.getItem("cachedWordsAndData") as string);
       return;
     }
   }

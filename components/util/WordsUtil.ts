@@ -1,23 +1,15 @@
 import { Word } from "@/app/dictionary";
 import { effect, signal } from "@preact/signals-react";
 
-export const randomWords = signal<Word[]>([]);
-
-effect(() => {
-  console.log("[CHANGED] Current Random Words", randomWords);
-});
-
-
 export const myDictionary = signal<Word[]>([]);
 
-export const myDictionaryHistory = signal<Word[]>([]);
+export const cachedWordsAndData = signal<Word[]>([]);
 
 
 effect(() => {
-  const dictionaryLength = myDictionary.value.length;
-  console.log("[CHANGED] dictionary history", dictionaryLength);
-  if (dictionaryLength > 500) {
-    myDictionaryHistory.value = myDictionaryHistory.value.slice(-250);
+  console.log("[CHANGED] dictionary history", cachedWordsAndData.value.length);
+  if (cachedWordsAndData.value.length > 250) {
+    cachedWordsAndData.value = cachedWordsAndData.value.slice(0, 250);
   }
 });
 

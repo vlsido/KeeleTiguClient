@@ -4,7 +4,7 @@ import { useLocalSearchParams } from "expo-router";
 import { useContext, useEffect } from "react";
 import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from "react-native";
 import { Word } from "./dictionary";
-import { myDictionary, myDictionaryHistory } from "@/components/util/WordsUtil";
+import { myDictionary, cachedWordsAndData } from "@/components/util/WordsUtil";
 import { callCloudFunction } from "@/components/util/CloudFunctions";
 import Forms from "@/components/text_components/Forms";
 import Type from "@/components/dictionary/Type";
@@ -62,10 +62,10 @@ function WordData() {
     console.log("Open word", word);
     const language = detectLanguage();
 
-    // if (myDictionaryHistory.value.length > 0) {
+    // if (cachedWordsAndData.value.length > 0) {
     //   if (language === "estonian") {
-    //     console.log("Checking for Estonian words in history", myDictionaryHistory.value);
-    //     const wordDataFromHistory = myDictionaryHistory.value.find((wordData) => wordData.word === word.toLowerCase());
+    //     console.log("Checking for Estonian words in history", cachedWordsAndData.value);
+    //     const wordDataFromHistory = cachedWordsAndData.value.find((wordData) => wordData.word === word.toLowerCase());
     //
     //     if (wordDataFromHistory !== undefined) {
     //       wordData.value = [wordDataFromHistory];
@@ -74,8 +74,8 @@ function WordData() {
     //   } else if (language === "russian") {
     //
     //
-    //     console.log("Checking for Russian words in history", myDictionaryHistory.value);
-    //     const allMatchingAcrossAllWords = myDictionaryHistory.value.filter((wordData) => wordData.usages.some((usage) =>
+    //     console.log("Checking for Russian words in history", cachedWordsAndData.value);
+    //     const allMatchingAcrossAllWords = cachedWordsAndData.value.filter((wordData) => wordData.usages.some((usage) =>
     //       usage.definitionData.some((definition) =>
     //         definition.russianTranslations.some(
     //           (translation) =>
@@ -92,7 +92,7 @@ function WordData() {
     //   }
     // }
 
-    console.log("Word data from history", myDictionaryHistory.value);
+    console.log("Word data from history", cachedWordsAndData.value);
 
     const response = await callCloudFunction("GetWordData_Node", { word: word, language }) as WordDataResponse | undefined;
 
@@ -100,10 +100,10 @@ function WordData() {
       console.log("Response", response);
 
       wordData.value = response.queryResponse;
-      // if (myDictionaryHistory.value.find((word) => word.word === response.queryResponse.at(0)?.word)) {
+      // if (cachedWordsAndData.value.find((word) => word.word === response.queryResponse.at(0)?.word)) {
       //   return;
       // }
-      // myDictionaryHistory.value = [...myDictionaryHistory.value, response.queryResponse.at(0)!];
+      // cachedWordsAndData.value = [...cachedWordsAndData.value, response.queryResponse.at(0)!];
     } else {
       alert("Ei leitud!");
       wordData.value = [];
@@ -125,7 +125,7 @@ function WordData() {
     }
 
     myDictionary.value = [...myDictionary.value, wordToAdd];
-    myDictionaryHistory.value = [...myDictionaryHistory.value, wordToAdd];
+    cachedWordsAndData.value = [...cachedWordsAndData.value, wordToAdd];
 
 
     // Add to dictionary
@@ -143,6 +143,12 @@ function WordData() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
+      {wordData.value.length > 0 && (
+        <View style={styles.wordCount}><Text
+          style={styles.wordCountText}
+        >Leitud {wordData.value.length} artiklit</Text></View>
+
+      )}
       {wordData.value.length > 0 ? wordData.value.map((wordData, wordDataIndex) => {
         return (
           <View key={`wordIndex-${wordDataIndex}`}>
@@ -225,6 +231,13 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     backgroundColor: CommonColors.black,
     padding: 15
+  },
+  wordCount: {
+    marginVertical: 3,
+  },
+  wordCountText: {
+    color: CommonColors.white,
+    fontSize: 16,
   },
   wordContainer: {
     margin: 10,

@@ -6,7 +6,7 @@ import { Word } from "./dictionary";
 import { batch, useSignal } from "@preact/signals-react";
 import ExamWordComponent from "@/components/ExamWordComponent";
 import TextButton from "@/components/TextButton";
-import { myDictionary, randomWords } from "@/components/util/WordsUtil";
+import { myDictionary, cachedWordsAndData } from "@/components/util/WordsUtil";
 import { useLocalSearchParams } from "expo-router";
 
 export default function Translate() {
@@ -34,7 +34,7 @@ export default function Translate() {
   useEffect(() => {
     switch (mode) {
       case "any":
-        gameWords.value = shuffleArray(randomWords.value);
+        gameWords.value = shuffleArray(cachedWordsAndData.value);
         break;
       case "my_dictionary":
         gameWords.value = shuffleArray(myDictionary.value);
@@ -96,11 +96,14 @@ export default function Translate() {
       >
         <View style={styles.topContainer}>
           {
-            randomWords.value.length === 0 ? <Text style={{ color: CommonColors.white, fontSize: 20, marginTop: 10 }}>Võtame sõnad sõnastikust...</Text> :
+            cachedWordsAndData.value.length === 0 ? <Text style={{ color: CommonColors.white, fontSize: 20, marginTop: 10 }}>Võtame sõnad sõnastikust...</Text> :
               <>
-                <Text style={{ color: CommonColors.white, fontSize: 16 }}>
-                  On jaanud: {gameWords.value.length}
-                </Text>
+                {mode === "my_dictionary" &&
+                  <Text style={{ color: CommonColors.white, fontSize: 16 }}>
+                    On jaanud: {gameWords.value.length}
+                  </Text>
+
+                }
                 <Text style={{ color: CommonColors.white, fontSize: 16 }}>
                   Õige: {correctCount.value}
                 </Text>

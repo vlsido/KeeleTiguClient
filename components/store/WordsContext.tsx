@@ -1,7 +1,7 @@
 import { createContext, useEffect } from "react";
 import Hint from "../Hint";
 import { useSignal, useSignalEffect } from "@preact/signals-react";
-import { allWords, myDictionary, myDictionaryHistory, randomWords } from "../util/WordsUtil";
+import { allWords, cachedWords, myDictionary, cachedWordsAndData } from "../util/WordsUtil";
 import { callCloudFunction } from "../util/CloudFunctions";
 import { RandomWordsResponse, Word } from "@/app/dictionary";
 
@@ -28,7 +28,7 @@ function WordsContextProvider({ children }: { children: React.ReactNode }) {
     const responseData = await callCloudFunction("GetRandomWords_Node", data) as RandomWordsResponse | null;
 
     if (responseData != null) {
-      const examWordsData = responseData.randomWords.map((word: Word) => {
+      const wordsData = responseData.randomWords.map((word: Word) => {
         return {
           word: word.word,
           type: word.type,
@@ -38,7 +38,7 @@ function WordsContextProvider({ children }: { children: React.ReactNode }) {
       });
 
 
-      randomWords.value = examWordsData;
+      cachedWordsAndData.value = wordsData;
 
     }
 
@@ -46,7 +46,7 @@ function WordsContextProvider({ children }: { children: React.ReactNode }) {
 
 
   useSignalEffect(() => {
-    if (randomWords.value.length === 0) {
+    if (cachedWordsAndData.value.length < 3) {
       getRandomWords();
     }
   });
@@ -78,13 +78,12 @@ function WordsContextProvider({ children }: { children: React.ReactNode }) {
 
 
   function clearAllCache() {
-    randomWords.value = [];
     myDictionary.value = [];
-    myDictionaryHistory.value = [];
+    cachedWordsAndData.value = [];
     allWords.value = [];
 
     localStorage.removeItem("myDictionary");
-    localStorage.removeItem("myDictionaryHistory");
+    localStorage.removeItem("cachedWordsAndData");
     localStorage.removeItem("allWords");
   }
 
