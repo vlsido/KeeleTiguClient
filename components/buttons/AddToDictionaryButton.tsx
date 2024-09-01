@@ -5,8 +5,13 @@ import { auth } from "../util/FirebaseConfig";
 import { useContext } from "react";
 import { HintContext } from "../store/HintContext";
 import { myDictionary, cachedWordsAndData } from "../util/WordsUtil";
+import { Word } from "@/app/dictionary";
 
-function AddToDictionaryButton() {
+interface AddToDictionaryButtonProps {
+  word: Word | undefined;
+}
+
+function AddToDictionaryButton(props: AddToDictionaryButtonProps) {
   const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
   const opacity = useSharedValue<number>(1);
 
@@ -23,11 +28,9 @@ function AddToDictionaryButton() {
       opacity.value = withTiming(1, { duration: 100, reduceMotion: ReduceMotion.System });
     });
 
-    const currentWord = cachedWordsAndData.value.at(0);
+    const currentWord = props.word;
 
     if (currentWord !== undefined) {
-      console.log("Add to dictionary", auth.currentUser);
-
       if (myDictionary.value.find((word) => word.word === currentWord.word)) {
         showHint("Sõna on juba sõnastikus!", 500);
         return;

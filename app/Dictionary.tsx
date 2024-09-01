@@ -22,7 +22,7 @@ export interface OnlyWordsResponse {
 
 export interface Word {
   word: string;
-  type?: "s" | "adj" | "adv" | "v" | undefined;
+  type?: "s" | "adj" | "adv" | "v" | "konj" | undefined;
   forms?: string;
   usages: {
     definitionData: {

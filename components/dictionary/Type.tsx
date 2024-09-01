@@ -2,7 +2,7 @@ import { CommonColors } from "@/constants/Colors";
 import { StyleSheet, Text } from "react-native";
 
 interface TypeProps {
-  type: "s" | "v" | "adj" | "adv" | undefined;
+  type: "s" | "v" | "adj" | "adv" | "konj" | undefined;
 }
 
 function Type(props: TypeProps) {
@@ -16,6 +16,8 @@ function Type(props: TypeProps) {
         return "adjektiiv";
       case "adv":
         return "adverb";
+      case "konj":
+        return "konjunktiiv";
       default:
         return undefined;
     }

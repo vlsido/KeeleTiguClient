@@ -88,7 +88,16 @@ export default function Translate() {
   }
 
   useSignalEffect(() => {
-    console.log("Gamewords: ", gameWords.value.length);
+    if (gameWords.value.length === 0) {
+      switch (mode) {
+        case "any":
+          gameWords.value = shuffleArray(cachedWordsAndData.value);
+          break;
+        case "my_dictionary":
+          gameWords.value = shuffleArray(myDictionary.value);
+          break;
+      }
+    }
   });
 
   function skipWord() {
@@ -100,6 +109,8 @@ export default function Translate() {
 
   }
 
+
+
   return (
     <>
       <View
@@ -107,13 +118,12 @@ export default function Translate() {
       >
         <View style={styles.topContainer}>
           {
-            cachedWordsAndData.value.length === 0 ? <Text style={{ color: CommonColors.white, fontSize: 20, marginTop: 10 }}>Võtame sõnad sõnastikust...</Text> :
+            gameWords.value.length === 0 ? <Text style={{ color: CommonColors.white, fontSize: 20, marginTop: 10 }}>Võtame sõnad sõnastikust...</Text> :
               <>
                 {mode === "my_dictionary" &&
                   <Text style={{ color: CommonColors.white, fontSize: 16 }}>
                     On jaanud: {gameWords.value.length}
                   </Text>
-
                 }
                 <Text style={{ color: CommonColors.white, fontSize: 16 }}>
                   Õige: {correctCount.value}
@@ -124,7 +134,7 @@ export default function Translate() {
               </>
           }
 
-          <ExamWordComponent words={gameWords} isAnswerVisible={isAnswerVisible} />
+          <ExamWordComponent words={gameWords} isAnswerVisible={isAnswerVisible} mode={mode} />
         </View>
         <View style={styles.bottomContainer} >
           <View style={{ flexDirection: "row", alignItems: "center" }}>

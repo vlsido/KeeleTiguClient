@@ -12,6 +12,7 @@ export interface ExamWord {
 interface ExamWordComponentProps {
   isAnswerVisible: Signal<boolean>;
   words: Signal<Word[]>;
+  mode: "any" | "my_dictionary";
 }
 
 function ExamWordComponent(props: ExamWordComponentProps) {
@@ -46,7 +47,6 @@ function ExamWordComponent(props: ExamWordComponentProps) {
         return wordElements;
       }
     }
-    wordElements.push(<ActivityIndicator key={"activity-indicator"} size={32} color={CommonColors.white} />);
     return wordElements;
   });
 
@@ -88,6 +88,14 @@ function ExamWordComponent(props: ExamWordComponentProps) {
     return wordElements;
   });
 
+  if (props.words.value.length === 0) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size={32} color={CommonColors.white} />
+      </View>
+    );
+  }
+
   return (
     <>
       <View style={styles.container}>
@@ -96,7 +104,7 @@ function ExamWordComponent(props: ExamWordComponentProps) {
       {props.isAnswerVisible.value === true && (
         <View style={styles.answerContainer}>
           {currentAnswer.value}
-          <AddToDictionaryButton />
+          {props.mode === "any" && <AddToDictionaryButton word={props.words.value.at(0)} />}
         </View>
       )}
     </>
