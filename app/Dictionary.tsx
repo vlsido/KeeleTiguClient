@@ -27,6 +27,7 @@ export interface Word {
   usages: {
     definitionData: {
       definitionText?: string;
+      fieldsOfKnowledge: string[];
       russianTranslations: string[];
     }[];
     examples?: {

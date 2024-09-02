@@ -5,7 +5,6 @@ export const myDictionary = signal<Word[]>([]);
 
 export const cachedWordsAndData = signal<Word[]>([]);
 
-
 effect(() => {
   console.log("[CHANGED] dictionary history", cachedWordsAndData.value.length);
   if (cachedWordsAndData.value.length > 250) {
