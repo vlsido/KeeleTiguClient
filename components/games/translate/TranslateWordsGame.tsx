@@ -6,10 +6,14 @@ import { Pressable, StyleSheet, Text, View, ViewStyle, useWindowDimensions } fro
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import OptionButton from "./OptionButton";
 import { myDictionary } from "@/components/util/WordsUtil";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { HintContext } from "@/components/store/HintContext";
 
 function TranslateWordsGame() {
+  useEffect(() => {
+    console.log("TranslateWordsGame mounted");
+  }, []);
+
   const dimensions = useWindowDimensions();
 
   const translateOptionsContainerHeight = useSignal<number>(0);
