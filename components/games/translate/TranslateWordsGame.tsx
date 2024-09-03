@@ -6,14 +6,10 @@ import { Pressable, StyleSheet, Text, View, ViewStyle, useWindowDimensions } fro
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import OptionButton from "./OptionButton";
 import { myDictionary } from "@/components/util/WordsUtil";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { HintContext } from "@/components/store/HintContext";
 
 function TranslateWordsGame() {
-  useEffect(() => {
-    console.log("TranslateWordsGame mounted");
-  }, []);
-
   const dimensions = useWindowDimensions();
 
   const translateOptionsContainerHeight = useSignal<number>(0);
@@ -120,7 +116,9 @@ const styles = StyleSheet.create({
   translateOptionsContainer: {
     width: "90%",
     backgroundColor: "#2C332C",
-    borderWidth: 1,
+    borderLeftWidth: 1,
+    borderRightWidth: 1,
+    borderBottomWidth: 1,
     borderColor: CommonColors.white,
     borderBottomLeftRadius: 5,
     borderBottomRightRadius: 5,
