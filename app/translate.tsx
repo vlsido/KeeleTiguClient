@@ -49,12 +49,13 @@ export default function Translate() {
   const textInputRef = useRef<TextInput>(null);
 
   function checkAnswer() {
-    if (answer.value === "" || gameWords.value.length === 0) {
+    const answerLowercase = answer.value.toLowerCase().trim();
+
+    if (answerLowercase === "" || gameWords.value.length === 0) {
       return;
     }
 
     const currentWordLowercase = gameWords.value[0].word.split("+").join("").toLowerCase();
-    const answerLowercase = answer.value.toLowerCase();
 
     console.log("gameWords: ", gameWords.value);
 
