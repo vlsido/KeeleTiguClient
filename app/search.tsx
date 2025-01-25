@@ -18,8 +18,12 @@ import { CommonColors } from "../constants/Colors";
 import SearchItem from "../components/search/SearchItem";
 import { router } from "expo-router";
 import { SearchIcon } from "../components/icons/SearchIcon";
+import { useAppDispatch, useAppSelector } from "../hooks/storeHooks";
 
 function Search() {
+  const query = useAppSelector((state) => state.search.query);
+  const result = useAppSelector((state) => state.search.results);
+  const dispatch = useAppDispatch();
   const searchQuery = useSignal<string>("");
   const searchResults = useSignal<WordWithoutData[]>([]);
 

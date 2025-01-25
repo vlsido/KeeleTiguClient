@@ -17,9 +17,12 @@ import ExamLink from "../components/ExamLink";
 import DictionaryLink from "../components/links/DictionaryLink";
 import SearchLink from "../components/links/SearchLink";
 import LeftHeaderButton from "../components/LeftHeaderButton";
+import { Provider } from "react-redux";
+import store from "../components/store/store";
+
+
 
 export default function RootLayout() {
-
   useSignalEffect(() => {
     if (allWords.value.length === 0) {
       getAllWords();
@@ -56,15 +59,17 @@ export default function RootLayout() {
   }
 
   return (
-    <ConfigContextProvider>
-      <HintContextProvider>
-        <AuthContextProvider>
-          <WordsContextProvider>
-            <RootLayoutStack />
-          </WordsContextProvider>
-        </AuthContextProvider>
-      </HintContextProvider >
-    </ConfigContextProvider>
+    <Provider store={store}>
+      <ConfigContextProvider>
+        <HintContextProvider>
+          <AuthContextProvider>
+            <WordsContextProvider>
+              <RootLayoutStack />
+            </WordsContextProvider>
+          </AuthContextProvider>
+        </HintContextProvider >
+      </ConfigContextProvider>
+    </Provider>
   );
 
 }
