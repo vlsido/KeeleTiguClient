@@ -1,4 +1,4 @@
-import { Word } from "../../app/Dictionary";
+import { Word } from "../../app/dictionary";
 import {
   StyleSheet,
   Text,

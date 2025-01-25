@@ -1,4 +1,4 @@
-import { Word } from "../../app/Dictionary";
+import { Word } from "../../app/dictionary";
 import { CommonColors } from "../../constants/Colors";
 import { ReadonlySignal } from "@preact/signals-react";
 import {

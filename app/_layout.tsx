@@ -4,7 +4,7 @@ import {
   cachedWordsAndData
 } from "../components/util/WordsUtil";
 import { callCloudFunction } from "../components/util/CloudFunctions";
-import { OnlyWordsResponse } from "./Dictionary";
+import { OnlyWordsResponse } from "./dictionary";
 import ConfigContextProvider from "../components/store/ConfigContext";
 import HintContextProvider from "../components/store/HintContext";
 import AuthContextProvider from "../components/store/AuthContext";

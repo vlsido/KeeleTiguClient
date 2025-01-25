@@ -12,7 +12,7 @@ import { callCloudFunction } from "../util/CloudFunctions";
 import {
   RandomWordsResponse,
   Word
-} from "../../app/Dictionary";
+} from "../../app/dictionary";
 
 interface WordsContextProps {
   cacheDictionary: () => void;

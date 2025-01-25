@@ -5,7 +5,7 @@ import { StyleSheet, Text } from "react-native";
 function DictionaryLink() {
 
   return (
-    <Link href="/Dictionary" style={styles.linkContainer}>
+    <Link href="/dictionary" style={styles.linkContainer}>
       <Text style={styles.linkText}>Minu Sõnastik</Text>
     </Link>
   )

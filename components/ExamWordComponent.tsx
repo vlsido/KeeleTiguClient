@@ -10,7 +10,7 @@ import {
   View
 } from "react-native";
 import AddToDictionaryButton from "./buttons/AddToDictionaryButton";
-import { Word } from "../app/Dictionary";
+import { Word } from "../app/dictionary";
 
 export interface ExamWord {
   word: string;

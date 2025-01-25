@@ -16,7 +16,7 @@ import {
   myDictionary,
   cachedWordsAndData
 } from "../util/WordsUtil";
-import { Word } from "../../app/Dictionary";
+import { Word } from "../../app/dictionary";
 
 interface AddToDictionaryButtonProps {
   word: Word | undefined;

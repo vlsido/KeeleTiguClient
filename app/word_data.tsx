@@ -9,7 +9,7 @@ import {
   Text,
   View
 } from "react-native";
-import { Word } from "./Dictionary";
+import { Word } from "./dictionary";
 import {
   myDictionary,
   cachedWordsAndData

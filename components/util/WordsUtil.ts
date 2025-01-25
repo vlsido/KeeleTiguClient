@@ -1,4 +1,4 @@
-import { Word } from "../../app/Dictionary";
+import { Word } from "../../app/dictionary";
 import { effect, signal } from "@preact/signals-react";
 
 export const myDictionary = signal<Word[]>([]);
