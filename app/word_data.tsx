@@ -1,18 +1,27 @@
-import { CommonColors } from "@/constants/Colors";
+import { CommonColors } from "../constants/Colors";
 import { useSignal } from "@preact/signals-react";
 import { useLocalSearchParams } from "expo-router";
 import { useContext, useEffect } from "react";
-import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from "react-native";
-import { Word } from "./dictionary";
-import { myDictionary, cachedWordsAndData } from "@/components/util/WordsUtil";
-import { callCloudFunction } from "@/components/util/CloudFunctions";
-import Forms from "@/components/text_components/Forms";
-import Type from "@/components/dictionary/Type";
-import Examples from "@/components/dictionary/Examples";
-import TextButton from "@/components/TextButton";
-import { i18n } from "@/components/store/i18n";
-import { HintContext } from "@/components/store/HintContext";
-import FoundArticlesCounter from "@/components/word_data/FoundArticlesCounter";
+import {
+  ActivityIndicator,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View
+} from "react-native";
+import { Word } from "./Dictionary";
+import {
+  myDictionary,
+  cachedWordsAndData
+} from "../components/util/WordsUtil";
+import { callCloudFunction } from "../components/util/CloudFunctions";
+import Forms from "../components/text_components/Forms";
+import Type from "../components/dictionary/Type";
+import Examples from "../components/dictionary/Examples";
+import TextButton from "../components/TextButton";
+import { i18n } from "../components/store/i18n";
+import { HintContext } from "../components/store/HintContext";
+import FoundArticlesCounter from "../components/word_data/FoundArticlesCounter";
 
 interface WordDataResponse {
   queryResponse: Word[];
@@ -23,9 +32,12 @@ function WordData() {
 
   const wordData = useSignal<Word[] | null>(null);
 
-  useEffect(() => {
-    getWordData();
-  }, []);
+  useEffect(
+    () => {
+      getWordData();
+    },
+    []
+  );
 
   function detectLanguage() {
     let estonianCount = 0;
@@ -41,7 +53,20 @@ function WordData() {
       }
       // Check for general Latin characters (A-Z, a-z)
       // And check for Estonian specific characters
-      else if ((charCode >= 0x0041 && charCode <= 0x005A) || (charCode >= 0x0061 && charCode <= 0x007A) || [0x00DC, 0x00FC, 0x00D5, 0x00F5, 0x00D6, 0x00F6, 0x00C4, 0x00E4, 0x017D, 0x017E, 0x0160, 0x0161].includes(charCode)) {
+      else if ((charCode >= 0x0041 && charCode <= 0x005A) || (charCode >= 0x0061 && charCode <= 0x007A) || [
+        0x00DC,
+        0x00FC,
+        0x00D5,
+        0x00F5,
+        0x00D6,
+        0x00F6,
+        0x00C4,
+        0x00E4,
+        0x017D,
+        0x017E,
+        0x0160,
+        0x0161
+      ].includes(charCode)) {
         estonianCount++;
       }
     }
@@ -56,11 +81,17 @@ function WordData() {
   }
 
   function normalizeRussianTranslation(translation: string) {
-    return translation.replace(/\"/g, "").toLowerCase();
+    return translation.replace(
+      /\"/g,
+      ""
+    ).toLowerCase();
   }
 
   async function getWordData() {
-    console.log("Open word", word);
+    console.log(
+      "Open word",
+      word
+    );
     const language = detectLanguage();
 
     // if (cachedWordsAndData.value.length > 0) {
@@ -93,12 +124,21 @@ function WordData() {
     //   }
     // }
 
-    console.log("Word data from history", cachedWordsAndData.value);
+    console.log(
+      "Word data from history",
+      cachedWordsAndData.value
+    );
 
-    const response = await callCloudFunction("GetWordData_Node", { word: word, language }) as WordDataResponse | undefined;
+    const response = await callCloudFunction(
+      "GetWordData_Node",
+      { word: word, language }
+    ) as WordDataResponse | undefined;
 
     if (response != null) {
-      console.log("Response", response);
+      console.log(
+        "Response",
+        response
+      );
 
       wordData.value = response.queryResponse;
       // if (cachedWordsAndData.value.find((word) => word.word === response.queryResponse.at(0)?.word)) {
@@ -121,16 +161,28 @@ function WordData() {
     console.log("added");
 
     if (myDictionary.value.find((word) => word.word === wordToAdd.word)) {
-      showHint("Sõna on juba sõnastikus!", 500);
+      showHint(
+        "Sõna on juba sõnastikus!",
+        500
+      );
       return;
     }
 
-    myDictionary.value = [...myDictionary.value, wordToAdd];
-    cachedWordsAndData.value = [...cachedWordsAndData.value, wordToAdd];
+    myDictionary.value = [
+      ...myDictionary.value,
+      wordToAdd
+    ];
+    cachedWordsAndData.value = [
+      ...cachedWordsAndData.value,
+      wordToAdd
+    ];
 
 
     // Add to dictionary
-    showHint("Lisatud!", 500);
+    showHint(
+      "Lisatud!",
+      500
+    );
   }
 
 
@@ -145,7 +197,9 @@ function WordData() {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <FoundArticlesCounter wordData={wordData} />
-      {wordData.value.length > 0 ? wordData.value.map((wordData, wordDataIndex) => {
+      {wordData.value.length > 0 ? wordData.value.map((
+        wordData, wordDataIndex
+      ) => {
         return (
           <View key={`wordIndex-${wordDataIndex}`}>
             <Text key={`wordIndex-${wordDataIndex}-text`} style={styles.wordText}>
@@ -153,20 +207,29 @@ function WordData() {
             </Text>
             <Forms key={`wordIndex-${wordDataIndex}-forms`} forms={wordData.forms} />
             <Type key={`wordIndex-${wordDataIndex}-type`} type={wordData.type} />
-            {wordData.usages.map((usage, usageIndex) => {
+            {wordData.usages.map((
+              usage, usageIndex
+            ) => {
               return (
                 <View key={`usage-${usageIndex}`}>
-                  {usage.definitionData.map((definition, index) => {
+                  {usage.definitionData.map((
+                    definition, index
+                  ) => {
                     const definitionIndexString: string = index === 0 ? `${usageIndex + 1}. ` : "\u25A0 "
 
                     return (
                       <View key={`usage-${wordDataIndex}-definition-${index}`}>
                         <Text key={`usage-${wordDataIndex}-definition-${index}-text`} style={styles.definitionText}>{definitionIndexString}{definition.definitionText}</Text>
                         {
-                          definition.russianTranslations.map((translation, index) => {
+                          definition.russianTranslations.map((
+                            translation, index
+                          ) => {
                             const textElements: React.JSX.Element[] = [];
                             if (translation == null) {
-                              console.log("Translation is null", translation);
+                              console.log(
+                                "Translation is null",
+                                translation
+                              );
                               return null;
                             }
                             const russianTranslationWordParts = translation.split("\"");
@@ -180,11 +243,9 @@ function WordData() {
                                 textElements.push(<Text key={`usage-${wordDataIndex}-russian-translation-${index}-current-word-part-${i}`} style={styles.russianText}>{russianTranslationWordParts[i]}</Text>);
                               } else {
                                 // The part after the quote, where the first letter is the accent
-                                textElements.push(
-                                  <Text key={`usage-${wordDataIndex}-russian-translation-${index}-current-word-part-${i}`} style={styles.russianAccentText}>{russianTranslationWordParts[i][0]}
-                                    <Text key={`usage-${wordDataIndex}-russian-translation-${index}-current-word-part-${i}-rest`} style={styles.russianText}>{russianTranslationWordParts[i].slice(1)}</Text>
-                                  </Text>,
-                                );
+                                textElements.push(<Text key={`usage-${wordDataIndex}-russian-translation-${index}-current-word-part-${i}`} style={styles.russianAccentText}>{russianTranslationWordParts[i][0]}
+                                  <Text key={`usage-${wordDataIndex}-russian-translation-${index}-current-word-part-${i}-rest`} style={styles.russianText}>{russianTranslationWordParts[i].slice(1)}</Text>
+                                </Text>,);
                               }
                             }
                             if (normalizeRussianTranslation(russianTranslationWordPartsJoined).includes(normalizeRussianTranslation(word)) === true) {
@@ -207,7 +268,10 @@ function WordData() {
 
 
             })}
-            <TextButton key={`wordIndex-${wordDataIndex}-add`} style={styles.addToDictionaryContainer} textStyle={styles.addToDictionaryText} text={i18n.t("add_to_dictionary", { defaultValue: "Lisa sõnastikku" })} onPress={() => addToDictionary(wordData)} label="Add to dictionary" />
+            <TextButton key={`wordIndex-${wordDataIndex}-add`} style={styles.addToDictionaryContainer} textStyle={styles.addToDictionaryText} text={i18n.t(
+              "add_to_dictionary",
+              { defaultValue: "Lisa sõnastikku" }
+            )} onPress={() => addToDictionary(wordData)} label="Add to dictionary" />
           </View>
         );
       }) : <Text style={styles.notFoundText}>Ei leitud!</Text>}

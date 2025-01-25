@@ -1,6 +1,10 @@
-import { ActivityIndicator, StyleSheet, View } from "react-native";
+import {
+  ActivityIndicator,
+  StyleSheet,
+  View
+} from "react-native";
 import TextButton from "./TextButton";
-import { CommonColors } from "@/constants/Colors";
+import { CommonColors } from "../constants/Colors";
 import { ReadonlySignal } from "@preact/signals-react";
 
 interface RegisterButtonProps {

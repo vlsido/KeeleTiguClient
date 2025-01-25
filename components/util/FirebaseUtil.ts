@@ -2,12 +2,18 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "./FirebaseConfig";
 
 
-export async function loginUser(email: string, password: string) {
+export async function loginUser(
+  email: string, password: string
+) {
   try {
-    await signInWithEmailAndPassword(auth, email, password);
-  } catch (error: any) {
+    await signInWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+  } catch (error) {
     console.error(error);
-    let errorMessage: any;
+    let errorMessage: string;
     switch (error.code) {
       case "auth/invalid-email":
         errorMessage = "Invalid email format.";

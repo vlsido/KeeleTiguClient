@@ -1,26 +1,29 @@
-import { useSignal, useSignalEffect } from "@preact/signals-react";
-import { FlatList, Pressable, StyleSheet, TextInput, View, useWindowDimensions } from "react-native";
-import { WordWithoutData, allWords } from "@/components/util/WordsUtil";
-import { CommonColors } from "@/constants/Colors";
-import SearchItem from "@/components/search/SearchItem";
-import IconButton from "@/components/IconButton";
+import {
+  useSignal,
+  useSignalEffect
+} from "@preact/signals-react";
+import {
+  FlatList,
+  Pressable,
+  StyleSheet,
+  TextInput,
+  View,
+  useWindowDimensions
+} from "react-native";
+import {
+  WordWithoutData,
+  allWords
+} from "../components/util/WordsUtil";
+import { CommonColors } from "../constants/Colors";
+import SearchItem from "../components/search/SearchItem";
 import { router } from "expo-router";
-import TextButton from "@/components/TextButton";
-import { SearchIcon } from "@/components/icons/SearchIcon";
+import { SearchIcon } from "../components/icons/SearchIcon";
 
 function Search() {
   const searchQuery = useSignal<string>("");
   const searchResults = useSignal<WordWithoutData[]>([]);
 
   const { height, width } = useWindowDimensions();
-
-  useSignalEffect(() => {
-    if (searchResults.value) {
-      console.log("searchResults", searchResults.value.length);
-    }
-  });
-
-
 
   function onChange(text: string) {
     if (text === "") {
@@ -44,8 +47,13 @@ function Search() {
 
   return (
     <View style={styles.container}>
-      <View style={[styles.searchContainer, width > height ? { width: "50%" } : { width: "90%" }]}>
-        <View style={[styles.searchFieldContainer]}>
+      <View style={[
+        styles.searchContainer,
+        width > height ? { width: "50%" } : { width: "90%" }
+      ]}>
+        <View style={[
+          styles.searchFieldContainer
+        ]}>
           <TextInput
             placeholder="Otsi..."
             style={styles.searchInput}
@@ -63,7 +71,9 @@ function Search() {
         <FlatList
           data={searchResults.value}
           renderItem={({ item, index }) => <SearchItem word={item.word} index={index + 1} />}
-          keyExtractor={(item, index) => `item-${item}-${index}`}
+          keyExtractor={(
+            item, index
+          ) => `item-${item}-${index}`}
         />
       </View>
     </View>

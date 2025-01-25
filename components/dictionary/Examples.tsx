@@ -1,8 +1,17 @@
-import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming
+} from "react-native-reanimated";
 import TextButton from "../TextButton";
-import { StyleSheet, Text, View, ViewStyle } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  ViewStyle
+} from "react-native";
 import { useSignal } from "@preact/signals-react";
-import { CommonColors } from "@/constants/Colors";
+import { CommonColors } from "../../constants/Colors";
 
 interface ExamplesProps {
   examples?: {
@@ -27,7 +36,10 @@ function Examples(props: ExamplesProps) {
 
   function triggerExamples() {
 
-    height.value = withTiming(height.value === 0 ? examplesContainerHeight.value : 0, { duration: 100 });
+    height.value = withTiming(
+      height.value === 0 ? examplesContainerHeight.value : 0,
+      { duration: 100 }
+    );
     props.examples?.forEach((example) => {
       console.log(example);
     });
@@ -40,14 +52,21 @@ function Examples(props: ExamplesProps) {
   return (
     <>
       <TextButton text="ava näited" textStyle={styles.openExamplesText} onPress={triggerExamples} label="Show examples" />
-      <Animated.View style={[animatedStyle, { overflow: "hidden" }]}>
+      <Animated.View style={[
+        animatedStyle,
+        { overflow: "hidden" }
+      ]}>
         <View onLayout={(event) => { examplesContainerHeight.value = event.nativeEvent.layout.height }}>
-          {props.examples?.map((example, index) => {
+          {props.examples?.map((
+            example, index
+          ) => {
 
             return (
               <View style={{ flexDirection: "column", width: "100%" }} key={`example-${index}`}>
                 <Text style={styles.estonianExample} >{example.estonianExample}</Text>
-                {example.russianTranslations.map((translation, index) => {
+                {example.russianTranslations.map((
+                  translation, index
+                ) => {
                   const russianTranslation: string = translation.split("\"").join("");
 
                   return (

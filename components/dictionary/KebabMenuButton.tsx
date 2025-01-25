@@ -1,8 +1,11 @@
-import { Pressable, StyleSheet, View } from "react-native";
+import {
+  Pressable,
+  StyleSheet,
+  View
+} from "react-native";
 import { useSignal } from "@preact/signals-react";
 import KebabMenu from "./KebabMenu";
-import { CommonColors } from "@/constants/Colors";
-import { myDictionary } from "../util/WordsUtil";
+import { CommonColors } from "../../constants/Colors";
 
 interface KebabMenuButtonProps {
   word: string;

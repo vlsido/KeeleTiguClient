@@ -1,12 +1,27 @@
-import TextAnswerField from "@/components/TextAnswerField";
-import { CommonColors } from "@/constants/Colors";
-import { useEffect, useRef } from "react";
-import { StyleSheet, Text, TextInput, View } from "react-native";
-import { Word } from "./dictionary";
-import { batch, useSignal, useSignalEffect } from "@preact/signals-react";
-import ExamWordComponent from "@/components/ExamWordComponent";
-import TextButton from "@/components/TextButton";
-import { myDictionary, cachedWordsAndData } from "@/components/util/WordsUtil";
+import TextAnswerField from "../components/TextAnswerField";
+import { CommonColors } from "../constants/Colors";
+import {
+  useEffect,
+  useRef
+} from "react";
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  View
+} from "react-native";
+import { Word } from "./Dictionary";
+import {
+  batch,
+  useSignal,
+  useSignalEffect
+} from "@preact/signals-react";
+import ExamWordComponent from "../components/ExamWordComponent";
+import TextButton from "../components/TextButton";
+import {
+  myDictionary,
+  cachedWordsAndData
+} from "../components/util/WordsUtil";
 import { useLocalSearchParams } from "expo-router";
 
 export default function Translate() {
@@ -21,7 +36,8 @@ export default function Translate() {
   const incorrectCount = useSignal<number>(0);
 
   function shuffleArray(array: Word[]) {
-    let newIndex, temporaryData;
+    let newIndex: number;
+    let temporaryData: Word;
     for (let index = 0; index < array.length; index++) {
       newIndex = Math.floor(Math.random() * index);
       temporaryData = array[index];
@@ -31,18 +47,23 @@ export default function Translate() {
     return array;
   }
 
-  useEffect(() => {
-    if (gameWords.value.length === 0) {
-      switch (mode) {
-        case "any":
-          gameWords.value = shuffleArray(cachedWordsAndData.value);
-          break;
-        case "my_dictionary":
-          gameWords.value = shuffleArray(myDictionary.value);
-          break;
+  useEffect(
+    () => {
+      if (gameWords.value.length === 0) {
+        switch (mode) {
+          case "any":
+            gameWords.value = shuffleArray(cachedWordsAndData.value);
+            break;
+          case "my_dictionary":
+            gameWords.value = shuffleArray(myDictionary.value);
+            break;
+        }
       }
-    }
-  }, [mode === "any" ? cachedWordsAndData.value : myDictionary.value]);
+    },
+    [
+      mode === "any" ? cachedWordsAndData.value : myDictionary.value
+    ]
+  );
 
   const lastIncorrectWord = useSignal<string>("");
 
@@ -57,10 +78,19 @@ export default function Translate() {
 
     const currentWordLowercase = gameWords.value[0].word.split("+").join("").toLowerCase();
 
-    console.log("gameWords: ", gameWords.value);
+    console.log(
+      "gameWords: ",
+      gameWords.value
+    );
 
-    console.log("Current word: ", currentWordLowercase);
-    console.log("Answer: ", answerLowercase);
+    console.log(
+      "Current word: ",
+      currentWordLowercase
+    );
+    console.log(
+      "Answer: ",
+      answerLowercase
+    );
 
     if (currentWordLowercase === answerLowercase) {
       console.log("Correct!");

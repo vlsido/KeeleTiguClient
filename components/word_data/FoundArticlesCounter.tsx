@@ -1,7 +1,11 @@
-import { Word } from "@/app/dictionary";
-import { CommonColors } from "@/constants/Colors";
+import { Word } from "../../app/Dictionary";
+import { CommonColors } from "../../constants/Colors";
 import { ReadonlySignal } from "@preact/signals-react";
-import { StyleSheet, Text, View } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View
+} from "react-native";
 import { i18n } from "../store/i18n";
 
 interface FoundArticlesCounterProps {
@@ -19,10 +23,13 @@ function FoundArticlesCounter(props: FoundArticlesCounterProps) {
         <Text
           style={styles.wordCountText}
         >
-          {i18n.t("count_words_in_search", {
-            defaultValue: "Leitud %{count} artiklit",
-            count: props.wordData.value.length,
-          })}
+          {i18n.t(
+            "count_words_in_search",
+            {
+              defaultValue: "Leitud %{count} artiklit",
+              count: props.wordData.value.length,
+            }
+          )}
         </Text>
       </View>
     )

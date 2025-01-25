@@ -1,19 +1,22 @@
-import ExamLink from "@/components/ExamLink";
-import LeftHeaderButton from "@/components/LeftHeaderButton";
-import AuthContextProvider from "@/components/store/AuthContext";
-import HintContextProvider from "@/components/store/HintContext";
-import { CommonColors } from "@/constants/Colors";
-import { Stack } from "expo-router";
-import WordsContextProvider from "@/components/store/WordsContext";
-import DictionaryLink from "@/components/links/DictionaryLink";
-import SearchLink from "@/components/links/SearchLink";
-import { View } from "react-native";
-import { allWords, cachedWordsAndData } from "@/components/util/WordsUtil";
-import { callCloudFunction } from "@/components/util/CloudFunctions";
 import { useSignalEffect } from "@preact/signals-react";
-import { OnlyWordsResponse } from "./dictionary";
-import ConfigContextProvider, { ConfigContext } from "@/components/store/ConfigContext";
-import { useContext } from "react";
+import {
+  allWords,
+  cachedWordsAndData
+} from "../components/util/WordsUtil";
+import { callCloudFunction } from "../components/util/CloudFunctions";
+import { OnlyWordsResponse } from "./Dictionary";
+import ConfigContextProvider from "../components/store/ConfigContext";
+import HintContextProvider from "../components/store/HintContext";
+import AuthContextProvider from "../components/store/AuthContext";
+import WordsContextProvider from "../components/store/WordsContext";
+import { Stack } from "expo-router";
+import { CommonColors } from "../constants/Colors";
+import { useConfig } from "../hooks/useConfig";
+import { View } from "react-native";
+import ExamLink from "../components/ExamLink";
+import DictionaryLink from "../components/links/DictionaryLink";
+import SearchLink from "../components/links/SearchLink";
+import LeftHeaderButton from "../components/LeftHeaderButton";
 
 export default function RootLayout() {
 
@@ -25,7 +28,10 @@ export default function RootLayout() {
 
   useSignalEffect(() => {
     if (cachedWordsAndData.value.length > 0) {
-      localStorage.setItem("cachedWordsAndData", JSON.stringify(cachedWordsAndData.value));
+      localStorage.setItem(
+        "cachedWordsAndData",
+        JSON.stringify(cachedWordsAndData.value)
+      );
     }
   });
 
@@ -35,11 +41,17 @@ export default function RootLayout() {
       return;
     }
 
-    const response = await callCloudFunction("GetDictionaryWordsOnly_Node", {}) as OnlyWordsResponse | null;
+    const response = await callCloudFunction(
+      "GetDictionaryWordsOnly_Node",
+      {}
+    ) as OnlyWordsResponse | null;
 
     if (response != null) {
       allWords.value = response.dictionary;
-      localStorage.setItem("allWords", JSON.stringify(allWords.value));
+      localStorage.setItem(
+        "allWords",
+        JSON.stringify(allWords.value)
+      );
     }
   }
 
@@ -58,7 +70,7 @@ export default function RootLayout() {
 }
 
 function RootLayoutStack() {
-  const { isUnderMaintenance } = useContext(ConfigContext);
+  const { isUnderMaintenance } = useConfig();
 
   return (
     <Stack
@@ -66,9 +78,9 @@ function RootLayoutStack() {
         headerStyle: {
           backgroundColor: CommonColors.black,
         },
-        headerTintColor: '#fff',
+        headerTintColor: "#fff",
         headerTitleStyle: {
-          fontWeight: 'bold',
+          fontWeight: "bold",
         },
         headerLeft: () => (
           <View style={{ flexDirection: "row" }}>

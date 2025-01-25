@@ -16,8 +16,13 @@ function HintContextProvider({ children }: { children: React.ReactNode }) {
   const isHintVisible = useSignal<boolean>(false);
   const duration = useSignal<number>(2000);
 
-  function showHint(text: string, durationInMs: number) {
-    console.log("siin", isHintVisible.value);
+  function showHint(
+    text: string, durationInMs: number
+  ) {
+    console.log(
+      "siin",
+      isHintVisible.value
+    );
     hintText.value = text;
     duration.value = durationInMs;
     isHintVisible.value = true;

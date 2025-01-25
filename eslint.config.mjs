@@ -13,12 +13,11 @@ export default [
       "@stylistic": stylistic,
       "disable-autofix": disableAutofix,
     },
-    languageOptions: {
-      parserOptions: {
-        ecmaFeatures: { jsx: true },
-      },
-      globals: globals.browser,
-    },
+    // languageOptions: {
+    //   parserOptions: {
+    //     ecmaFeatures: { jsx: true },
+    //   },
+    // },
     rules: {
       "@stylistic/quotes": ["warn", "double"],
       "@stylistic/array-bracket-newline": ["warn", { minItems: 1 }],

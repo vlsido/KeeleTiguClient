@@ -1,7 +1,20 @@
-import { Pressable, StyleSheet, Text, View, ViewStyle } from "react-native";
-import Animated, { ReduceMotion, SharedValue, runOnJS, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
-import { CommonColors } from "@/constants/Colors";
-import { ReadonlySignal, signal, useSignalEffect } from "@preact/signals-react";
+import {
+  Pressable,
+  StyleSheet,
+  ViewStyle
+} from "react-native";
+import Animated, {
+  SharedValue,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming
+} from "react-native-reanimated";
+import { CommonColors } from "../constants/Colors";
+import {
+  ReadonlySignal,
+  signal,
+  useSignalEffect
+} from "@preact/signals-react";
 import { CheckmarkIcon } from "./icons/CheckmarkIcon";
 
 export const textAnswerFieldContainerWidth = signal<number>(0);
@@ -26,10 +39,16 @@ function SendAnswerButton(props: SendAnswerButtonProps) {
 
   useSignalEffect(() => {
     if (props.answer.value !== "") {
-      props.opacity.value = withTiming(1, { duration: 100 });
+      props.opacity.value = withTiming(
+        1,
+        { duration: 100 }
+      );
       pointerEvents.value = "auto";
     } else {
-      props.opacity.value = withTiming(0.16888, { duration: 33 });
+      props.opacity.value = withTiming(
+        0.16888,
+        { duration: 33 }
+      );
       pointerEvents.value = "none";
     }
   });
@@ -54,7 +73,10 @@ function SendAnswerButton(props: SendAnswerButtonProps) {
 
   return (
     <AnimatedPressable
-      style={[animatedStyle, styles.container]}
+      style={[
+        animatedStyle,
+        styles.container
+      ]}
       hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
       onPress={onPress}
     >

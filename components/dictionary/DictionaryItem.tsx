@@ -1,7 +1,11 @@
-import { Word } from "@/app/dictionary";
-import { StyleSheet, Text, View } from "react-native";
+import { Word } from "../../app/Dictionary";
+import {
+  StyleSheet,
+  Text,
+  View
+} from "react-native";
 import Forms from "../text_components/Forms";
-import { CommonColors } from "@/constants/Colors";
+import { CommonColors } from "../../constants/Colors";
 import Examples from "./Examples";
 import KebabMenuButton from "./KebabMenuButton";
 import Type from "./Type";
@@ -31,20 +35,29 @@ function DictionaryItem(props: DictionaryItemProps) {
           </Text>
           <Forms forms={props.forms} />
           <Type type={props.type} />
-          {props.usages.map((usage, usageIndex) => {
+          {props.usages.map((
+            usage, usageIndex
+          ) => {
             return (
               <View key={`usage-${usageIndex}`}>
-                {usage.definitionData.map((definition, definitionIndex) => {
+                {usage.definitionData.map((
+                  definition, definitionIndex
+                ) => {
                   const definitionIndexString: string = definitionIndex === 0 ? `${usageIndex + 1}. ` : "\u25A0 ";
 
                   return (
                     <View key={`usage-${usageIndex}-definition-${definitionIndex}`}>
                       <Text key={`usage-${usageIndex}-definition-${definitionIndex}-text`} style={styles.definitionText}>{definitionIndexString}{definition.definitionText}</Text>
                       {
-                        definition.russianTranslations.map((translation, index) => {
+                        definition.russianTranslations.map((
+                          translation, index
+                        ) => {
                           const textElements: React.JSX.Element[] = [];
                           if (translation == null) {
-                            console.log("Translation is null", translation);
+                            console.log(
+                              "Translation is null",
+                              translation
+                            );
                             return null;
                           }
                           const russianTranslationWordParts = translation.split("\"");

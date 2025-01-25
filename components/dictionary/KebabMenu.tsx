@@ -1,9 +1,18 @@
-import { Signal, useSignalEffect } from "@preact/signals-react";
-import { Animated, Pressable, StyleSheet } from "react-native";
-import { ReduceMotion, runOnJS, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
+import {
+  Signal,
+} from "@preact/signals-react";
+import {
+  Pressable,
+  StyleSheet
+} from "react-native";
+import Animated, {
+  FadeIn,
+  FadeOut,
+  ReduceMotion,
+} from "react-native-reanimated";
 import { myDictionary } from "../util/WordsUtil";
 import TextButton from "../TextButton";
-import { CommonColors } from "@/constants/Colors";
+import { CommonColors } from "../../constants/Colors";
 
 interface KebabMenuProps {
   isVisible: Signal<boolean>;
@@ -12,7 +21,6 @@ interface KebabMenuProps {
 }
 
 function KebabMenu(props: KebabMenuProps) {
-  const opacity = useSharedValue<number>(0);
 
   function onRemoveWord() {
     myDictionary.value = myDictionary.value.filter((word) => word.word !== props.word);
@@ -21,34 +29,7 @@ function KebabMenu(props: KebabMenuProps) {
     }
   }
 
-  useSignalEffect(() => {
-    if (props.isVisible.value === true) {
-      opacity.value = withTiming(1, {
-        duration: 250,
-        reduceMotion: ReduceMotion.System,
-      });
-    }
-  });
-
-  function handleClose() {
-    opacity.value = withTiming(
-      0,
-      { duration: 250, reduceMotion: ReduceMotion.System },
-      () => {
-        runOnJS(props.onClose)();
-      },
-    );
-  }
-
-
   const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
-
-  const animatedPressableStyle = useAnimatedStyle(() => {
-    return {
-      opacity: opacity.value,
-    };
-  });
-
 
   if (!props.isVisible.value) {
     return null;
@@ -69,9 +50,14 @@ function KebabMenu(props: KebabMenuProps) {
           justifyContent: "center",
           alignItems: "center",
         },
-        animatedPressableStyle,
       ]}
-      onPress={handleClose}
+      entering={FadeIn.
+        duration(250).
+        reduceMotion(ReduceMotion.System)}
+      exiting={FadeOut.
+        duration(250).
+        reduceMotion(ReduceMotion.System)}
+      onPress={props.onClose}
     >
       <TextButton
         text={"Eemalda"}

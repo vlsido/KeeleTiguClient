@@ -1,8 +1,25 @@
-import { CommonColors } from "@/constants/Colors";
-import { Signal, useSignal, useSignalEffect } from "@preact/signals-react";
-import { StyleSheet, Text, TextInput, TextStyle, View } from "react-native";
-import Animated, { ReduceMotion, runOnJS, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
-import SendAnswerButton, { textAnswerFieldContainerWidth } from "./SendAnswerButton";
+import { CommonColors } from "../constants/Colors";
+import {
+  Signal,
+  useSignalEffect
+} from "@preact/signals-react";
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  TextStyle,
+  View
+} from "react-native";
+import Animated, {
+  ReduceMotion,
+  runOnJS,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming
+} from "react-native-reanimated";
+import SendAnswerButton, {
+  textAnswerFieldContainerWidth
+} from "./SendAnswerButton";
 
 
 interface TextAnswerFieldProps {
@@ -16,7 +33,10 @@ function TextAnswerField(props: TextAnswerFieldProps) {
   const sendAnswerButtonOpacity = useSharedValue<number>(0);
 
   function onChange(text: string) {
-    console.log("text", text);
+    console.log(
+      "text",
+      text
+    );
     props.answer.value = text;
   }
 
@@ -42,7 +62,10 @@ function TextAnswerField(props: TextAnswerFieldProps) {
 
   function onSubmit() {
     "worklet";
-    sendAnswerButtonOpacity.value = withTiming(0.16888, { duration: 33, reduceMotion: ReduceMotion.System });
+    sendAnswerButtonOpacity.value = withTiming(
+      0.16888,
+      { duration: 33, reduceMotion: ReduceMotion.System }
+    );
     props.textInputRef.current?.clear();
     runOnJS(props.onSubmit)();
   }
@@ -58,7 +81,10 @@ function TextAnswerField(props: TextAnswerFieldProps) {
           ref={props.textInputRef}
           tabIndex={0}
           onLayout={(event) => textAnswerFieldContainerWidth.value = event.nativeEvent.layout.width}
-          style={[styles.inputText, animatedStyle]}
+          style={[
+            styles.inputText,
+            animatedStyle
+          ]}
           placeholder="Kirjuta vastust siia..."
           onFocus={() => props.isValid.value = true}
           onChange={(event) => onChange(event.nativeEvent.text)}

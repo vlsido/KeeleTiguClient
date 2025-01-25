@@ -1,9 +1,18 @@
-import { createContext, useEffect } from "react";
-import Hint from "../Hint";
-import { useSignal, useSignalEffect } from "@preact/signals-react";
-import { allWords, cachedWords, myDictionary, cachedWordsAndData } from "../util/WordsUtil";
+import {
+  createContext,
+  useEffect
+} from "react";
+import { useSignalEffect } from "@preact/signals-react";
+import {
+  allWords,
+  myDictionary,
+  cachedWordsAndData
+} from "../util/WordsUtil";
 import { callCloudFunction } from "../util/CloudFunctions";
-import { RandomWordsResponse, Word } from "@/app/dictionary";
+import {
+  RandomWordsResponse,
+  Word
+} from "../../app/Dictionary";
 
 interface WordsContextProps {
   cacheDictionary: () => void;
@@ -16,16 +25,17 @@ export const WordsContext = createContext<WordsContextProps>({
 
 });
 
-
 function WordsContextProvider({ children }: { children: React.ReactNode }) {
-
 
   async function getRandomWords() {
     const data = {
       numberOfWords: 100,
     };
 
-    const responseData = await callCloudFunction("GetRandomWords_Node", data) as RandomWordsResponse | null;
+    const responseData = await callCloudFunction(
+      "GetRandomWords_Node",
+      data
+    ) as RandomWordsResponse | null;
 
     if (responseData != null) {
       const wordsData = responseData.randomWords.map((word: Word) => {
@@ -53,14 +63,20 @@ function WordsContextProvider({ children }: { children: React.ReactNode }) {
 
   useSignalEffect(() => {
     if (myDictionary.value.length > 0) {
-      console.log("[CHANGED] Caching myDictionary", myDictionary.value);
+      console.log(
+        "[CHANGED] Caching myDictionary",
+        myDictionary.value
+      );
       cacheDictionary();
     }
   });
 
-  useEffect(() => {
-    getCachedDictionary();
-  }, []);
+  useEffect(
+    () => {
+      getCachedDictionary();
+    },
+    []
+  );
 
 
   function getCachedDictionary() {
@@ -68,11 +84,17 @@ function WordsContextProvider({ children }: { children: React.ReactNode }) {
 
     myDictionary.value = cached != null ? JSON.parse(cached) : [];
 
-    console.log("myDictionary loaded!", myDictionary.value);
+    console.log(
+      "myDictionary loaded!",
+      myDictionary.value
+    );
   }
 
   function cacheDictionary() {
-    localStorage.setItem("myDictionary", JSON.stringify(myDictionary.value));
+    localStorage.setItem(
+      "myDictionary",
+      JSON.stringify(myDictionary.value)
+    );
     console.log("myDictionary cached!");
   }
 

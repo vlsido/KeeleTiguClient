@@ -1,8 +1,13 @@
-import DictionaryItem from "@/components/dictionary/DictionaryItem";
-import { i18n } from "@/components/store/i18n";
-import { WordWithoutData, myDictionary } from "@/components/util/WordsUtil";
-import { CommonColors } from "@/constants/Colors";
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  View
+} from "react-native";
+import { WordWithoutData, myDictionary } from "../components/util/WordsUtil";
+import { i18n } from "../components/store/i18n";
+import DictionaryItem from "../components/dictionary/DictionaryItem";
+import { CommonColors } from "../constants/Colors";
 
 export interface DictionaryRequest {
   page: number;
@@ -56,10 +61,13 @@ function Dictionary() {
   return (
     <View style={styles.container}>
       <Text style={styles.text}>
-        {i18n.t("count_words_in_dictionary", {
-          defaultValue: "Sõnastikus on %{count} sõnad",
-          count: myDictionary.value.length,
-        })}
+        {i18n.t(
+          "count_words_in_dictionary",
+          {
+            defaultValue: "Sõnastikus on %{count} sõnad",
+            count: myDictionary.value.length,
+          }
+        )}
       </Text>
       <FlatList
         data={myDictionary.value}

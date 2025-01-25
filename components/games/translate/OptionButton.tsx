@@ -1,6 +1,10 @@
-import { CheckmarkIcon } from "@/components/icons/CheckmarkIcon";
-import { CommonColors } from "@/constants/Colors";
-import { Pressable, StyleSheet, Text } from "react-native"
+import { CheckmarkIcon } from "../../../components/icons/CheckmarkIcon";
+import { CommonColors } from "../../../constants/Colors";
+import {
+  Pressable,
+  StyleSheet,
+  Text
+} from "react-native"
 
 interface OptionButtonProps {
   text: string;

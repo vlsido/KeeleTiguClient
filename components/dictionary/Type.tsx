@@ -1,5 +1,8 @@
-import { CommonColors } from "@/constants/Colors";
-import { StyleSheet, Text } from "react-native";
+import { CommonColors } from "../../constants/Colors";
+import {
+  StyleSheet,
+  Text
+} from "react-native";
 
 interface TypeProps {
   type: "s" | "v" | "adj" | "adv" | "konj" | undefined;

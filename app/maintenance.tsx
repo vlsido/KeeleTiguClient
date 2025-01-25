@@ -1,4 +1,4 @@
-import { CommonColors } from "@/constants/Colors";
+import { CommonColors } from "../constants/Colors";
 import { useSignal } from "@preact/signals-react";
 import { StyleSheet, Text, View } from "react-native";
 

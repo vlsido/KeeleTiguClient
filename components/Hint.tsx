@@ -1,4 +1,8 @@
-import { StyleSheet, Text, View } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View
+} from "react-native";
 import Animated, {
   useSharedValue,
   withTiming,
@@ -6,8 +10,13 @@ import Animated, {
   ReduceMotion,
   runOnJS,
 } from "react-native-reanimated";
-import { ReadonlySignal, Signal, useSignal, useSignalEffect } from "@preact/signals-react";
-import { CommonColors } from "@/constants/Colors";
+import {
+  ReadonlySignal,
+  Signal,
+  useSignal,
+  useSignalEffect
+} from "@preact/signals-react";
+import { CommonColors } from "../constants/Colors";
 
 interface HintProps {
   text: ReadonlySignal<string>;
@@ -33,18 +42,21 @@ function Hint(props: HintProps) {
   });
 
   function hideWithDelay() {
-    setTimeout(() => {
-      opacity.value = withTiming(
-        0,
-        {
-          duration: 500,
-          reduceMotion: ReduceMotion.System,
-        },
-        () => {
-          runOnJS(unmount)();
-        },
-      );
-    }, props.duration.value);
+    setTimeout(
+      () => {
+        opacity.value = withTiming(
+          0,
+          {
+            duration: 500,
+            reduceMotion: ReduceMotion.System,
+          },
+          () => {
+            runOnJS(unmount)();
+          },
+        );
+      },
+      props.duration.value
+    );
   }
 
   function unmount() {
@@ -95,7 +107,10 @@ function Hint(props: HintProps) {
           },
         ]}
       >
-        <Text style={[styles.hintText, { color: CommonColors.black }]}>
+        <Text style={[
+          styles.hintText,
+          { color: CommonColors.black }
+        ]}>
           {props.text}
         </Text>
       </Animated.View>

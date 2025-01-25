@@ -1,8 +1,12 @@
-import { StyleSheet, Text, View } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View
+} from "react-native";
 import { auth } from "./util/FirebaseConfig";
 import { router } from "expo-router";
 import TextButton from "./TextButton";
-import { CommonColors } from "@/constants/Colors";
+import { CommonColors } from "../constants/Colors";
 
 function RightHeaderButton() {
   async function handleLogout() {

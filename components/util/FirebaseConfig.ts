@@ -2,8 +2,6 @@ import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFunctions } from "firebase/functions";
 import { getFirestore } from "firebase/firestore";
-import { getRemoteConfig } from "firebase/remote-config";
-import { ReCaptchaEnterpriseProvider, initializeAppCheck } from "firebase/app-check";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAtAMXf-JMlMDi4h_ZYtHRs09aSCuR1s-A",

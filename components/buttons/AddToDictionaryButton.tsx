@@ -1,11 +1,22 @@
-import { Alert, Pressable, StyleSheet, ViewStyle } from "react-native";
+import {
+  Pressable,
+  StyleSheet,
+  ViewStyle
+} from "react-native";
 import { AddToDictionaryIcon } from "../icons/AddToDictionaryIcon";
-import Animated, { ReduceMotion, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
-import { auth } from "../util/FirebaseConfig";
+import Animated, {
+  ReduceMotion,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming
+} from "react-native-reanimated";
 import { useContext } from "react";
 import { HintContext } from "../store/HintContext";
-import { myDictionary, cachedWordsAndData } from "../util/WordsUtil";
-import { Word } from "@/app/dictionary";
+import {
+  myDictionary,
+  cachedWordsAndData
+} from "../util/WordsUtil";
+import { Word } from "../../app/Dictionary";
 
 interface AddToDictionaryButtonProps {
   word: Word | undefined;
@@ -24,33 +35,58 @@ function AddToDictionaryButton(props: AddToDictionaryButtonProps) {
   const { showHint } = useContext(HintContext);
 
   function onPress() {
-    opacity.value = withTiming(0.5, { duration: 50, reduceMotion: ReduceMotion.System }, () => {
-      opacity.value = withTiming(1, { duration: 100, reduceMotion: ReduceMotion.System });
-    });
+    opacity.value = withTiming(
+      0.5,
+      { duration: 50, reduceMotion: ReduceMotion.System },
+      () => {
+        opacity.value = withTiming(
+          1,
+          { duration: 100, reduceMotion: ReduceMotion.System }
+        );
+      }
+    );
 
     const currentWord = props.word;
 
     if (currentWord !== undefined) {
       if (myDictionary.value.find((word) => word.word === currentWord.word)) {
-        showHint("Sõna on juba sõnastikus!", 500);
+        showHint(
+          "Sõna on juba sõnastikus!",
+          500
+        );
         return;
       }
 
-      myDictionary.value = [...myDictionary.value, currentWord];
-      cachedWordsAndData.value = [...cachedWordsAndData.value, currentWord];
+      myDictionary.value = [
+        ...myDictionary.value,
+        currentWord
+      ];
+      cachedWordsAndData.value = [
+        ...cachedWordsAndData.value,
+        currentWord
+      ];
 
       // Add to dictionary
-      showHint("Lisatud!", 500);
+      showHint(
+        "Lisatud!",
+        500
+      );
     } else {
 
-      showHint("Error! No words loaded.", 500);
+      showHint(
+        "Error! No words loaded.",
+        500
+      );
     }
 
   }
 
   return (
     <AnimatedPressable onPress={onPress}
-      style={[animatedStyle, styles.container]}
+      style={[
+        animatedStyle,
+        styles.container
+      ]}
     >
       <AddToDictionaryIcon />
     </AnimatedPressable>

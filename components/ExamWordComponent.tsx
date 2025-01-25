@@ -1,8 +1,16 @@
-import { CommonColors } from "@/constants/Colors";
-import { Signal, useComputed } from "@preact/signals-react";
-import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import { CommonColors } from "../constants/Colors";
+import {
+  Signal,
+  useComputed
+} from "@preact/signals-react";
+import {
+  ActivityIndicator,
+  StyleSheet,
+  Text,
+  View
+} from "react-native";
 import AddToDictionaryButton from "./buttons/AddToDictionaryButton";
-import { Word } from "@/app/dictionary";
+import { Word } from "../app/Dictionary";
 
 export interface ExamWord {
   word: string;
@@ -22,7 +30,9 @@ function ExamWordComponent(props: ExamWordComponentProps) {
       const word = props.words.value.at(0);
 
       if (word != null) {
-        word?.usages.at(0)?.definitionData.at(0)?.russianTranslations.forEach((translation, index) => {
+        word?.usages.at(0)?.definitionData.at(0)?.russianTranslations.forEach((
+          translation, index
+        ) => {
           const textElements: React.JSX.Element[] = [];
           const russianTranslationWordParts = translation.split("\"");
 
@@ -72,13 +82,9 @@ function ExamWordComponent(props: ExamWordComponentProps) {
             wordElements.push(<Text key={`answer-part-${i}-parentheses`} style={styles.smallText}> (<Text key={`answer-part-${i}`} style={styles.smallAccentedText}>{wordParts[i]}</Text></Text>);
 
           } else if (i !== 0 && i !== wordParts.length - 1) {
-            wordElements.push(
-              <Text key={`answer-part-${i}`} style={styles.smallText}>{wordParts[i]}</Text>
-            );
+            wordElements.push(<Text key={`answer-part-${i}`} style={styles.smallText}>{wordParts[i]}</Text>);
           } else if (i === wordParts.length - 1) {
-            wordElements.push(
-              <Text key={`answer-part-${i}`} style={styles.smallText}>+{wordParts[i]})</Text>
-            );
+            wordElements.push(<Text key={`answer-part-${i}`} style={styles.smallText}>+{wordParts[i]})</Text>);
           }
         }
 

@@ -1,11 +1,11 @@
-import { CommonColors } from "@/constants/Colors";
+import { CommonColors } from "../../constants/Colors";
 import { Link } from "expo-router";
 import { StyleSheet, Text } from "react-native";
 
 function DictionaryLink() {
 
   return (
-    <Link href="/dictionary" style={styles.linkContainer}>
+    <Link href="/Dictionary" style={styles.linkContainer}>
       <Text style={styles.linkText}>Minu Sõnastik</Text>
     </Link>
   )

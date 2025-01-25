@@ -1,4 +1,4 @@
-import { CommonColors } from "@/constants/Colors";
+import { CommonColors } from "../../constants/Colors";
 import { StyleSheet, Text, View } from "react-native";
 
 interface FormsProps {
@@ -10,7 +10,10 @@ function Forms(props: FormsProps) {
     return null;
   }
 
-  const fixedForms = props.forms.replaceAll("_&_", " ~ ");
+  const fixedForms = props.forms.replaceAll(
+    "_&_",
+    " ~ "
+  );
 
   return (
     <View style={styles.container}>

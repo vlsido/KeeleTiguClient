@@ -1,13 +1,28 @@
-import { TranslateIcon } from "@/components/icons/TranslateIcon";
-import { CommonColors } from "@/constants/Colors";
-import { untracked, useSignal, useSignalEffect } from "@preact/signals-react";
+import { TranslateIcon } from "../../../components/icons/TranslateIcon";
+import { CommonColors } from "../../../constants/Colors";
+import {
+  untracked,
+  useSignal,
+  useSignalEffect
+} from "@preact/signals-react";
 import { router } from "expo-router";
-import { Pressable, StyleSheet, Text, View, ViewStyle, useWindowDimensions } from "react-native";
-import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
+import {
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+  ViewStyle,
+  useWindowDimensions
+} from "react-native";
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming
+} from "react-native-reanimated";
 import OptionButton from "./OptionButton";
-import { myDictionary } from "@/components/util/WordsUtil";
+import { myDictionary } from "../../../components/util/WordsUtil";
 import { useContext } from "react";
-import { HintContext } from "@/components/store/HintContext";
+import { HintContext } from "../../../components/store/HintContext";
 
 function TranslateWordsGame() {
   const dimensions = useWindowDimensions();
@@ -20,15 +35,25 @@ function TranslateWordsGame() {
   useSignalEffect(() => {
     if (isTranslateOptionsVisible.value != null) {
       untracked(() => {
-        translateOptionsHeight.value = withTiming(isTranslateOptionsVisible.value === true ? translateOptionsContainerHeight.value : 0, { duration: 500 });
+        translateOptionsHeight.value = withTiming(
+          isTranslateOptionsVisible.value === true ? translateOptionsContainerHeight.value : 0,
+          { duration: 500 }
+        );
       });
     }
   });
 
   function toggleTranslateGameOptions() {
-    translateGameContainerOpacity.value = withTiming(translateGameContainerOpacity.value === 1 ? 0.5 : 1, { duration: 50 }, () => {
-      translateGameContainerOpacity.value = withTiming(translateGameContainerOpacity.value === 0.5 ? 1 : 0.75, { duration: 50 });
-    });
+    translateGameContainerOpacity.value = withTiming(
+      translateGameContainerOpacity.value === 1 ? 0.5 : 1,
+      { duration: 50 },
+      () => {
+        translateGameContainerOpacity.value = withTiming(
+          translateGameContainerOpacity.value === 0.5 ? 1 : 0.75,
+          { duration: 50 }
+        );
+      }
+    );
     isTranslateOptionsVisible.value = !isTranslateOptionsVisible.value;
   }
 
@@ -55,7 +80,10 @@ function TranslateWordsGame() {
 
     <View style={{ width: dimensions.width > dimensions.height ? "33%" : "75%" }}>
       <AnimatedPressable
-        style={[translateGameContainerAnimatedStyle, styles.translateButton]}
+        style={[
+          translateGameContainerAnimatedStyle,
+          styles.translateButton
+        ]}
         aria-label="Ava tõlge mäng valikud"
         onHoverIn={() => { }}
         onHoverOut={() => { }}
@@ -66,9 +94,14 @@ function TranslateWordsGame() {
           Sõnade tõlkimine
         </Text>
       </AnimatedPressable>
-      <Animated.View style={[translateOptionsAnimatedStyle, { overflow: "hidden", alignItems: "center" }]}>
+      <Animated.View style={[
+        translateOptionsAnimatedStyle,
+        { overflow: "hidden", alignItems: "center" }
+      ]}>
         <View
-          style={[styles.translateOptionsContainer]}
+          style={[
+            styles.translateOptionsContainer
+          ]}
           onLayout={(event) => { translateOptionsContainerHeight.value = event.nativeEvent.layout.height }}>
           <OptionButton
             text={"Suvalised sõnad"}
@@ -78,7 +111,10 @@ function TranslateWordsGame() {
             text={"Sõnad mu sõnastikust"}
             onPress={() => {
               if (myDictionary.value.length < 1) {
-                showHint("Sõnastik on tühi", 1000);
+                showHint(
+                  "Sõnastik on tühi",
+                  1000
+                );
                 return;
               }
               wordsOptions.value = "my_dictionary"
