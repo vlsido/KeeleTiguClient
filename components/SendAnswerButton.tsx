@@ -16,6 +16,7 @@ import {
   useSignalEffect
 } from "@preact/signals-react";
 import { CheckmarkIcon } from "./icons/CheckmarkIcon";
+import { AnimatedPressable } from "./util/AnimatedComponentsUtil";
 
 export const textAnswerFieldContainerWidth = signal<number>(0);
 
@@ -53,7 +54,6 @@ function SendAnswerButton(props: SendAnswerButtonProps) {
     }
   });
 
-  const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
   const animatedStyle = useAnimatedStyle<ViewStyle>(() => {
     return {

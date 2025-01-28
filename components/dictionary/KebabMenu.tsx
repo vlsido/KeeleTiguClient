@@ -13,6 +13,7 @@ import Animated, {
 import { myDictionary } from "../util/WordsUtil";
 import TextButton from "../TextButton";
 import { CommonColors } from "../../constants/Colors";
+import { AnimatedPressable } from "../util/AnimatedComponentsUtil";
 
 interface KebabMenuProps {
   isVisible: Signal<boolean>;
@@ -28,8 +29,6 @@ function KebabMenu(props: KebabMenuProps) {
       localStorage.removeItem("myDictionary");
     }
   }
-
-  const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
   if (!props.isVisible.value) {
     return null;

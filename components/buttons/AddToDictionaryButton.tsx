@@ -12,18 +12,19 @@ import Animated, {
 } from "react-native-reanimated";
 import { useContext } from "react";
 import { HintContext } from "../store/HintContext";
-import {
-  myDictionary,
-  cachedWordsAndData
-} from "../util/WordsUtil";
 import { Word } from "../../app/dictionary";
+import { useAppSelector } from "../../hooks/storeHooks";
+import { AnimatedPressable } from "../util/AnimatedComponentsUtil";
 
 interface AddToDictionaryButtonProps {
   word: Word | undefined;
 }
 
 function AddToDictionaryButton(props: AddToDictionaryButtonProps) {
-  const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+  const { showHint } = useContext(HintContext);
+
+  const myDictionary = useAppSelector((state) => state.dictionary.myDictionary);
+
   const opacity = useSharedValue<number>(1);
 
   const animatedStyle = useAnimatedStyle<ViewStyle>(() => {
@@ -32,7 +33,6 @@ function AddToDictionaryButton(props: AddToDictionaryButtonProps) {
     }
   });
 
-  const { showHint } = useContext(HintContext);
 
   function onPress() {
     opacity.value = withTiming(

@@ -8,6 +8,7 @@ import Animated, {
   useSharedValue,
   withTiming
 } from "react-native-reanimated";
+import { AnimatedPressable } from "./util/AnimatedComponentsUtil";
 
 interface IconButtonProps {
   onPress: () => void;
@@ -17,8 +18,6 @@ interface IconButtonProps {
 }
 
 function IconButton(props: IconButtonProps) {
-  const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
-
   const opacity = useSharedValue<number>(1);
 
   const animatedPressableStyle = useAnimatedStyle<ViewStyle>(() => {

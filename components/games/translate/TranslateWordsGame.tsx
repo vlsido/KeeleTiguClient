@@ -23,6 +23,7 @@ import OptionButton from "./OptionButton";
 import { myDictionary } from "../../../components/util/WordsUtil";
 import { useContext } from "react";
 import { HintContext } from "../../../components/store/HintContext";
+import { AnimatedPressable } from "../../util/AnimatedComponentsUtil";
 
 function TranslateWordsGame() {
   const dimensions = useWindowDimensions();
@@ -69,8 +70,6 @@ function TranslateWordsGame() {
       opacity: translateGameContainerOpacity.value,
     };
   });
-
-  const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
   const wordsOptions = useSignal<"any" | "my_dictionary">("any");
 
