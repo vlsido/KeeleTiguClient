@@ -13,11 +13,6 @@ export default [
       "@stylistic": stylistic,
       "disable-autofix": disableAutofix,
     },
-    // languageOptions: {
-    //   parserOptions: {
-    //     ecmaFeatures: { jsx: true },
-    //   },
-    // },
     rules: {
       "@stylistic/quotes": ["warn", "double"],
       "@stylistic/array-bracket-newline": ["warn", { minItems: 1 }],
@@ -40,6 +35,16 @@ export default [
       "no-unreachable-loop": ["warn"],
       "no-invalid-regexp": ["error"],
       "react/react-in-jsx-scope": "off",
+      "no-restricted-imports": "off",
+      "@typescript-eslint/no-restricted-imports": [
+        "warn",
+        {
+          name: "react-redux",
+          importNames: ["useSelector", "useDispatch"],
+          message:
+            "Use typed hooks `useAppDispatch` and `useAppSelector` instead.",
+        },
+      ],
     },
   },
 ];
