@@ -37,12 +37,15 @@ export default function Translate() {
 
   function shuffleArray(array: Word[]) {
     let newIndex: number;
-    let temporaryData: Word;
     for (let index = 0; index < array.length; index++) {
       newIndex = Math.floor(Math.random() * index);
-      temporaryData = array[index];
-      array[index] = array[newIndex];
-      array[newIndex] = temporaryData;
+      [
+        array[index],
+        array[newIndex]
+      ] = [
+          array[newIndex],
+          array[index]
+        ];
     }
     return array;
   }

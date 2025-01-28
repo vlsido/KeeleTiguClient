@@ -9,14 +9,11 @@ import {
   useEffect
 } from "react";
 import { app } from "../util/FirebaseConfig";
-import {
-  allWords,
-  myDictionary,
-  cachedWordsAndData
-} from "../util/WordsUtil";
 import { i18n } from "./i18n";
 import ee from "../../components/store/translations/ee.json"
 import { useSignal } from "@preact/signals-react";
+import { useAppDispatch } from "../../hooks/storeHooks";
+import { clearDictionary } from "./slices/dictionarySlice";
 
 interface ConfigContextProps {
   remoteConfig: RemoteConfig | null;
@@ -32,14 +29,28 @@ export const ConfigContext = createContext<ConfigContextProps>({
 function ConfigContextProvider({ children }: { children: React.ReactNode }) {
   const remoteConfig = getRemoteConfig(app);
 
+  const dispatch = useAppDispatch();
+
   const isUnderMaintenance = useSignal<boolean>(false);
 
-  remoteConfig.settings.minimumFetchIntervalMillis = 600000; // 600000ms = 10 minutes
-
-  remoteConfig.defaultConfig = { current_build_version: "1.0.0", is_under_maintenance: false, maintenance_text: "Uuendame appi, proovige uuesti hiljem!" };
 
   useEffect(
     () => {
+      const unsubscribe = i18n.onChange(() => {
+        console.log("I18n has changed!");
+      });
+
+      return unsubscribe;
+    },
+    []
+  );
+
+  useEffect(
+    () => {
+      remoteConfig.settings.minimumFetchIntervalMillis = 600000; // 600000ms = 10 minutes
+
+      remoteConfig.defaultConfig = { current_build_version: "1.0.0", is_under_maintenance: false, maintenance_text: "Uuendame appi, proovige uuesti hiljem!" };
+
       fetchAndActivate(remoteConfig).
         then(() => {
 
@@ -75,7 +86,8 @@ function ConfigContextProvider({ children }: { children: React.ReactNode }) {
             ).asString()
           );
 
-          getDictionaryHistory();
+          dispatch({ type: "dictionary/loadCachedWords" });
+
           loadTranslations("ee");
         }).catch((error) => {
           console.log(
@@ -95,29 +107,8 @@ function ConfigContextProvider({ children }: { children: React.ReactNode }) {
     console.log("Removing cache...");
     localStorage.removeItem("allWords");
     localStorage.removeItem("cachedWordsAndData");
-    allWords.value = [];
-    myDictionary.value = [];
-    cachedWordsAndData.value = [];
+    dispatch(clearDictionary());
   }
-
-
-  function getDictionaryHistory() {
-    if (localStorage.getItem("cachedWordsAndData") != null) {
-      cachedWordsAndData.value = JSON.parse(localStorage.getItem("cachedWordsAndData") as string);
-      return;
-    }
-  }
-
-  useEffect(
-    () => {
-      const unsubscribe = i18n.onChange(() => {
-        console.log("I18n has changed!");
-      });
-
-      return unsubscribe;
-    },
-    []
-  );
 
   async function loadTranslations(locale: string) {
     i18n.defaultLocale = locale;

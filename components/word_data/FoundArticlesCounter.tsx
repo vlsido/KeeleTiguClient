@@ -1,6 +1,5 @@
 import { Word } from "../../app/dictionary";
 import { CommonColors } from "../../constants/Colors";
-import { ReadonlySignal } from "@preact/signals-react";
 import {
   StyleSheet,
   Text,
@@ -9,15 +8,15 @@ import {
 import { i18n } from "../store/i18n";
 
 interface FoundArticlesCounterProps {
-  wordData: ReadonlySignal<Word[] | null>;
+  wordData: Word[] | null;
 }
 
 function FoundArticlesCounter(props: FoundArticlesCounterProps) {
-  if (!props.wordData.value) {
+  if (!props.wordData) {
     return null;
   }
 
-  if (props.wordData.value.length > 0 && props.wordData.value.length < 51) {
+  if (props.wordData.length > 0 && props.wordData.length < 51) {
     return (
       <View style={styles.wordCount}>
         <Text
@@ -27,7 +26,7 @@ function FoundArticlesCounter(props: FoundArticlesCounterProps) {
             "count_words_in_search",
             {
               defaultValue: "Leitud %{count} artiklit",
-              count: props.wordData.value.length,
+              count: props.wordData.length,
             }
           )}
         </Text>

@@ -4,28 +4,27 @@ import {
 } from "react-native";
 import { CommonColors } from "../../constants/Colors";
 import TextButton from "../TextButton";
-import { useSignal } from "@preact/signals-react";
-import { router } from "expo-router";
+import { useState } from "react";
 
 interface SearchItemProps {
   index: number;
   word: string;
+  onPress: (word: string) => Promise<void>
 }
 
 function SearchItem(props: SearchItemProps) {
 
-  function openWordPage() {
-    router.push({ pathname: "/word_data", params: { word: props.word } });
-  }
-
-  const isHoveredIn = useSignal<boolean>(false);
+  const [
+    isHoveredIn,
+    setIsHoveredIn
+  ] = useState<boolean>(false);
 
   function onHoverIn() {
-    isHoveredIn.value = true;
+    setIsHoveredIn(true);
   }
 
   function onHoverOut() {
-    isHoveredIn.value = false;
+    setIsHoveredIn(false);
   }
 
   return (
@@ -33,15 +32,15 @@ function SearchItem(props: SearchItemProps) {
       <TextButton
         style={[
           styles.wordContainer,
-          isHoveredIn.value === true ?
+          isHoveredIn === true ?
             { backgroundColor: "rgba(223, 255, 255, 0.9)" }
             : { backgroundColor: CommonColors.white }
         ]}
         text={props.word}
-        onPress={openWordPage}
+        onPress={() => props.onPress(props.word)}
         textStyle={[
           styles.wordText,
-          isHoveredIn.value === true ? { color: CommonColors.black } : { color: CommonColors.black }
+          isHoveredIn === true ? { color: CommonColors.black } : { color: CommonColors.black }
         ]}
         label={`Word: ${props.word}. Open link.`}
         onHoverIn={onHoverIn}
