@@ -11,6 +11,7 @@ const tintColorDark = "#fff";
 
 export const CommonColors = {
   white: "#F3FFF3",
+  whiteA50: "#F3FFF380",
   black: "#212221",
   green: "#62DD7D",
   yellow: "#EBA575",
