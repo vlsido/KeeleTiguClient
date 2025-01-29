@@ -1,6 +1,6 @@
-import TextAnswerField from "../components/TextAnswerField";
 import { CommonColors } from "../constants/Colors";
 import {
+  useCallback,
   useEffect,
   useRef
 } from "react";
@@ -11,32 +11,66 @@ import {
   View
 } from "react-native";
 import { Word } from "./dictionary";
-import {
-  batch,
-  useSignal,
-  useSignalEffect
-} from "@preact/signals-react";
-import ExamWordComponent from "../components/ExamWordComponent";
 import TextButton from "../components/TextButton";
-import {
-  myDictionary,
-  cachedWordsAndData
-} from "../components/util/WordsUtil";
 import { useLocalSearchParams } from "expo-router";
+import { useAppSelector } from "../hooks/storeHooks";
+import {
+  atom,
+  useAtom,
+  useSetAtom
+} from "jotai";
+import ExamWordComponent from "../components/screens/translate/ExamWordComponent";
+import TextAnswerField from "../components/screens/translate/TextAnswerField";
+import {
+  answerAtom,
+  gameWordsAtom,
+  isAnswerValidAtom,
+  isAnswerVisibleAtom
+} from "../components/screens/translate/translateAtoms";
+
+const correctCountAtom = atom<number>(0);
+const incorrectCountAtom = atom<number>(0);
+const lastIncorrectWordAtom = atom<string>("");
 
 export default function Translate() {
   const { mode } = useLocalSearchParams<{ mode: "any" | "my_dictionary" }>();
 
-  const gameWords = useSignal<Word[]>([]);
+  const myDictionary = useAppSelector((state) => state.dictionary.myDictionary);
 
-  const answer = useSignal<string>("");
-  const isAnswerValid = useSignal<boolean>(true);
-  const isAnswerVisible = useSignal<boolean>(false);
-  const correctCount = useSignal<number>(0);
-  const incorrectCount = useSignal<number>(0);
+  const cachedDictionary = useAppSelector((state) => state.dictionary.cachedDictionary);
+
+  const [
+    gameWords,
+    setGameWords
+  ] = useAtom<Word[]>(gameWordsAtom);
+
+  const [
+    answer,
+    setAnswer
+  ] = useAtom<string>(answerAtom);
+
+  const setIsAnswerValid = useSetAtom(isAnswerValidAtom);
+
+  const setIsAnswerVisible = useSetAtom(isAnswerVisibleAtom);
+
+  const [
+    correctCount,
+    setCorrectCount
+  ] = useAtom<number>(correctCountAtom);
+
+  const [
+    incorrectCount,
+    setIncorrectCount
+  ] = useAtom<number>(incorrectCountAtom);
+
+  const [
+    lastIncorrectWord,
+    setLastIncorrectWord
+  ] = useAtom<string>(lastIncorrectWordAtom);
 
   function shuffleArray(array: Word[]) {
     let newIndex: number;
+
     for (let index = 0; index < array.length; index++) {
       newIndex = Math.floor(Math.random() * index);
       [
@@ -50,100 +84,103 @@ export default function Translate() {
     return array;
   }
 
-  useEffect(
+  const refreshGameWords = useCallback(
     () => {
-      if (gameWords.value.length === 0) {
-        switch (mode) {
-          case "any":
-            gameWords.value = shuffleArray(cachedWordsAndData.value);
-            break;
-          case "my_dictionary":
-            gameWords.value = shuffleArray(myDictionary.value);
-            break;
-        }
+      switch (mode) {
+        case "any":
+          setGameWords(shuffleArray([
+            ...cachedDictionary
+          ]));
+          break;
+        case "my_dictionary":
+          setGameWords(shuffleArray([
+            ...myDictionary
+          ]));
+          break;
       }
     },
     [
-      mode === "any" ? cachedWordsAndData.value : myDictionary.value
+      mode === "any" ? cachedDictionary : myDictionary
     ]
   );
 
-  const lastIncorrectWord = useSignal<string>("");
+  useEffect(
+    () => {
+      refreshGameWords();
+    },
+    []
+  );
+
+  useEffect(
+    () => {
+      if (gameWords.length === 0) {
+        refreshGameWords();
+      }
+    },
+    [
+      gameWords
+    ]
+  );
+
 
   const textInputRef = useRef<TextInput>(null);
 
-  function checkAnswer() {
-    const answerLowercase = answer.value.toLowerCase().trim();
+  const checkAnswer = useCallback(
+    () => {
+      const answerLowercase = answer.toLowerCase().trim();
 
-    if (answerLowercase === "" || gameWords.value.length === 0) {
-      return;
-    }
-
-    const currentWordLowercase = gameWords.value[0].word.split("+").join("").toLowerCase();
-
-    console.log(
-      "gameWords: ",
-      gameWords.value
-    );
-
-    console.log(
-      "Current word: ",
-      currentWordLowercase
-    );
-    console.log(
-      "Answer: ",
-      answerLowercase
-    );
-
-    if (currentWordLowercase === answerLowercase) {
-      console.log("Correct!");
-      isAnswerVisible.value = false;
-      batch(() => {
-        gameWords.value = gameWords.value.slice(1);
-        correctCount.value += 1;
-      });
-    } else {
-      console.log("Incorrect!");
-      if (lastIncorrectWord.value !== currentWordLowercase) {
-        batch(() => {
-          lastIncorrectWord.value = currentWordLowercase;
-          incorrectCount.value += 1;
-        });
+      if (answerLowercase === "" || gameWords.length === 0) {
+        return;
       }
 
-      batch(() => {
-        isAnswerValid.value = false;
-        isAnswerVisible.value = true;
+      const currentWordLowercase = gameWords[0].word.split("+").join("").toLowerCase();
 
-      });
-    }
+      console.log(
+        "gameWords: ",
+        gameWords
+      );
 
-    answer.value = "";
-  }
+      console.log(
+        "Current word: ",
+        currentWordLowercase
+      );
+      console.log(
+        "Answer: ",
+        answerLowercase
+      );
 
-  useSignalEffect(() => {
-    if (gameWords.value.length === 0) {
-      switch (mode) {
-        case "any":
-          gameWords.value = shuffleArray(cachedWordsAndData.value);
-          break;
-        case "my_dictionary":
-          gameWords.value = shuffleArray(myDictionary.value);
-          break;
+      if (currentWordLowercase === answerLowercase) {
+        console.log("Correct!");
+        setIsAnswerVisible(false);
+        setGameWords(gameWords.slice(1));
+        setCorrectCount(correctCount + 1);
+      } else {
+        console.log("Incorrect!");
+        if (lastIncorrectWord !== currentWordLowercase) {
+          setLastIncorrectWord(currentWordLowercase);
+          setIncorrectCount(incorrectCount + 1);
+        }
+
+        setIsAnswerValid(false);
+        setIsAnswerVisible(true);
+
       }
-    }
-  });
+
+      setAnswer("");
+    },
+    [
+      answer,
+      gameWords,
+      correctCount,
+      incorrectCount
+    ]
+  );
 
   function skipWord() {
-    batch(() => {
-      isAnswerVisible.value = false;
-      gameWords.value = gameWords.value.slice(1);
-      answer.value = "";
-    });
-
+    setIsAnswerVisible(false);
+    setGameWords(gameWords.slice(1));
+    setAnswer("");
   }
-
-
 
   return (
     <>
@@ -152,27 +189,27 @@ export default function Translate() {
       >
         <View style={styles.topContainer}>
           {
-            gameWords.value.length === 0 ? <Text style={{ color: CommonColors.white, fontSize: 20, marginTop: 10 }}>Võtame sõnad sõnastikust...</Text> :
+            gameWords.length === 0 ? <Text style={{ color: CommonColors.white, fontSize: 20, marginTop: 10 }}>Võtame sõnad sõnastikust...</Text> :
               <>
                 {mode === "my_dictionary" &&
                   <Text style={{ color: CommonColors.white, fontSize: 16 }}>
-                    On jaanud: {gameWords.value.length}
+                    On jaanud: {gameWords.length}
                   </Text>
                 }
                 <Text style={{ color: CommonColors.white, fontSize: 16 }}>
-                  Õige: {correctCount.value}
+                  Õige: {correctCount}
                 </Text>
                 <Text style={{ color: CommonColors.white, fontSize: 16 }}>
-                  Vale: {incorrectCount.value}
+                  Vale: {incorrectCount}
                 </Text>
               </>
           }
 
-          <ExamWordComponent words={gameWords} isAnswerVisible={isAnswerVisible} mode={mode} />
+          <ExamWordComponent mode={mode} />
         </View>
         <View style={styles.bottomContainer} >
           <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <TextAnswerField answer={answer} isValid={isAnswerValid} onSubmit={checkAnswer} textInputRef={textInputRef} />
+            <TextAnswerField onSubmit={checkAnswer} textInputRef={textInputRef} />
           </View>
           <TextButton
             onPress={skipWord}

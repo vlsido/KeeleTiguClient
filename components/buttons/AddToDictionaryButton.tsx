@@ -1,29 +1,36 @@
 import {
-  Pressable,
   StyleSheet,
   ViewStyle
 } from "react-native";
 import { AddToDictionaryIcon } from "../icons/AddToDictionaryIcon";
-import Animated, {
+import {
   ReduceMotion,
   useAnimatedStyle,
   useSharedValue,
   withTiming
 } from "react-native-reanimated";
-import { useContext } from "react";
-import { HintContext } from "../store/HintContext";
 import { Word } from "../../app/dictionary";
-import { useAppSelector } from "../../hooks/storeHooks";
+import {
+  useAppDispatch,
+  useAppSelector
+} from "../../hooks/storeHooks";
 import { AnimatedPressable } from "../util/AnimatedComponentsUtil";
+import {
+  pushToCachedDictionary,
+  pushToMyDictionary
+} from "../store/slices/dictionarySlice";
+import { useHint } from "../../hooks/useHint";
 
 interface AddToDictionaryButtonProps {
   word: Word | undefined;
 }
 
 function AddToDictionaryButton(props: AddToDictionaryButtonProps) {
-  const { showHint } = useContext(HintContext);
+  const { showHint } = useHint();
 
   const myDictionary = useAppSelector((state) => state.dictionary.myDictionary);
+
+  const dispatch = useAppDispatch();
 
   const opacity = useSharedValue<number>(1);
 
@@ -49,33 +56,27 @@ function AddToDictionaryButton(props: AddToDictionaryButtonProps) {
     const currentWord = props.word;
 
     if (currentWord !== undefined) {
-      if (myDictionary.value.find((word) => word.word === currentWord.word)) {
+      if (myDictionary.find((word) => word.word === currentWord.word)) {
         showHint(
           "Sõna on juba sõnastikus!",
-          500
+          2500
         );
         return;
       }
 
-      myDictionary.value = [
-        ...myDictionary.value,
-        currentWord
-      ];
-      cachedWordsAndData.value = [
-        ...cachedWordsAndData.value,
-        currentWord
-      ];
+      dispatch(pushToMyDictionary(currentWord));
+
+      dispatch(pushToCachedDictionary(currentWord));
 
       // Add to dictionary
       showHint(
         "Lisatud!",
-        500
+        2500
       );
     } else {
-
       showHint(
         "Error! No words loaded.",
-        500
+        2500
       );
     }
 

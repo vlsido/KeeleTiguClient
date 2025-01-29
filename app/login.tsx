@@ -5,28 +5,51 @@ import {
   NativeSyntheticEvent,
   StyleSheet,
   Text,
-  TextInput,
   TextInputChangeEventData,
   TextStyle,
   View,
 } from "react-native";
-import { useSignal } from "@preact/signals-react";
 import {
   Link,
   router
 } from "expo-router";
 import { auth } from "../components/util/FirebaseConfig";
-import Animated, {
+import {
   useAnimatedStyle,
   useSharedValue
 } from "react-native-reanimated";
 import LoginButton from "../components/LoginButton";
+import {
+  atom,
+  useAtom
+} from "jotai";
+import { useMemo } from "react";
+import { AnimatedTextInput } from "../components/util/AnimatedComponentsUtil";
 
 function Login() {
-  const email = useSignal<string>("");
-  const password = useSignal<string>("");
-  const isProcessing = useSignal<boolean>(false);
-  const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
+  const [
+    email,
+    setEmail
+  ] = useAtom<string>(useMemo(
+    () => atom<string>(""),
+    []
+  ));
+
+  const [
+    password,
+    setPassword
+  ] = useAtom<string>(useMemo(
+    () => atom<string>(""),
+    []
+  ));
+
+  const [
+    isProcessing,
+    setIsProcessing
+  ] = useAtom<boolean>(useMemo(
+    () => atom<boolean>(false),
+    []
+  ));
 
   const emailBorderColor = useSharedValue<string>("gray");
 
@@ -45,37 +68,42 @@ function Login() {
   });
 
   async function handleLogin() {
-    if (email.value === "" || password.value === "") {
-      if (email.value === "") {
+    if (email === "" || password === "") {
+      if (email === "") {
         emailBorderColor.value = "red";
       }
-      if (password.value === "") {
+      if (password === "") {
         passwordBorderColor.value = "red";
       }
       return;
     }
-    isProcessing.value = true;
+
+    setIsProcessing(true);
+
     await loginUser(
-      email.value,
-      password.value
+      email,
+      password
     ).catch((error) => {
-      alert(error.message);
-      isProcessing.value = false;
+      alert("Error logging in: " +
+        error.message);
+      console.error(
+        "Error logging in",
+        error
+      );
     });
 
-
-    isProcessing.value = false;
+    setIsProcessing(false);
     if (auth.currentUser && !auth.currentUser.isAnonymous) {
       router.replace("/");
     }
   }
 
   function onChangeEmail(event: NativeSyntheticEvent<TextInputChangeEventData>) {
-    email.value = event.nativeEvent.text;
+    setEmail(event.nativeEvent.text);
   }
 
   function onChangePassword(event: NativeSyntheticEvent<TextInputChangeEventData>) {
-    password.value = event.nativeEvent.text;
+    setPassword(event.nativeEvent.text);
   }
 
   return (

@@ -14,10 +14,10 @@ import {
   WordWithoutData,
 } from "../components/util/WordsUtil";
 import { CommonColors } from "../constants/Colors";
-import SearchItem from "../components/search/SearchItem";
 import { SearchIcon } from "../components/icons/SearchIcon";
 import {
   useCallback,
+  useMemo,
   useRef
 } from "react";
 import {
@@ -29,10 +29,11 @@ import Animated, {
   useSharedValue,
 } from "react-native-reanimated";
 import { Word } from "./dictionary";
-import WordData from "./word_data";
 import { callCloudFunction } from "../components/util/CloudFunctions";
 import { useHint } from "../hooks/useHint";
 import { useAppSelector } from "../hooks/storeHooks";
+import SearchItem from "../components/screens/search/SearchItem";
+import WordData from "../components/WordData";
 
 interface SearchDataResults {
   queryResponse: Word[];
@@ -44,7 +45,6 @@ const wordsDataArrayAtom = atom<Word[]>([]);
 const isSearchingInProcessAtom = atom<boolean>(false);
 const searchStringAtom = atom<string>("");
 const searchTimeoutIdAtom = atom<NodeJS.Timeout | null>(null);
-const searchFieldHeightAtom = atom<number>(0);
 
 function Search() {
   const { showHint } = useHint();
@@ -84,7 +84,10 @@ function Search() {
   const [
     searchFieldHeight,
     setSearchFieldHeight
-  ] = useAtom<number>(searchFieldHeightAtom);
+  ] = useAtom<number>(useMemo(
+    () => atom<number>(0),
+    []
+  ));
 
   const searchListOpacity = useSharedValue<number>(0);
   const searchListPointerEvents = useSharedValue<"auto" | "none">("none");

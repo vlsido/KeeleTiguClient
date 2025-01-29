@@ -5,16 +5,15 @@ import {
 } from "react-native";
 import TextButton from "./TextButton";
 import { CommonColors } from "../constants/Colors";
-import { ReadonlySignal } from "@preact/signals-react";
 
 interface LoginButtonProps {
-  isProcessing: ReadonlySignal<boolean>;
+  isProcessing: boolean;
   onPress: () => void;
 }
 
 function LoginButton(props: LoginButtonProps) {
 
-  if (props.isProcessing.value === true) {
+  if (props.isProcessing === true) {
     return (
       <View style={styles.loginContainer}>
         <ActivityIndicator

@@ -4,10 +4,11 @@ import {
   Text,
   View
 } from "react-native";
-import { WordWithoutData, myDictionary } from "../components/util/WordsUtil";
+import { WordWithoutData } from "../components/util/WordsUtil";
 import { i18n } from "../components/store/i18n";
-import DictionaryItem from "../components/dictionary/DictionaryItem";
 import { CommonColors } from "../constants/Colors";
+import { useAppSelector } from "../hooks/storeHooks";
+import DictionaryItem from "../components/screens/dictionary/DictionaryItem";
 
 export interface DictionaryRequest {
   page: number;
@@ -27,11 +28,11 @@ export interface OnlyWordsResponse {
 
 export interface Word {
   word: string;
-  type?: "s" | "adj" | "adv" | "v" | "konj" | undefined;
-  forms?: string;
+  type: "s" | "adj" | "adv" | "v" | "konj" | undefined;
+  forms: string | undefined;
   usages: {
     definitionData: {
-      definitionText?: string;
+      definitionText: string | undefined;
       fieldsOfKnowledge: string[];
       russianTranslations: string[];
     }[];
@@ -47,16 +48,15 @@ export interface DictionaryResponse {
 }
 
 function Dictionary() {
+  const myDictionary = useAppSelector((state) => state.dictionary.myDictionary);
 
-  if (myDictionary.value.length === 0) {
-
+  if (myDictionary.length === 0) {
     return (
       <View style={styles.noWordsContainer}>
         <Text style={styles.loadingText}>Siin pole midagi. Lisa uued sõnad eksami leheküljel.</Text>
       </View>
     );
   }
-
 
   return (
     <View style={styles.container}>
@@ -65,13 +65,13 @@ function Dictionary() {
           "count_words_in_dictionary",
           {
             defaultValue: "Sõnastikus on %{count} sõnad",
-            count: myDictionary.value.length,
+            count: myDictionary.length,
           }
         )}
       </Text>
       <FlatList
-        data={myDictionary.value}
-        keyExtractor={(item) => `word-${myDictionary.value.indexOf(item)}`}
+        data={myDictionary}
+        keyExtractor={(item) => `word-${myDictionary.indexOf(item)}`}
         contentContainerStyle={{ gap: 10 }}
         renderItem={({ item, index }) => <DictionaryItem {...item} index={index + 1} />}
       />

@@ -11,28 +11,26 @@ import {
 import { app } from "../util/FirebaseConfig";
 import { i18n } from "./i18n";
 import ee from "../../components/store/translations/ee.json"
-import { useSignal } from "@preact/signals-react";
 import { useAppDispatch } from "../../hooks/storeHooks";
 import { clearDictionary } from "./slices/dictionarySlice";
+import { atom, useSetAtom } from "jotai";
 
 interface ConfigContextProps {
   remoteConfig: RemoteConfig | null;
-  isUnderMaintenance: boolean;
 }
 
 export const ConfigContext = createContext<ConfigContextProps>({
   remoteConfig: null,
-  isUnderMaintenance: false
 });
 
+export const isUnderMaintenanceAtom = atom<boolean>(false);
 
 function ConfigContextProvider({ children }: { children: React.ReactNode }) {
   const remoteConfig = getRemoteConfig(app);
 
   const dispatch = useAppDispatch();
 
-  const isUnderMaintenance = useSignal<boolean>(false);
-
+  const setIsUnderMaintenance = useSetAtom(isUnderMaintenanceAtom);
 
   useEffect(
     () => {
@@ -73,10 +71,10 @@ function ConfigContextProvider({ children }: { children: React.ReactNode }) {
             return;
           }
 
-          isUnderMaintenance.value = getValue(
+          setIsUnderMaintenance(getValue(
             remoteConfig,
             "is_under_maintenance"
-          ).asBoolean();
+          ).asBoolean());
 
           localStorage.setItem(
             "maintenanceText",
@@ -119,7 +117,6 @@ function ConfigContextProvider({ children }: { children: React.ReactNode }) {
 
   const value = {
     remoteConfig,
-    isUnderMaintenance: isUnderMaintenance.value
   }
 
   return (

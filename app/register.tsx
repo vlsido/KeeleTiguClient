@@ -1,9 +1,12 @@
+import {
+  atom,
+  useAtom
+} from "jotai";
 import RegisterButton from "../components/RegisterButton";
 import { callCloudFunction } from "../components/util/CloudFunctions";
 import { auth } from "../components/util/FirebaseConfig";
 import { SignupData } from "../constants/ApiTypes";
 import { CommonColors } from "../constants/Colors";
-import { useSignal } from "@preact/signals-react";
 import {
   Link,
   router
@@ -16,62 +19,83 @@ import {
   NativeSyntheticEvent,
   StyleSheet,
   Text,
-  TextInput,
   TextInputChangeEventData,
+  TextStyle,
   View,
-  ViewStyle
 } from "react-native";
-import Animated, {
+import {
   useAnimatedStyle,
   useSharedValue
 } from "react-native-reanimated";
+import { useMemo } from "react";
+import { AnimatedTextInput } from "../components/util/AnimatedComponentsUtil";
+import { OperationError } from "../components/errors/OperationError";
+import { useHint } from "../hooks/useHint";
 
 function Register() {
-  const nickname = useSignal<string>("");
-  const email = useSignal<string>("");
-  const password = useSignal<string>("");
-  const isProcessing = useSignal<boolean>(false);
+  const { showHint } = useHint();
 
-  const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
+  const [
+    nickname,
+    setNickname
+  ] = useAtom<string>(useMemo(
+    () => atom<string>(""),
+    []
+  ));
+
+  const [
+    email,
+    setEmail
+  ] = useAtom<string>(useMemo(
+    () => atom<string>(""),
+    []
+  ));
+
+  const [
+    password,
+    setPassword
+  ] = useAtom<string>(useMemo(
+    () => atom<string>(""),
+    []
+  ));
+
+  const [
+    isProcessing,
+    setIsProcessing
+  ] = useAtom<boolean>(useMemo(
+    () => atom<boolean>(false),
+    []
+  ));
 
   const emailBorderColor = useSharedValue<string>("gray");
 
-  const emailAnimatedTextInputStyle = useAnimatedStyle<ViewStyle>(() => {
+  const nicknameBorderColor = useSharedValue<string>("gray");
+
+  const passwordBorderColor = useSharedValue<string>("gray");
+
+  const emailAnimatedTextInputStyle = useAnimatedStyle<TextStyle>(() => {
     return {
       borderColor: emailBorderColor.value,
     };
   });
 
-
-  const nicknameBorderColor = useSharedValue<string>("gray");
-
-  const nicknameAnimatedTextInputStyle = useAnimatedStyle<ViewStyle>(() => {
+  const nicknameAnimatedTextInputStyle = useAnimatedStyle<TextStyle>(() => {
     return {
       borderColor: nicknameBorderColor.value,
     };
   });
 
-  const passwordBorderColor = useSharedValue<string>("gray");
-
-  const passwordAnimatedTextInputStyle = useAnimatedStyle<ViewStyle>(() => {
+  const passwordAnimatedTextInputStyle = useAnimatedStyle<TextStyle>(() => {
     return {
       borderColor: passwordBorderColor.value,
     };
   });
 
-  async function handleRegister() {
-    await handleSignup(
-      email.value,
-      password.value,
-      nickname.value
-    );
-  }
-
-  async function handleSignup(
-    email: string,
-    password: string,
-    nickname: string
-  ) {
+  async function handleSignup() {
+    if (auth.currentUser === null) {
+      showHint("Midagi läks valesti. Proovige uuesti!")
+      return;
+    }
     if (email === "" || password === "" || nickname === "") {
       if (email === "") {
         emailBorderColor.value = "red";
@@ -85,7 +109,7 @@ function Register() {
       return;
     }
 
-    isProcessing.value = true;
+    setIsProcessing(true);
 
     await createUserWithEmailAndPassword(
       auth,
@@ -93,10 +117,10 @@ function Register() {
       password
     ).catch((error) => {
       alert(error.message);
-      isProcessing.value = false;
+      setIsProcessing(false);
+      return;
     });
 
-    //
     const data: SignupData = {
       email: email,
       nickname: nickname,
@@ -107,9 +131,7 @@ function Register() {
       data
     );
 
-    if (auth.currentUser === null) {
-      throw new Error("auth.currentUser is null");
-    }
+
 
     updateProfile(
       auth.currentUser,
@@ -127,21 +149,21 @@ function Register() {
     });
 
     // console.log("response", response);
-    isProcessing.value = false;
+    setIsProcessing(false);
 
     router.replace("/");
 
   }
   function onChangeEmail(event: NativeSyntheticEvent<TextInputChangeEventData>) {
-    email.value = event.nativeEvent.text;
+    setEmail(event.nativeEvent.text);
   }
 
   function onChangePassword(event: NativeSyntheticEvent<TextInputChangeEventData>) {
-    password.value = event.nativeEvent.text;
+    setPassword(event.nativeEvent.text);
   }
 
   function onChangeNickname(event: NativeSyntheticEvent<TextInputChangeEventData>) {
-    nickname.value = event.nativeEvent.text;
+    setNickname(event.nativeEvent.text);
   }
   return (
     <View style={styles.container}>
@@ -166,8 +188,8 @@ function Register() {
           passwordAnimatedTextInputStyle
         ]} onChange={onChangePassword} textContentType="password" secureTextEntry={true} onFocus={() => passwordBorderColor.value = "gray"} />
       </View>
-      {isProcessing.value === true && <Text style={{ color: CommonColors.white }}>Processing...</Text>}
-      <RegisterButton isProcessing={isProcessing} onPress={handleRegister} />
+      {isProcessing === true && <Text style={{ color: CommonColors.white }}>Processing...</Text>}
+      <RegisterButton isProcessing={isProcessing} onPress={handleSignup} />
       <Link
         style={styles.loginContainer}
         href="/login"

@@ -2,17 +2,14 @@ import {
   createContext,
   useEffect
 } from "react";
-import { useSignalEffect } from "@preact/signals-react";
 import {
-  allWords,
-  myDictionary,
-  cachedWordsAndData
-} from "../util/WordsUtil";
-import { callCloudFunction } from "../util/CloudFunctions";
+  useAppDispatch,
+  useAppSelector
+} from "../../hooks/storeHooks";
 import {
-  RandomWordsResponse,
-  Word
-} from "../../app/dictionary";
+  clearDictionary,
+  setMyDictionary
+} from "./slices/dictionarySlice";
 
 interface WordsContextProps {
   cacheDictionary: () => void;
@@ -22,54 +19,40 @@ interface WordsContextProps {
 export const WordsContext = createContext<WordsContextProps>({
   cacheDictionary: () => { return },
   clearAllCache: async () => { return }
-
 });
 
 function WordsContextProvider({ children }: { children: React.ReactNode }) {
+  const myDictionary = useAppSelector((state) => state.dictionary.myDictionary);
+  const cachedDictionary = useAppSelector((state) => state.dictionary.cachedDictionary);
 
-  async function getRandomWords() {
-    const data = {
-      numberOfWords: 100,
-    };
+  const dispatch = useAppDispatch();
 
-    const responseData = await callCloudFunction(
-      "GetRandomWords_Node",
-      data
-    ) as RandomWordsResponse | null;
+  useEffect(
+    () => {
+      // IDEA: probably can do this without useEffect
+      if (cachedDictionary.length < 3) {
+        dispatch({ type: "dictionary/fetchRandomWords" });
+      }
+    },
+    [
+      cachedDictionary
+    ]
+  );
 
-    if (responseData != null) {
-      const wordsData = responseData.randomWords.map((word: Word) => {
-        return {
-          word: word.word,
-          type: word.type,
-          forms: word.forms,
-          usages: word.usages,
-        };
-      });
-
-
-      cachedWordsAndData.value = wordsData;
-
-    }
-
-  };
-
-
-  useSignalEffect(() => {
-    if (cachedWordsAndData.value.length < 3) {
-      getRandomWords();
-    }
-  });
-
-  useSignalEffect(() => {
-    if (myDictionary.value.length > 0) {
-      console.log(
-        "[CHANGED] Caching myDictionary",
-        myDictionary.value
-      );
-      cacheDictionary();
-    }
-  });
+  useEffect(
+    () => {
+      if (myDictionary.length > 0) {
+        console.log(
+          "[CHANGED] Caching myDictionary",
+          myDictionary
+        );
+        cacheDictionary();
+      }
+    },
+    [
+      myDictionary
+    ]
+  );
 
   useEffect(
     () => {
@@ -78,31 +61,29 @@ function WordsContextProvider({ children }: { children: React.ReactNode }) {
     []
   );
 
-
   function getCachedDictionary() {
     const cached = localStorage.getItem("myDictionary");
 
-    myDictionary.value = cached != null ? JSON.parse(cached) : [];
+    const myDictionaryCached = cached != null ? JSON.parse(cached) : [];
+
+    dispatch(setMyDictionary(myDictionaryCached));
 
     console.log(
       "myDictionary loaded!",
-      myDictionary.value
+      myDictionary
     );
   }
 
   function cacheDictionary() {
     localStorage.setItem(
       "myDictionary",
-      JSON.stringify(myDictionary.value)
+      JSON.stringify(myDictionary)
     );
     console.log("myDictionary cached!");
   }
 
-
   function clearAllCache() {
-    myDictionary.value = [];
-    cachedWordsAndData.value = [];
-    allWords.value = [];
+    dispatch(clearDictionary());
 
     localStorage.removeItem("myDictionary");
     localStorage.removeItem("cachedWordsAndData");

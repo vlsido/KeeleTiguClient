@@ -1,10 +1,10 @@
-import ConfigContextProvider from "../components/store/ConfigContext";
-import HintContextProvider from "../components/store/HintContext";
+import ConfigContextProvider, {
+  isUnderMaintenanceAtom
+} from "../components/store/ConfigContext";
 import AuthContextProvider from "../components/store/AuthContext";
 import WordsContextProvider from "../components/store/WordsContext";
 import { Stack } from "expo-router";
 import { CommonColors } from "../constants/Colors";
-import { useConfig } from "../hooks/useConfig";
 import { View } from "react-native";
 import ExamLink from "../components/ExamLink";
 import DictionaryLink from "../components/links/DictionaryLink";
@@ -14,6 +14,8 @@ import { Provider } from "react-redux";
 import store from "../components/store/store";
 import { useEffect } from "react";
 import { useAppDispatch } from "../hooks/storeHooks";
+import HintContextProvider from "../components/store/HintContext/HintContext";
+import { useAtomValue } from "jotai";
 
 
 
@@ -37,7 +39,7 @@ export default function RootLayout() {
 }
 
 function RootLayoutStack() {
-  const { isUnderMaintenance } = useConfig();
+  const isUnderMaintenance = useAtomValue(isUnderMaintenanceAtom);
 
   const dispatch = useAppDispatch();
 
@@ -58,6 +60,7 @@ function RootLayoutStack() {
         headerTitleStyle: {
           fontWeight: "bold",
         },
+        contentStyle: { backgroundColor: "red" },
         headerLeft: () => (
           <View style={{ flexDirection: "row" }}>
             <ExamLink />
@@ -76,12 +79,9 @@ function RootLayoutStack() {
       <Stack.Screen
         redirect={isUnderMaintenance}
         name="index"
-        options={({ navigation }) => ({
+        options={{
           title: "",
-          // headerRight: () => (
-          //   <RightHeaderButton />
-          // ),
-        })} />
+        }} />
       <Stack.Screen
         redirect={isUnderMaintenance}
         name="dictionary"
@@ -95,12 +95,6 @@ function RootLayoutStack() {
           title: "",
         }}
       />
-      <Stack.Screen
-        redirect={isUnderMaintenance}
-        name="word_data"
-        options={{
-          title: "",
-        }} />
       <Stack.Screen
         redirect={isUnderMaintenance}
         name="translate"
@@ -120,8 +114,6 @@ function RootLayoutStack() {
         redirect={isUnderMaintenance}
         name="register"
         options={{ title: "" }} />
-
-
     </Stack >
   );
 }

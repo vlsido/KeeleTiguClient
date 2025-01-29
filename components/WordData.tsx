@@ -1,30 +1,27 @@
 import { CommonColors } from "../constants/Colors";
-import { useSignal } from "@preact/signals-react";
 import {
-  useContext,
-  useEffect
-} from "react";
-import {
-  ActivityIndicator,
   FlatList,
   ScrollView,
   StyleSheet,
   Text,
   View
 } from "react-native";
-import { Word } from "./dictionary";
-import {
-  myDictionary,
-  cachedWordsAndData
-} from "../components/util/WordsUtil";
 import Forms from "../components/text_components/Forms";
-import Type from "../components/dictionary/Type";
-import Examples from "../components/dictionary/Examples";
 import TextButton from "../components/TextButton";
 import { i18n } from "../components/store/i18n";
-import FoundArticlesCounter from "../components/word_data/FoundArticlesCounter";
 import { useHint } from "../hooks/useHint";
-
+import {
+  useAppDispatch,
+  useAppSelector
+} from "../hooks/storeHooks";
+import {
+  pushToCachedDictionary,
+  pushToMyDictionary
+} from "../components/store/slices/dictionarySlice";
+import FoundArticlesCounter from "../components/screens/word_data/FoundArticlesCounter";
+import Type from "../components/screens/dictionary/Type";
+import Examples from "../components/screens/dictionary/Examples";
+import { Word } from "../app/dictionary";
 
 interface WordDataProps {
   wordDataArray: Word[];
@@ -33,6 +30,8 @@ interface WordDataProps {
 
 function WordData(props: WordDataProps) {
   const { showHint } = useHint();
+  const myDictionary = useAppSelector((state) => state.dictionary.myDictionary);
+  const dispatch = useAppDispatch();
 
   if (props.wordDataArray.length === 0) {
     return null;
@@ -46,30 +45,22 @@ function WordData(props: WordDataProps) {
   }
 
   function addToDictionary(wordToAdd: Word) {
-    console.log("added");
-
-    if (myDictionary.value.find((word) => word.word === wordToAdd.word)) {
+    if (myDictionary.find((word) => word.word === wordToAdd.word)) {
       showHint(
         "Sõna on juba sõnastikus!",
-        500
+        2500
       );
       return;
     }
 
-    myDictionary.value = [
-      ...myDictionary.value,
-      wordToAdd
-    ];
-    cachedWordsAndData.value = [
-      ...cachedWordsAndData.value,
-      wordToAdd
-    ];
+    dispatch(pushToMyDictionary(wordToAdd));
 
+    dispatch(pushToCachedDictionary(wordToAdd));
 
     // Add to dictionary
     showHint(
       "Lisatud!",
-      500
+      2500
     );
   }
 
