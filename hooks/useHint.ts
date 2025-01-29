@@ -1,6 +1,6 @@
 import { useContext } from "react";
-import { HintContext } from "../components/store/HintContext";
 import { OperationError } from "../components/errors/OperationError";
+import { HintContext } from "../components/store/HintContext/HintContext";
 
 export function useHint() {
   const { showHint } = useContext(HintContext);
