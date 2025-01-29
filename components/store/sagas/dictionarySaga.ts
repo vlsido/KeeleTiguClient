@@ -1,7 +1,7 @@
 import { call, put, takeLatest } from "redux-saga/effects";
 import { setCachedDictionary, setWords } from "../slices/dictionarySlice";
 import { callCloudFunction } from "../../util/CloudFunctions";
-import { OnlyWordsResponse } from "../../../app/dictionary";
+import { OnlyWordsResponse, RandomWordsResponse, Word } from "../../../app/dictionary";
 
 function* fetchAllWordsSaga() {
   try {
@@ -34,6 +34,11 @@ function* fetchAllWordsSaga() {
     switch (error.code) {
       case "cloud-function/error":
         alert("Server error");
+
+        console.error(
+          "Server error",
+          error
+        );
         break;
       default:
         console.error(
@@ -42,6 +47,51 @@ function* fetchAllWordsSaga() {
         );
         break;
     }
+  }
+}
+
+function* fetchRandomWordsSaga() {
+  try {
+    const data = {
+      numberOfWords: 100,
+    };
+    const response = (yield call(
+      callCloudFunction,
+      "GetRandomWords_Node",
+      data
+    )) as RandomWordsResponse | null;
+
+    if (response != null) {
+
+      const wordsData = response.randomWords.map((word: Word) => {
+        return {
+          word: word.word,
+          type: word.type,
+          forms: word.forms,
+          usages: word.usages,
+        };
+      });
+
+      yield put(setCachedDictionary(wordsData));
+    }
+  } catch (error) {
+    switch (error.code) {
+      case "cloud-function/error":
+        alert("Server error");
+
+        console.error(
+          "Server error",
+          error
+        );
+        break;
+      default:
+        console.error(
+          "Unexpected error",
+          error
+        );
+        break;
+    }
+
   }
 }
 
@@ -63,6 +113,11 @@ export function* watchDictionarySaga() {
   yield takeLatest(
     "dictionary/fetchWordsRequest",
     fetchAllWordsSaga
+  );
+
+  yield takeLatest(
+    "dictionary/fetchRandomWords",
+    fetchRandomWordsSaga
   );
 
   yield takeLatest(

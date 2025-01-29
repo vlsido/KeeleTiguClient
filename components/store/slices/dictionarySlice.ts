@@ -24,10 +24,20 @@ export const dictionarySlice = createSlice({
     ) => {
       state.myDictionary = action.payload;
     },
+    pushToMyDictionary: (
+      state, action: PayloadAction<Word>
+    ) => {
+      state.myDictionary.push(action.payload);
+    },
     setCachedDictionary: (
       state, action: PayloadAction<Word[]>
     ) => {
       state.cachedDictionary = action.payload;
+    },
+    pushToCachedDictionary: (
+      state, action: PayloadAction<Word>
+    ) => {
+      state.cachedDictionary.push(action.payload);
     },
     setWords: (
       state, action: PayloadAction<WordWithoutData[]>
@@ -45,7 +55,9 @@ export const dictionarySlice = createSlice({
 
 export const {
   setMyDictionary,
+  pushToMyDictionary,
   setCachedDictionary,
+  pushToCachedDictionary,
   setWords,
   clearDictionary
 } = dictionarySlice.actions;
