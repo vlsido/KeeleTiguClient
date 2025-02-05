@@ -25,6 +25,7 @@ import {
   useAtom
 } from "jotai";
 import Animated, {
+  runOnJS,
   useAnimatedStyle,
   useSharedValue,
 } from "react-native-reanimated";
@@ -34,6 +35,10 @@ import { useHint } from "../hooks/useHint";
 import { useAppSelector } from "../hooks/storeHooks";
 import SearchItem from "../components/screens/search/SearchItem";
 import WordData from "../components/WordData";
+import {
+  Gesture,
+  GestureDetector
+} from "react-native-gesture-handler";
 
 interface SearchDataResults {
   queryResponse: Word[];
@@ -81,13 +86,7 @@ function Search() {
     setSearchTimeoutId
   ] = useAtom<NodeJS.Timeout | null>(searchTimeoutIdAtom);
 
-  const [
-    searchFieldHeight,
-    setSearchFieldHeight
-  ] = useAtom<number>(useMemo(
-    () => atom<number>(0),
-    []
-  ));
+  const searchFieldHeight = useSharedValue<number>(0);
 
   const searchListOpacity = useSharedValue<number>(0);
   const searchListPointerEvents = useSharedValue<"auto" | "none">("none");
@@ -239,85 +238,113 @@ function Search() {
     ]
   );
 
-  const flatListAnimatedStyle = useAnimatedStyle<ViewStyle>(() => {
-    return {
-      opacity: searchListOpacity.value,
-      pointerEvents: searchListPointerEvents.value
-    };
-  });
+
+
+
+
+  const tapGesture = useMemo(
+    () =>
+      Gesture.Tap().onEnd(() => {
+        console.log("tap");
+        runOnJS(makeResultsUnvisible)();
+      }),
+    [
+      makeResultsUnvisible
+    ]
+  );
+
+  const listTapGesture = useMemo(
+    () =>
+      Gesture.Tap().onEnd(() => {
+        // We don't want list tap to make results unvisible, this is why we need this
+      }),
+    []
+  );
+
+  const searchTapGesture = useMemo(
+    () =>
+      Gesture.Tap().onEnd(() => {
+        // We don't want search tap to make results unvisible, this is why we need this
+      }),
+    []
+  );
+
 
   const onSearchFieldLayout = useCallback(
     (event: LayoutChangeEvent) => {
-      setSearchFieldHeight(event.nativeEvent.layout.height + 10);
+      searchFieldHeight.value = event.nativeEvent.layout.height + 15;
     },
     []
   );
 
+  const flatListAnimatedStyle = useAnimatedStyle<ViewStyle>(() => {
+    return {
+      opacity: searchListOpacity.value,
+      pointerEvents: searchListPointerEvents.value,
+      top: searchFieldHeight.value
+    };
+  });
+
   return (
-    <View style={styles.container}>
-      <View style={[
-        styles.searchContainer,
-      ]}
-      >
+    <GestureDetector
+      gesture={tapGesture}
+      userSelect="text"
+    >
+      <View style={styles.container}>
         <View style={[
-          styles.searchFieldContainer
+          styles.searchContainer,
         ]}
-          onLayout={(event: LayoutChangeEvent) => onSearchFieldLayout(event)}
         >
-          <TextInput
-            ref={inputRef}
-            placeholder="Otsi..."
-            style={styles.searchInput}
-            value={query}
-            onChange={(event) => onChange(event.nativeEvent.text)}
-            onFocus={makeResultsVisible}
-            onBlur={() => {
-              setTimeout(
-                () => {
-                  makeResultsUnvisible();
-                },
-                1
-              );
-            }}
-            onSubmitEditing={(event: NativeSyntheticEvent<TextInputChangeEventData>) => getWordData(event.nativeEvent.text)}
-          />
-          <Pressable
-            onPress={() => getWordData(query)}
-            style={styles.searchIconContainer}
-            aria-label="Otsi sõna"
-          >
-            <SearchIcon />
-          </Pressable>
+          <GestureDetector gesture={searchTapGesture}>
+            <View style={[
+              styles.searchFieldContainer
+            ]}
+              onLayout={(event: LayoutChangeEvent) => onSearchFieldLayout(event)}
+            >
+
+              <TextInput
+                ref={inputRef}
+                placeholder="Otsi..."
+                style={styles.searchInput}
+                value={query}
+                onChange={(event) => onChange(event.nativeEvent.text)}
+                onFocus={makeResultsVisible}
+                onSubmitEditing={(event: NativeSyntheticEvent<TextInputChangeEventData>) => getWordData(event.nativeEvent.text)}
+              />
+              <Pressable
+                onPress={() => getWordData(query)}
+                style={styles.searchIconContainer}
+                aria-label="Otsi sõna"
+              >
+                <SearchIcon />
+              </Pressable>
+            </View>
+          </GestureDetector>
+        </View>
+        <GestureDetector gesture={listTapGesture}>
+          <Animated.View style={[
+            flatListAnimatedStyle,
+            styles.flatListContainer,
+          ]}>
+            <FlatList
+              data={results}
+              contentContainerStyle={{ backgroundColor: CommonColors.white }}
+              renderItem={({ item, index }) => <SearchItem word={item.word} index={index + 1} onPress={getWordData} />}
+              keyExtractor={(
+                item, index
+              ) => `item-${item}-${index}`}
+            />
+          </Animated.View>
+        </GestureDetector>
+        <View style={styles.wordsDataContainer}>
+          {isSearchingInProcess === true ? (
+            <View>
+              <ActivityIndicator size={36} color={CommonColors.white} />
+            </View>
+          ) : (<WordData wordDataArray={wordsDataArray} searchString={searchString} />)}
         </View>
       </View>
-      <Animated.View style={[
-        flatListAnimatedStyle,
-        {
-          position: "absolute",
-          maxWidth: 400,
-          width: "80%",
-          top: searchFieldHeight + 10,
-          bottom: "50%",
-          zIndex: 1
-        }
-      ]}>
-        <FlatList
-          data={results}
-          contentContainerStyle={{ backgroundColor: CommonColors.white }}
-          renderItem={({ item, index }) => <SearchItem word={item.word} index={index + 1} onPress={getWordData} />}
-          keyExtractor={(
-            item, index
-          ) => `item-${item}-${index}`}
-        />
-      </Animated.View>
-      <View style={styles.wordsDataContainer}>
-        {isSearchingInProcess === true ? (
-          <View>
-            <ActivityIndicator size={36} color={CommonColors.white} />
-          </View>
-        ) : (<WordData wordDataArray={wordsDataArray} searchString={searchString} />)}
-      </View>
-    </View>
+    </GestureDetector>
   );
 }
 
@@ -367,6 +394,13 @@ const styles = StyleSheet.create({
   },
   searchResultsContainer: {
     paddingTop: 10,
+  },
+  flatListContainer: {
+    position: "absolute",
+    maxWidth: 400,
+    width: "80%",
+    bottom: "50%",
+    zIndex: 1,
   },
   wordsDataContainer: {
     flex: 1,
