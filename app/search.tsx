@@ -126,7 +126,18 @@ function Search() {
       () => {
         const textLowerCase = text.toLowerCase();
 
-        const searchResults = words.filter((word) => word.word.toLowerCase().includes(textLowerCase));
+        const searchResults = words.
+          filter((word) => word.word.toLowerCase().includes(textLowerCase)).
+          sort((
+            a, b
+          ) => {
+            const aExact = a.word.toLowerCase() === textLowerCase;
+            const bExact = b.word.toLowerCase() === textLowerCase;
+
+            if (aExact && !bExact) return -1;
+            if (!aExact && bExact) return 1;
+            return a.word.localeCompare(b.word);
+          });
 
         setResults(searchResults);
       },
@@ -268,7 +279,6 @@ function Search() {
       }),
     []
   );
-
 
   const onSearchFieldLayout = useCallback(
     (event: LayoutChangeEvent) => {

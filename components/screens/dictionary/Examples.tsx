@@ -1,3 +1,4 @@
+import { useCallback, useMemo } from "react";
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -12,7 +13,6 @@ import {
 import TextButton from "../../TextButton";
 import { CommonColors } from "../../../constants/Colors";
 import { atom, useAtom } from "jotai";
-import { useMemo } from "react";
 
 interface ExamplesProps {
   examples: {
@@ -32,22 +32,25 @@ function Examples(props: ExamplesProps) {
 
   const height = useSharedValue<number>(0);
 
+  const triggerExamples = useCallback(
+    () => {
+
+      height.value = withTiming(
+        height.value === 0 ? examplesContainerHeight : 0,
+        { duration: 100 }
+      );
+    },
+    [
+      height,
+      examplesContainerHeight,
+    ]
+  );
+
   const animatedStyle = useAnimatedStyle<ViewStyle>(() => {
     return {
       height: height.value,
     }
   });
-
-  function triggerExamples() {
-
-    height.value = withTiming(
-      height.value === 0 ? examplesContainerHeight : 0,
-      { duration: 100 }
-    );
-    props.examples?.forEach((example) => {
-      console.log(example);
-    });
-  }
 
   if (!props.examples || props.examples.length === 0) {
     return null;
