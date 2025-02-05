@@ -8,6 +8,7 @@ import {
   atom,
   useAtom
 } from "jotai";
+import { useMemo } from "react";
 
 interface SearchItemProps {
   index: number;
@@ -15,13 +16,14 @@ interface SearchItemProps {
   onPress: (word: string) => Promise<void>
 }
 
-const isHoveredInAtom = atom<boolean>(false);
-
 function SearchItem(props: SearchItemProps) {
   const [
     isHoveredIn,
     setIsHoveredIn
-  ] = useAtom<boolean>(isHoveredInAtom);
+  ] = useAtom(useMemo(
+    () => atom<boolean>(false),
+    []
+  ));
 
   function onHoverIn() {
     setIsHoveredIn(true);
