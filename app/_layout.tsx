@@ -16,6 +16,7 @@ import { useEffect } from "react";
 import { useAppDispatch } from "../hooks/storeHooks";
 import HintContextProvider from "../components/store/HintContext/HintContext";
 import { useAtomValue } from "jotai";
+import Footer from "../components/Footer";
 
 
 
@@ -28,7 +29,10 @@ export default function RootLayout() {
         <HintContextProvider>
           <AuthContextProvider>
             <WordsContextProvider>
-              <RootLayoutStack />
+              <>
+                <RootLayoutStack />
+                <Footer />
+              </>
             </WordsContextProvider>
           </AuthContextProvider>
         </HintContextProvider >
