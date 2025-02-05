@@ -131,11 +131,11 @@ function Search() {
           sort((
             a, b
           ) => {
-            const aExact = a.word.toLowerCase() === textLowerCase;
-            const bExact = b.word.toLowerCase() === textLowerCase;
+            const aStarts = a.word.startsWith(textLowerCase);
+            const bStarts = b.word.startsWith(textLowerCase);
 
-            if (aExact && !bExact) return -1;
-            if (!aExact && bExact) return 1;
+            if (aStarts && !bStarts) return -1;
+            if (!aStarts && bStarts) return 1;
             return a.word.localeCompare(b.word);
           });
 
