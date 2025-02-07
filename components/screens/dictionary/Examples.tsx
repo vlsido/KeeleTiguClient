@@ -1,48 +1,134 @@
-import { useCallback, useMemo } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo
+} from "react";
+import {
+  FlatList,
+  StyleSheet,
+  View,
+  ViewStyle
+} from "react-native";
 import Animated, {
+  ReduceMotion,
   useAnimatedStyle,
   useSharedValue,
   withTiming
 } from "react-native-reanimated";
 import {
-  StyleSheet,
-  Text,
-  View,
-  ViewStyle
-} from "react-native";
+  atom,
+  useAtom
+} from "jotai";
 import TextButton from "../../TextButton";
-import { CommonColors } from "../../../constants/Colors";
-import { atom, useAtom } from "jotai";
+import Example from "../../text_components/Example";
 
 interface ExamplesProps {
   examples: {
     estonianExample: string;
     russianTranslations: string[];
   }[] | undefined;
+  searchString: string | undefined;
 }
 
 function Examples(props: ExamplesProps) {
   const [
     examplesContainerHeight,
     setExamplesContainerHeight
-  ] = useAtom(useMemo(
+  ] = useAtom<number>(useMemo(
     () => atom<number>(0),
     []
   ));
 
-  const height = useSharedValue<number>(0);
-
-  const triggerExamples = useCallback(
+  const getAreExamplesOpen = useCallback(
     () => {
+      if (props.searchString === undefined) return false;
 
-      height.value = withTiming(
-        height.value === 0 ? examplesContainerHeight : 0,
-        { duration: 100 }
-      );
+      const hasMatchInThisExample: boolean | undefined = props.examples?.some((example) => {
+        if (example.estonianExample.includes(props.searchString!)) return true;
+
+        if (example.russianTranslations.some((translation) => translation.includes(props.searchString!))) return true;
+
+        return false;
+      });
+
+      return hasMatchInThisExample ?? false;
     },
     [
+      props.searchString,
+      props.examples,
+    ]
+  );
+
+  const [
+    areExamplesOpen,
+    setAreExamplesOpen
+  ] = useAtom<boolean>(useMemo(
+    () => atom<boolean>(getAreExamplesOpen()),
+    []
+  ));
+
+
+
+  const height = useSharedValue<number>(0);
+
+  const toggleExamples = useCallback(
+    (
+      isOpen?: boolean, layoutHeight?: number
+    ) => {
+      const targetHeight = layoutHeight ? layoutHeight : examplesContainerHeight;
+
+      if (isOpen != null) {
+        height.value = withTiming(
+          isOpen ? targetHeight : 0,
+          { duration: 500, reduceMotion: ReduceMotion.System }
+        );
+
+        setAreExamplesOpen(isOpen ? true : false);
+        return;
+      }
+
+      if (height.value === 0) {
+        height.value = withTiming(
+          targetHeight,
+          { duration: 500, reduceMotion: ReduceMotion.System },
+        );
+        setAreExamplesOpen(true);
+      } else {
+        height.value = withTiming(
+          0,
+          { duration: 500, reduceMotion: ReduceMotion.System }
+        );
+        setAreExamplesOpen(false);
+      }
+
+
+    },
+    [
+      setAreExamplesOpen,
       height,
       examplesContainerHeight,
+    ]
+  );
+
+  const onExamplesLayout = useCallback(
+    (height: number) => {
+      setExamplesContainerHeight(height);
+
+      if (props.searchString === undefined) return;
+
+      if (getAreExamplesOpen() === true) {
+        toggleExamples(
+          true,
+          height
+        );
+      };
+
+    },
+    [
+      setExamplesContainerHeight,
+      props.searchString,
+      props.examples,
+      toggleExamples
     ]
   );
 
@@ -59,35 +145,29 @@ function Examples(props: ExamplesProps) {
   return (
     <>
       <TextButton
-        text="ava näited"
+        text={areExamplesOpen === false ? "ava näited" : "sulge näited"}
         textStyle={styles.openExamplesText}
-        onPress={triggerExamples}
-        label="Ava näited"
+        onPress={() => toggleExamples()}
+        label={areExamplesOpen === false ? "ava näited" : "sulge näited"}
       />
       <Animated.View style={[
         animatedStyle,
         { overflow: "hidden" }
-      ]}>
-        <View onLayout={(event) => { setExamplesContainerHeight(event.nativeEvent.layout.height) }}>
-          {props.examples?.map((
+      ]}
+
+      >
+        <View
+          onLayout={(event) => onExamplesLayout(event.nativeEvent.layout.height)}>
+          {props.examples.map((
             example, index
           ) => {
-
             return (
-              <View style={{ flexDirection: "column", width: "100%" }} key={`example-${index}`}>
-                <Text style={styles.estonianExample} >{example.estonianExample}</Text>
-                {example.russianTranslations.map((
-                  translation, index
-                ) => {
-                  const russianTranslation: string = translation.split("\"").join("");
+              <Example
+                key={index}
+                estonianExample={example.estonianExample}
+                russianTranslations={example.russianTranslations}
+                searchString={props.searchString} />
 
-                  return (
-                    <Text key={`russian-translation-${index}-current-word-part-${index}`} style={styles.russianExample}>
-                      {russianTranslation}
-                    </Text>
-                  )
-                })}
-              </View>
             );
           })}
         </View>
@@ -102,20 +182,5 @@ const styles = StyleSheet.create({
   openExamplesText: {
     color: "rgba(255, 0, 200, 0.7)",
     fontSize: 16
-  },
-  estonianExample: {
-    color: CommonColors.white,
-    fontSize: 16,
-    fontWeight: "bold"
-  },
-  russianExample: {
-    color: "rgba(255, 255, 255, 0.7)",
-    fontSize: 16,
-    fontWeight: "thin",
-
-  },
-  russianExampleAccented: {
-    color: CommonColors.red,
-    fontSize: 16,
   },
 });
