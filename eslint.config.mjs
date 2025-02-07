@@ -1,4 +1,3 @@
-import globals from "globals";
 import tseslint from "typescript-eslint";
 import stylistic from "@stylistic/eslint-plugin";
 import react from "eslint-plugin-react";
