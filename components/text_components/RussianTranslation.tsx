@@ -72,7 +72,9 @@ function RussianTranslation(props: RussianTranslationProps) {
       }
     });
 
-    textElements.push(<Text key={`wordIndex-${wordIndex}-word-${textElements.length}`}>{elements}{endSeparator}</Text>)
+    textElements.push(<Text
+      key={`wordIndex-${wordIndex}-word-${textElements.length}`}>{elements}{endSeparator}
+    </Text>)
 
   });
 
@@ -85,18 +87,18 @@ export default RussianTranslation;
 
 const styles = StyleSheet.create({
   russianText: {
-    color: CommonColors.purple,
+    color: CommonColors.yellow,
     fontSize: 16,
     fontWeight: "bold"
   },
   russianAccentText: {
-    color: CommonColors.yellow,
+    color: CommonColors.purple,
     fontSize: 16,
     fontWeight: "bold"
   },
   highlightedText: {
     flexDirection: "row",
-    backgroundColor: CommonColors.purpleA10,
+    backgroundColor: "rgba(255, 255, 255, 0.15)",
     marginRight: "auto",
   },
 })

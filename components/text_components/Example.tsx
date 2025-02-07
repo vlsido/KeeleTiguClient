@@ -76,12 +76,12 @@ const styles = StyleSheet.create({
     fontWeight: "bold"
   },
   russianExample: {
-    color: "rgba(255, 255, 255, 0.7)",
+    color: "rgba(255, 255, 255, 0.85)",
     fontSize: 16,
     fontWeight: "thin",
   },
   russianAccentText: {
-    color: CommonColors.orange,
+    color: CommonColors.yellow,
     fontSize: 16,
     fontWeight: "thin",
   },
@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
   },
   highlightedRussianText: {
     flexDirection: "row",
-    backgroundColor: CommonColors.purpleA10,
+    backgroundColor: CommonColors.yellowA50,
     marginRight: "auto",
   },
 })

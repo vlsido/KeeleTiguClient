@@ -14,6 +14,7 @@ export const CommonColors = {
   whiteA50: "#F3FFF380",
   black: "#212221",
   blackA50: "#21222180",
+  blackAlternative: "#221E29",
   green: "#62DD7D",
   yellow: "#EBA575",
   yellowA50: "#EBA57580",

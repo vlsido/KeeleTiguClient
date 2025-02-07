@@ -9,6 +9,7 @@ import { i18n } from "../components/store/i18n";
 import { CommonColors } from "../constants/Colors";
 import { useAppSelector } from "../hooks/storeHooks";
 import DictionaryItem from "../components/screens/dictionary/DictionaryItem";
+import { memo } from "react";
 
 export interface DictionaryRequest {
   page: number;
@@ -79,7 +80,7 @@ function Dictionary() {
   );
 }
 
-export default Dictionary;
+export default memo(Dictionary);
 
 const styles = StyleSheet.create({
   noWordsContainer: {

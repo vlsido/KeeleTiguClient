@@ -1,5 +1,6 @@
 import { CommonColors } from "../constants/Colors";
 import {
+  FlatList,
   ScrollView,
   StyleSheet,
   Text,
@@ -19,8 +20,9 @@ import {
 } from "../components/store/slices/dictionarySlice";
 import FoundArticlesCounter from "../components/screens/word_data/FoundArticlesCounter";
 import Type from "../components/screens/dictionary/Type";
-import { Word } from "../app/dictionary";
+import { Word } from "../app/Dictionary";
 import Usage from "./text_components/Usage";
+import { memo } from "react";
 
 interface WordDataProps {
   wordDataArray: Word[] | null;
@@ -85,19 +87,21 @@ function WordData(props: WordDataProps) {
             </Text>
             <Forms key={`wordIndex-${index}-forms`} forms={wordData.forms} />
             <Type key={`wordIndex-${index}-type`} type={wordData.type} />
-            {wordData.usages.map((
-              usage, index
-            ) => {
-              return (
-                <Usage
-                  key={index}
-                  index={index}
-                  definitionData={usage.definitionData}
-                  examples={usage.examples}
-                  searchString={props.searchString}
-                />
-              )
-            })}
+            <FlatList
+              data={wordData.usages}
+              renderItem={({ item, index }) => {
+                return (
+                  <Usage
+                    key={index}
+                    index={index}
+                    definitionData={item.definitionData}
+                    examples={item.examples}
+                    searchString={props.searchString}
+                  />
+                )
+
+              }
+              } />
             <TextButton key={`wordIndex-${index}-add`} style={styles.addToDictionaryContainer} textStyle={styles.addToDictionaryText} text={i18n.t(
               "add_to_dictionary",
               { defaultValue: "Lisa sõnastikku" }
@@ -109,7 +113,7 @@ function WordData(props: WordDataProps) {
   );
 }
 
-export default WordData;
+export default memo(WordData);
 
 const styles = StyleSheet.create({
   notFoundText: {
