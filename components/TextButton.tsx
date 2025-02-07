@@ -1,8 +1,14 @@
-import { ActivityIndicator, Pressable, StyleProp, Text, TextStyle, ViewStyle } from "react-native";
-import { ReadonlySignal } from "@preact/signals-react";
+import {
+  ActivityIndicator,
+  Pressable,
+  StyleProp,
+  Text,
+  TextStyle,
+  ViewStyle
+} from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 
-interface TextButtonProps {
+export interface TextButtonProps {
   style?: StyleProp<ViewStyle>;
   text: string;
   textStyle?: StyleProp<TextStyle>;
@@ -10,9 +16,9 @@ interface TextButtonProps {
   onHoverIn?: () => void;
   onHoverOut?: () => void;
   disabledBool?: boolean;
-  customActivityIndicator?: any;
-  isActivityIndicatorVisible?: ReadonlySignal<boolean>;
-  activityIndicatorViewStyle?: any;
+  customActivityIndicator?: React.ReactNode;
+  isActivityIndicatorVisible?: boolean;
+  activityIndicatorViewStyle?: ViewStyle;
   activityIndicatorColor?: string;
   activityIndicatorSize?: number | "small" | "large";
   label: string;
@@ -25,7 +31,7 @@ interface TextButtonProps {
 function TextButton(props: TextButtonProps) {
 
 
-  if (props.isActivityIndicatorVisible && props.isActivityIndicatorVisible.value === true) {
+  if (props.isActivityIndicatorVisible === true) {
     if (props.customActivityIndicator) {
       return props.customActivityIndicator;
     }
@@ -43,7 +49,7 @@ function TextButton(props: TextButtonProps) {
     <Pressable
       style={({ pressed }) => [
         props.style,
-        { opacity: pressed ? 0.75 : 1 }, // Change opacity based on pressed state
+        { opacity: pressed ? 0.75 : 1 },
       ]}
       onPress={props.onPress}
       disabled={props.disabledBool}

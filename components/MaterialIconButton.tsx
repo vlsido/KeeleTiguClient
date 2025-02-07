@@ -1,4 +1,9 @@
-import { Pressable, StyleProp, TextStyle, ViewStyle } from "react-native";
+import {
+  Pressable,
+  StyleProp,
+  TextStyle,
+  ViewStyle
+} from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 
 interface MaterialIconButtonProps {
@@ -7,10 +12,10 @@ interface MaterialIconButtonProps {
   name: keyof typeof MaterialIcons.glyphMap;
   color: string;
   size: number;
-  onPress: any;
-  onLongPress?: any;
-  onPressIn?: any;
-  onPressOut?: any;
+  onPress: () => void;
+  onLongPress?: () => void;
+  onPressIn?: () => void;
+  onPressOut?: () => void;
   disabledBool?: boolean;
   ariaLabel: string;
   enableContrastLayer?: boolean;
@@ -67,7 +72,9 @@ function MaterialIconButton(props: MaterialIconButtonProps) {
         name={name}
         color={color}
         size={size}
-        style={[iconStyle]}
+        style={[
+          iconStyle
+        ]}
       />
       {children}
     </Pressable>

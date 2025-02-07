@@ -1,8 +1,15 @@
-import DictionaryItem from "@/components/dictionary/DictionaryItem";
-import { i18n } from "@/components/store/i18n";
-import { WordWithoutData, myDictionary } from "@/components/util/WordsUtil";
-import { CommonColors } from "@/constants/Colors";
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  View
+} from "react-native";
+import { WordWithoutData } from "../components/util/WordsUtil";
+import { i18n } from "../components/store/i18n";
+import { CommonColors } from "../constants/Colors";
+import { useAppSelector } from "../hooks/storeHooks";
+import DictionaryItem from "../components/screens/dictionary/DictionaryItem";
+import { memo } from "react";
 
 export interface DictionaryRequest {
   page: number;
@@ -22,11 +29,11 @@ export interface OnlyWordsResponse {
 
 export interface Word {
   word: string;
-  type?: "s" | "adj" | "adv" | "v" | "konj" | undefined;
-  forms?: string;
+  type: "s" | "adj" | "adv" | "v" | "konj" | undefined;
+  forms: string | undefined;
   usages: {
     definitionData: {
-      definitionText?: string;
+      definitionText: string | undefined;
       fieldsOfKnowledge: string[];
       russianTranslations: string[];
     }[];
@@ -42,9 +49,9 @@ export interface DictionaryResponse {
 }
 
 function Dictionary() {
+  const myDictionary = useAppSelector((state) => state.dictionary.myDictionary);
 
-  if (myDictionary.value.length === 0) {
-
+  if (myDictionary.length === 0) {
     return (
       <View style={styles.noWordsContainer}>
         <Text style={styles.loadingText}>Siin pole midagi. Lisa uued sõnad eksami leheküljel.</Text>
@@ -52,18 +59,20 @@ function Dictionary() {
     );
   }
 
-
   return (
     <View style={styles.container}>
       <Text style={styles.text}>
-        {i18n.t("count_words_in_dictionary", {
-          defaultValue: "Sõnastikus on %{count} sõnad",
-          count: myDictionary.value.length,
-        })}
+        {i18n.t(
+          "count_words_in_dictionary",
+          {
+            defaultValue: "Sõnastikus on %{count} sõnad",
+            count: myDictionary.length,
+          }
+        )}
       </Text>
       <FlatList
-        data={myDictionary.value}
-        keyExtractor={(item) => `word-${myDictionary.value.indexOf(item)}`}
+        data={myDictionary}
+        keyExtractor={(item) => `word-${myDictionary.indexOf(item)}`}
         contentContainerStyle={{ gap: 10 }}
         renderItem={({ item, index }) => <DictionaryItem {...item} index={index + 1} />}
       />
@@ -71,7 +80,7 @@ function Dictionary() {
   );
 }
 
-export default Dictionary;
+export default memo(Dictionary);
 
 const styles = StyleSheet.create({
   noWordsContainer: {

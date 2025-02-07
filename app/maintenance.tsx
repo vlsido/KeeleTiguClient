@@ -1,23 +1,31 @@
-import { CommonColors } from "@/constants/Colors";
-import { useSignal } from "@preact/signals-react";
-import { StyleSheet, Text, View } from "react-native";
+import {
+  atom,
+  useAtomValue
+} from "jotai";
+import { CommonColors } from "../constants/Colors";
+import {
+  StyleSheet,
+  Text,
+  View
+} from "react-native";
+
+function getMaintenanceText() {
+  const maintenanceText = localStorage.getItem("maintenanceText");
+
+  if (maintenanceText != null) {
+    return maintenanceText;
+  }
+  return "Uuendame appi, proovige uuesti hiljem!"
+}
+
+const maintenanceTextAtom = atom<string>(getMaintenanceText);
 
 function Maintenance() {
-  const maintenanceText = useSignal<string>(getMaintenanceText());
-
-
-  function getMaintenanceText() {
-    const maintenanceText = localStorage.getItem("maintenanceText");
-
-    if (maintenanceText != null) {
-      return maintenanceText;
-    }
-    return "Uuendame appi, proovige uuesti hiljem!"
-  }
+  const maintenanceText = useAtomValue<string>(maintenanceTextAtom);
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>{maintenanceText.value}</Text>
+      <Text style={styles.text}>{maintenanceText}</Text>
     </View>
   );
 }

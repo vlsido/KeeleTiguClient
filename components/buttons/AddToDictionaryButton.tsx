@@ -1,18 +1,37 @@
-import { Alert, Pressable, StyleSheet, ViewStyle } from "react-native";
+import {
+  StyleSheet,
+  ViewStyle
+} from "react-native";
 import { AddToDictionaryIcon } from "../icons/AddToDictionaryIcon";
-import Animated, { ReduceMotion, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
-import { auth } from "../util/FirebaseConfig";
-import { useContext } from "react";
-import { HintContext } from "../store/HintContext";
-import { myDictionary, cachedWordsAndData } from "../util/WordsUtil";
-import { Word } from "@/app/dictionary";
+import {
+  ReduceMotion,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming
+} from "react-native-reanimated";
+import { Word } from "../../app/dictionary";
+import {
+  useAppDispatch,
+  useAppSelector
+} from "../../hooks/storeHooks";
+import { AnimatedPressable } from "../util/AnimatedComponentsUtil";
+import {
+  pushToCachedDictionary,
+  pushToMyDictionary
+} from "../store/slices/dictionarySlice";
+import { useHint } from "../../hooks/useHint";
 
 interface AddToDictionaryButtonProps {
   word: Word | undefined;
 }
 
 function AddToDictionaryButton(props: AddToDictionaryButtonProps) {
-  const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+  const { showHint } = useHint();
+
+  const myDictionary = useAppSelector((state) => state.dictionary.myDictionary);
+
+  const dispatch = useAppDispatch();
+
   const opacity = useSharedValue<number>(1);
 
   const animatedStyle = useAnimatedStyle<ViewStyle>(() => {
@@ -21,36 +40,54 @@ function AddToDictionaryButton(props: AddToDictionaryButtonProps) {
     }
   });
 
-  const { showHint } = useContext(HintContext);
 
   function onPress() {
-    opacity.value = withTiming(0.5, { duration: 50, reduceMotion: ReduceMotion.System }, () => {
-      opacity.value = withTiming(1, { duration: 100, reduceMotion: ReduceMotion.System });
-    });
+    opacity.value = withTiming(
+      0.5,
+      { duration: 50, reduceMotion: ReduceMotion.System },
+      () => {
+        opacity.value = withTiming(
+          1,
+          { duration: 100, reduceMotion: ReduceMotion.System }
+        );
+      }
+    );
 
     const currentWord = props.word;
 
     if (currentWord !== undefined) {
-      if (myDictionary.value.find((word) => word.word === currentWord.word)) {
-        showHint("Sõna on juba sõnastikus!", 500);
+      if (myDictionary.find((word) => word.word === currentWord.word)) {
+        showHint(
+          "Sõna on juba sõnastikus!",
+          2500
+        );
         return;
       }
 
-      myDictionary.value = [...myDictionary.value, currentWord];
-      cachedWordsAndData.value = [...cachedWordsAndData.value, currentWord];
+      dispatch(pushToMyDictionary(currentWord));
+
+      dispatch(pushToCachedDictionary(currentWord));
 
       // Add to dictionary
-      showHint("Lisatud!", 500);
+      showHint(
+        "Lisatud!",
+        2500
+      );
     } else {
-
-      showHint("Error! No words loaded.", 500);
+      showHint(
+        "Error! No words loaded.",
+        2500
+      );
     }
 
   }
 
   return (
     <AnimatedPressable onPress={onPress}
-      style={[animatedStyle, styles.container]}
+      style={[
+        animatedStyle,
+        styles.container
+      ]}
     >
       <AddToDictionaryIcon />
     </AnimatedPressable>

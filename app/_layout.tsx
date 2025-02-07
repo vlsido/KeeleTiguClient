@@ -1,64 +1,58 @@
-import ExamLink from "@/components/ExamLink";
-import LeftHeaderButton from "@/components/LeftHeaderButton";
-import AuthContextProvider from "@/components/store/AuthContext";
-import HintContextProvider from "@/components/store/HintContext";
-import { CommonColors } from "@/constants/Colors";
+import ConfigContextProvider, {
+  isUnderMaintenanceAtom
+} from "../components/store/ConfigContext";
+import AuthContextProvider from "../components/store/AuthContext";
+import WordsContextProvider from "../components/store/WordsContext";
 import { Stack } from "expo-router";
-import WordsContextProvider from "@/components/store/WordsContext";
-import DictionaryLink from "@/components/links/DictionaryLink";
-import SearchLink from "@/components/links/SearchLink";
+import { CommonColors } from "../constants/Colors";
 import { View } from "react-native";
-import { allWords, cachedWordsAndData } from "@/components/util/WordsUtil";
-import { callCloudFunction } from "@/components/util/CloudFunctions";
-import { useSignalEffect } from "@preact/signals-react";
-import { OnlyWordsResponse } from "./dictionary";
-import ConfigContextProvider, { ConfigContext } from "@/components/store/ConfigContext";
-import { useContext } from "react";
+import ExamLink from "../components/ExamLink";
+import DictionaryLink from "../components/links/DictionaryLink";
+import SearchLink from "../components/links/SearchLink";
+import LeftHeaderButton from "../components/LeftHeaderButton";
+import { Provider } from "react-redux";
+import store from "../components/store/store";
+import { useEffect } from "react";
+import { useAppDispatch } from "../hooks/storeHooks";
+import HintContextProvider from "../components/store/HintContext/HintContext";
+import { useAtomValue } from "jotai";
+import Footer from "../components/Footer";
+
+
 
 export default function RootLayout() {
 
-  useSignalEffect(() => {
-    if (allWords.value.length === 0) {
-      getAllWords();
-    }
-  });
-
-  useSignalEffect(() => {
-    if (cachedWordsAndData.value.length > 0) {
-      localStorage.setItem("cachedWordsAndData", JSON.stringify(cachedWordsAndData.value));
-    }
-  });
-
-  async function getAllWords() {
-    if (localStorage.getItem("allWords") != null) {
-      allWords.value = JSON.parse(localStorage.getItem("allWords") as string);
-      return;
-    }
-
-    const response = await callCloudFunction("GetDictionaryWordsOnly_Node", {}) as OnlyWordsResponse | null;
-
-    if (response != null) {
-      allWords.value = response.dictionary;
-      localStorage.setItem("allWords", JSON.stringify(allWords.value));
-    }
-  }
 
   return (
-    <ConfigContextProvider>
-      <HintContextProvider>
-        <AuthContextProvider>
-          <WordsContextProvider>
-            <RootLayoutStack />
-          </WordsContextProvider>
-        </AuthContextProvider>
-      </HintContextProvider >
-    </ConfigContextProvider>
+    <Provider store={store}>
+      <ConfigContextProvider>
+        <HintContextProvider>
+          <AuthContextProvider>
+            <WordsContextProvider>
+              <>
+                <RootLayoutStack />
+                <Footer />
+              </>
+            </WordsContextProvider>
+          </AuthContextProvider>
+        </HintContextProvider >
+      </ConfigContextProvider>
+    </Provider>
   );
 
 }
 
 function RootLayoutStack() {
-  const { isUnderMaintenance } = useContext(ConfigContext);
+  const isUnderMaintenance = useAtomValue(isUnderMaintenanceAtom);
+
+  const dispatch = useAppDispatch();
+
+  useEffect(
+    () => {
+      dispatch({ type: "dictionary/fetchWordsRequest" })
+    },
+    []
+  );
 
   return (
     <Stack
@@ -66,10 +60,11 @@ function RootLayoutStack() {
         headerStyle: {
           backgroundColor: CommonColors.black,
         },
-        headerTintColor: '#fff',
+        headerTintColor: "#fff",
         headerTitleStyle: {
-          fontWeight: 'bold',
+          fontWeight: "bold",
         },
+        contentStyle: { backgroundColor: CommonColors.black },
         headerLeft: () => (
           <View style={{ flexDirection: "row" }}>
             <ExamLink />
@@ -88,12 +83,9 @@ function RootLayoutStack() {
       <Stack.Screen
         redirect={isUnderMaintenance}
         name="index"
-        options={({ navigation }) => ({
+        options={{
           title: "",
-          // headerRight: () => (
-          //   <RightHeaderButton />
-          // ),
-        })} />
+        }} />
       <Stack.Screen
         redirect={isUnderMaintenance}
         name="dictionary"
@@ -107,12 +99,6 @@ function RootLayoutStack() {
           title: "",
         }}
       />
-      <Stack.Screen
-        redirect={isUnderMaintenance}
-        name="word_data"
-        options={{
-          title: "",
-        }} />
       <Stack.Screen
         redirect={isUnderMaintenance}
         name="translate"
@@ -132,8 +118,6 @@ function RootLayoutStack() {
         redirect={isUnderMaintenance}
         name="register"
         options={{ title: "" }} />
-
-
     </Stack >
   );
 }
