@@ -1,7 +1,14 @@
-import { ActivityIndicator, Pressable, StyleProp, Text, TextStyle, ViewStyle } from "react-native";
+import {
+  ActivityIndicator,
+  Pressable,
+  StyleProp,
+  Text,
+  TextStyle,
+  ViewStyle
+} from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 
-interface TextButtonProps {
+export interface TextButtonProps {
   style?: StyleProp<ViewStyle>;
   text: string;
   textStyle?: StyleProp<TextStyle>;
