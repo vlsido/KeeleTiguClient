@@ -71,7 +71,9 @@ export default function Translate() {
   function shuffleArray(array: Word[]) {
     let newIndex: number;
 
-    for (let index = 0; index < array.length; index++) {
+    array.forEach((
+      _, index
+    ) => {
       newIndex = Math.floor(Math.random() * index);
       [
         array[index],
@@ -80,7 +82,7 @@ export default function Translate() {
           array[newIndex],
           array[index]
         ];
-    }
+    });
     return array;
   }
 
@@ -121,7 +123,6 @@ export default function Translate() {
       gameWords
     ]
   );
-
 
   const textInputRef = useRef<TextInput>(null);
 
@@ -196,9 +197,11 @@ export default function Translate() {
                     On jaanud: {gameWords.length}
                   </Text>
                 }
-                <Text style={{ color: CommonColors.white, fontSize: 16 }}>
-                  Õige: {correctCount}
-                </Text>
+                <View>
+                  <Text style={{ color: CommonColors.white, fontSize: 16 }}>
+                    Õige: {correctCount}
+                  </Text>
+                </View>
                 <Text style={{ color: CommonColors.white, fontSize: 16 }}>
                   Vale: {incorrectCount}
                 </Text>
@@ -227,8 +230,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: "column",
-    justifyContent: "space-between",
     alignItems: "center",
+    gap: "50%",
     backgroundColor: CommonColors.black,
     paddingVertical: 10
   },
