@@ -44,10 +44,6 @@ function TextAnswerField(props: TextAnswerFieldProps) {
   const sendAnswerButtonOpacity = useSharedValue<number>(0);
 
   function onChange(text: string) {
-    console.log(
-      "text",
-      text
-    );
     setAnswer(text);
   }
 

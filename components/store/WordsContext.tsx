@@ -42,10 +42,6 @@ function WordsContextProvider({ children }: { children: React.ReactNode }) {
   useEffect(
     () => {
       if (myDictionary.length > 0) {
-        console.log(
-          "[CHANGED] Caching myDictionary",
-          myDictionary
-        );
         cacheDictionary();
       }
     },
@@ -67,11 +63,6 @@ function WordsContextProvider({ children }: { children: React.ReactNode }) {
     const myDictionaryCached = cached != null ? JSON.parse(cached) : [];
 
     dispatch(setMyDictionary(myDictionaryCached));
-
-    console.log(
-      "myDictionary loaded!",
-      myDictionary
-    );
   }
 
   function cacheDictionary() {
@@ -79,7 +70,6 @@ function WordsContextProvider({ children }: { children: React.ReactNode }) {
       "myDictionary",
       JSON.stringify(myDictionary)
     );
-    console.log("myDictionary cached!");
   }
 
   function clearAllCache() {

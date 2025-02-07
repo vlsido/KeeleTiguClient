@@ -136,27 +136,11 @@ export default function Translate() {
 
       const currentWordLowercase = gameWords[0].word.split("+").join("").toLowerCase();
 
-      console.log(
-        "gameWords: ",
-        gameWords
-      );
-
-      console.log(
-        "Current word: ",
-        currentWordLowercase
-      );
-      console.log(
-        "Answer: ",
-        answerLowercase
-      );
-
       if (currentWordLowercase === answerLowercase) {
-        console.log("Correct!");
         setIsAnswerVisible(false);
         setGameWords(gameWords.slice(1));
         setCorrectCount(correctCount + 1);
       } else {
-        console.log("Incorrect!");
         if (lastIncorrectWord !== currentWordLowercase) {
           setLastIncorrectWord(currentWordLowercase);
           setIncorrectCount(incorrectCount + 1);

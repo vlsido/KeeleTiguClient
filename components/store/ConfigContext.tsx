@@ -13,7 +13,10 @@ import { i18n } from "./i18n";
 import ee from "../../components/store/translations/ee.json"
 import { useAppDispatch } from "../../hooks/storeHooks";
 import { clearDictionary } from "./slices/dictionarySlice";
-import { atom, useSetAtom } from "jotai";
+import {
+  atom,
+  useSetAtom
+} from "jotai";
 
 interface ConfigContextProps {
   remoteConfig: RemoteConfig | null;
@@ -32,16 +35,18 @@ function ConfigContextProvider({ children }: { children: React.ReactNode }) {
 
   const setIsUnderMaintenance = useSetAtom(isUnderMaintenanceAtom);
 
-  useEffect(
-    () => {
-      const unsubscribe = i18n.onChange(() => {
-        console.log("I18n has changed!");
-      });
-
-      return unsubscribe;
-    },
-    []
-  );
+  // if (__DEV__) {
+  //   useEffect(
+  //     () => {
+  //       const unsubscribe = i18n.onChange(() => {
+  //         console.log("I18n has changed!");
+  //       });
+  //
+  //       return unsubscribe;
+  //     },
+  //     []
+  //   );
+  // }
 
   useEffect(
     () => {
@@ -88,7 +93,7 @@ function ConfigContextProvider({ children }: { children: React.ReactNode }) {
 
           loadTranslations("ee");
         }).catch((error) => {
-          console.log(
+          console.error(
             "error fetching config",
             error
           );
@@ -102,7 +107,6 @@ function ConfigContextProvider({ children }: { children: React.ReactNode }) {
   );
 
   async function removeCache() {
-    console.log("Removing cache...");
     localStorage.removeItem("allWords");
     localStorage.removeItem("cachedWordsAndData");
     dispatch(clearDictionary());

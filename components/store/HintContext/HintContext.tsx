@@ -2,7 +2,11 @@ import { createContext } from "react";
 import {
   useSetAtom
 } from "jotai";
-import { durationAtom, hintTextAtom, isHintVisibleAtom } from "./hintAtoms";
+import {
+  durationAtom,
+  hintTextAtom,
+  isHintVisibleAtom
+} from "./hintAtoms";
 import Hint from "./Hint";
 
 interface HintContextProps {
@@ -22,7 +26,6 @@ function HintContextProvider({ children }: { children: React.ReactNode }) {
   function showHint(
     text: string, durationInMs: number
   ) {
-
     setHintText(text);
     setDuration(durationInMs);
     setIsHintVisible(true);

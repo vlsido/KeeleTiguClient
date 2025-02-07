@@ -10,12 +10,9 @@ import { CommonColors } from "../constants/Colors";
 
 function RightHeaderButton() {
   async function handleLogout() {
-    console.log("Logout");
     await auth.signOut();
     router.replace("/");
   }
-
-  console.log(auth.currentUser);
 
   if (auth.currentUser && !auth.currentUser.isAnonymous) {
     return (

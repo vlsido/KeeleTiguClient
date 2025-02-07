@@ -34,10 +34,6 @@ function Hint() {
   ] = useAtom(isHintVisibleAtom);
 
   function hideWithDelay() {
-    console.log(
-      "duration",
-      duration
-    );
     setTimeout(
       () => {
         setIsHintVisible(false);
