@@ -64,7 +64,7 @@ function RootLayoutStack() {
         headerTitleStyle: {
           fontWeight: "bold",
         },
-        contentStyle: { backgroundColor: "red" },
+        contentStyle: { backgroundColor: CommonColors.black },
         headerLeft: () => (
           <View style={{ flexDirection: "row" }}>
             <ExamLink />
