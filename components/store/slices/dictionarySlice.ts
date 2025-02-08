@@ -1,9 +1,15 @@
-import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { Word, WordAndExamData } from "../../../app/dictionary";
+import {
+  PayloadAction,
+  createSlice
+} from "@reduxjs/toolkit";
+import {
+  Word,
+  WordAndExamData
+} from "../../../app/dictionary";
 import { RootState } from "../store";
 import { WordWithoutData } from "../../util/WordsUtil";
 
-interface DictionaryState {
+export interface DictionaryState {
   myDictionary: Word[],
   examDictionary: WordAndExamData[],
   words: WordWithoutData[]

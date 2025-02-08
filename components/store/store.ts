@@ -1,4 +1,4 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import createSagaMiddleware from "redux-saga";
 
 import { atomWithStore } from "jotai-redux";
@@ -8,22 +8,28 @@ import { watchDictionarySaga } from "./sagas/dictionarySaga";
 
 const sagaMiddleware = createSagaMiddleware();
 
-const store = configureStore({
-  reducer: {
-    dictionary: dictionaryReducer,
-  },
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware({ thunk: false }).concat(sagaMiddleware)
-});
+const rootReducer = combineReducers({
+  dictionary: dictionaryReducer
+})
 
-sagaMiddleware.run(watchDictionarySaga);
+export const setupStore = (preloadedState?: Partial<RootState>) => {
+  return configureStore({
+    reducer: rootReducer,
+    // middleware: (getDefaultMiddleware) => getDefaultMiddleware({ thunk: false }).concat(sagaMiddleware),
+    preloadedState
+  });
 
-export const storeAtom = atomWithStore(store);
+}
 
-export type AppStore = typeof store;
+// sagaMiddleware.run(watchDictionarySaga);
 
-export type RootState = ReturnType<typeof store.getState>;
+export const storeAtom = atomWithStore(setupStore());
 
-export type AppDispatch = typeof store.dispatch;
+export type RootState = ReturnType<typeof rootReducer>;
 
-export default store;
+export type AppStore = ReturnType<typeof setupStore>;
+
+export type AppDispatch = AppStore["dispatch"];
+
+export const store = setupStore();
 

@@ -6,22 +6,19 @@ import WordsContextProvider from "../components/store/WordsContext";
 import { Stack } from "expo-router";
 import { CommonColors } from "../constants/Colors";
 import { View } from "react-native";
-import ExamLink from "../components/ExamLink";
 import DictionaryLink from "../components/links/DictionaryLink";
 import SearchLink from "../components/links/SearchLink";
-import LeftHeaderButton from "../components/LeftHeaderButton";
 import { Provider } from "react-redux";
-import store from "../components/store/store";
+import { store } from "../components/store/store";
 import { useEffect } from "react";
 import { useAppDispatch } from "../hooks/storeHooks";
 import HintContextProvider from "../components/store/HintContext/HintContext";
 import { useAtomValue } from "jotai";
 import Footer from "../components/Footer";
-
-
+import LeftHeaderButton from "../components/buttons/LeftHeaderButton";
+import ExamLink from "../components/links/ExamLink";
 
 export default function RootLayout() {
-
 
   return (
     <Provider store={store}>
@@ -39,7 +36,6 @@ export default function RootLayout() {
       </ConfigContextProvider>
     </Provider>
   );
-
 }
 
 function RootLayoutStack() {
