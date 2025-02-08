@@ -6,7 +6,13 @@ import { CommonColors } from "../constants/Colors";
 function Footer() {
   return (
     <View style={styles.container}>
-      <Text style={styles.buildText}>
+      <Text style={styles.text}>
+        by coslavko
+      </Text>
+      <Text style={styles.text}>
+        Examinyasha
+      </Text>
+      <Text style={styles.text}>
         Build {packageJson.version}
       </Text>
     </View>
@@ -21,12 +27,14 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    alignItems: "flex-end",
+    marginHorizontal: "2.5%",
+    flexDirection: "row",
+    justifyContent: "space-between"
   },
-  buildText: {
+  text: {
     color: CommonColors.white,
     fontSize: 12,
-    marginRight: "2.5%",
     padding: 2.5
-  }
+
+  },
 })
