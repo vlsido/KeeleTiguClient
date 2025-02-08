@@ -16,7 +16,7 @@ export interface DictionaryRequest {
 }
 
 export interface RandomWordsResponse {
-  randomWords: Word[];
+  randomWords: WordAndExamData[];
 }
 
 export interface AllWordsResponse {
@@ -42,6 +42,14 @@ export interface Word {
       russianTranslations: string[];
     }[];
   }[]
+}
+
+export interface WordAndExamData extends Word {
+  examData: {
+    word: string,
+    level: "A1" | "A2" | "B1",
+    russianTranslations: string[]
+  }
 }
 
 export interface DictionaryResponse {
