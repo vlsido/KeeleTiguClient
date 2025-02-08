@@ -15,7 +15,6 @@ import {
   useAppSelector
 } from "../hooks/storeHooks";
 import {
-  pushToCachedDictionary,
   pushToMyDictionary
 } from "../components/store/slices/dictionarySlice";
 import FoundArticlesCounter from "../components/screens/word_data/FoundArticlesCounter";
@@ -44,8 +43,6 @@ function WordData(props: WordDataProps) {
     }
 
     dispatch(pushToMyDictionary(wordToAdd));
-
-    dispatch(pushToCachedDictionary(wordToAdd));
 
     // Add to dictionary
     showHint(
@@ -135,7 +132,8 @@ const styles = StyleSheet.create({
   },
   highlightedText: {
     flexDirection: "row",
-    backgroundColor: CommonColors.yellowA50,
+    color: CommonColors.black,
+    backgroundColor: CommonColors.yellow,
     marginRight: "auto",
   },
   addToDictionaryContainer: {
