@@ -6,6 +6,7 @@ import {
   useRef
 } from "react";
 import {
+  Pressable,
   StyleSheet,
   Text,
   TextInput,
@@ -31,6 +32,9 @@ import {
 import MaterialIconButton from "../components/MaterialIconButton";
 import { useHint } from "../hooks/useHint";
 import { setExamDictionary } from "../components/store/slices/dictionarySlice";
+import { SkipNextIcon } from "../components/icons/SkipNextIcon";
+import { VisibilityIcon } from "../components/icons/VisibilityIcon";
+import CustomIconButton from "../components/buttons/CustomIconButton";
 
 export default function Translate() {
   const { mode } = useLocalSearchParams<{ mode: "any" | "my_dictionary" }>();
@@ -348,20 +352,12 @@ export default function Translate() {
           />
         </View>
         <View style={{ flexDirection: "row", gap: 10 }}>
-          <MaterialIconButton
-            onPress={skipWord}
-            name={"skip-next"}
-            size={32}
-            color={CommonColors.white}
-            ariaLabel="Skip word"
-          />
-          <MaterialIconButton
-            onPress={showWord}
-            name={"visibility"}
-            size={32}
-            color={CommonColors.white}
-            ariaLabel="Show word"
-          />
+          <CustomIconButton onPress={skipWord}>
+            <SkipNextIcon />
+          </CustomIconButton>
+          <CustomIconButton onPress={showWord}>
+            <VisibilityIcon />
+          </CustomIconButton>
         </View>
       </View>
     </View>

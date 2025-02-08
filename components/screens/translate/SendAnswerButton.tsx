@@ -17,6 +17,7 @@ import { useEffect } from "react";
 import { AnimatedPressable } from "../../util/AnimatedComponentsUtil";
 import { CommonColors } from "../../../constants/Colors";
 import { MaterialIcons } from "@expo/vector-icons";
+import { ArrowUpwardIcon } from "../../icons/ArrowUpwardIcon";
 
 interface SendAnswerButtonProps {
   opacity: SharedValue<number>;
@@ -90,11 +91,7 @@ function SendAnswerButton(props: SendAnswerButtonProps) {
       hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
       onPress={onPress}
     >
-      <MaterialIcons
-        name="arrow-upward"
-        size={32}
-        color={"black"}
-      />
+      <ArrowUpwardIcon />
     </AnimatedPressable>
   );
 }
@@ -106,14 +103,9 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 0,
     right: 0,
-    height: 32,
-    width: 32,
+    margin: 5,
     alignSelf: "flex-end",
-    margin: 8,
     backgroundColor: "white",
-    borderRadius: 60,
-    justifyContent: "center",
-    alignItems: "center"
   },
   text: {
     fontWeight: "bold",
