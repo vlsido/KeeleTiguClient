@@ -108,7 +108,7 @@ function ConfigContextProvider({ children }: { children: React.ReactNode }) {
 
   async function removeCache() {
     localStorage.removeItem("allWords");
-    localStorage.removeItem("cachedWordsAndData");
+    localStorage.removeItem("wordsAndExamData");
     dispatch(clearDictionary());
   }
 

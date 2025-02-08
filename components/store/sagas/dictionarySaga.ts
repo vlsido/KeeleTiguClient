@@ -1,7 +1,10 @@
 import { call, put, takeLatest } from "redux-saga/effects";
-import { setCachedDictionary, setWords } from "../slices/dictionarySlice";
+import { setExamDictionary, setWords } from "../slices/dictionarySlice";
 import { callCloudFunction } from "../../util/CloudFunctions";
-import { OnlyWordsResponse, RandomWordsResponse, Word } from "../../../app/dictionary";
+import {
+  OnlyWordsResponse,
+  RandomWordsResponse
+} from "../../../app/Dictionary";
 
 function* fetchAllWordsSaga() {
   try {
@@ -53,7 +56,7 @@ function* fetchAllWordsSaga() {
 function* fetchRandomWordsSaga() {
   try {
     const data = {
-      numberOfWords: 100,
+      numberOfWords: 120,
     };
     const response = (yield call(
       callCloudFunction,
@@ -63,16 +66,12 @@ function* fetchRandomWordsSaga() {
 
     if (response != null) {
 
-      const wordsData = response.randomWords.map((word: Word) => {
-        return {
-          word: word.word,
-          type: word.type,
-          forms: word.forms,
-          usages: word.usages,
-        };
-      });
+      console.log(
+        "response.randomWords",
+        response.randomWords
+      );
 
-      yield put(setCachedDictionary(wordsData));
+      yield put(setExamDictionary(response.randomWords));
     }
   } catch (error) {
     switch (error.code) {
@@ -97,9 +96,9 @@ function* fetchRandomWordsSaga() {
 
 function* loadCachedWordsSaga() {
   try {
-    const cachedWords = localStorage.getItem("cachedWordsAndData");
+    const cachedWords = localStorage.getItem("wordsAndExamData");
     if (cachedWords) {
-      yield put(setCachedDictionary(JSON.parse(cachedWords)));
+      yield put(setExamDictionary(JSON.parse(cachedWords)));
     }
   } catch (error) {
     console.error(
