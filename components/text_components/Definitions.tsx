@@ -37,10 +37,8 @@ function Definitions(props: DefinitionProps) {
               ) => {
                 const separator = wordIndex < splitDefinitionWords.length ? " " : "";
                 if (wordIndex === searchStringIndex) {
-
-
                   return [
-                    <Text style={[
+                    <Text key={wordIndex} style={[
                       wordIndex === searchStringIndex && styles.highlightedWord
 
                     ]}>{word}</Text>,
@@ -48,7 +46,7 @@ function Definitions(props: DefinitionProps) {
                   ]
                 }
                 return (
-                  <Text style={[
+                  <Text key={wordIndex} style={[
                     wordIndex === searchStringIndex && styles.highlightedWord
 
                   ]}>{word}{separator}</Text>
