@@ -3,8 +3,6 @@ import {
   Text,
 } from "react-native";
 import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
   ReduceMotion,
   FadeIn,
   FadeOut,
