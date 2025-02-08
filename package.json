@@ -13,9 +13,6 @@
     "test": "jest --watchAll",
     "lint": "expo lint"
   },
-  "jest": {
-    "preset": "jest-expo"
-  },
   "dependencies": {
     "@expo/metro-runtime": "~4.0.1",
     "@expo/vector-icons": "^14.0.3",
@@ -49,19 +46,24 @@
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
+    "@babel/preset-typescript": "^7.26.0",
     "@eslint/compat": "^1.2.5",
     "@eslint/js": "^9.19.0",
+    "@testing-library/react-native": "^13.0.1",
     "@types/jest": "^29.5.12",
     "@types/react": "~18.3.12",
     "@types/react-test-renderer": "^18.0.7",
     "babel-plugin-module-resolver": "^5.0.2",
     "babel-plugin-transform-remove-console": "^6.9.4",
-    "eslint": "^9.19.0",
+    "eslint": "^8.57.0",
+    "eslint-config-expo": "~8.0.1",
     "eslint-plugin-disable-autofix": "^5.0.1",
     "eslint-plugin-react": "^7.37.4",
+    "eslint-plugin-testing-library": "^7.1.1",
     "jest": "^29.2.1",
+    "jest-environment-jsdom": "^29.7.0",
     "jest-expo": "~52.0.3",
-    "react-test-renderer": "18.2.0",
+    "react-test-renderer": "18.3.1",
     "typescript": "~5.3.3",
     "typescript-eslint": "^8.21.0"
   },
