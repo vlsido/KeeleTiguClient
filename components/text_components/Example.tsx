@@ -81,16 +81,18 @@ const styles = StyleSheet.create({
     fontWeight: "thin",
   },
   russianAccentText: {
-    color: CommonColors.yellow,
+    color: CommonColors.red,
     fontSize: 16,
     fontWeight: "thin",
   },
-  highlightedEstonianText: {
-    backgroundColor: CommonColors.yellowA50,
-  },
   highlightedRussianText: {
     flexDirection: "row",
-    backgroundColor: CommonColors.yellowA50,
+    backgroundColor: "#393080",
+    color: CommonColors.yellow,
     marginRight: "auto",
+  },
+  highlightedEstonianText: {
+    color: CommonColors.black,
+    backgroundColor: CommonColors.yellow,
   },
 })
