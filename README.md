@@ -12,6 +12,6 @@
 
 • Add sign-up possibility to save words in DB \
 • Add more games \
-• Design \
+• Add Estonian-English version \
 • More...
 
