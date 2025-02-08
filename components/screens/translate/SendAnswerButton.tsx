@@ -15,8 +15,8 @@ import {
 } from "./translateAtoms";
 import { useEffect } from "react";
 import { AnimatedPressable } from "../../util/AnimatedComponentsUtil";
-import { CheckmarkIcon } from "../../icons/CheckmarkIcon";
 import { CommonColors } from "../../../constants/Colors";
+import { MaterialIcons } from "@expo/vector-icons";
 
 interface SendAnswerButtonProps {
   opacity: SharedValue<number>;
@@ -90,7 +90,11 @@ function SendAnswerButton(props: SendAnswerButtonProps) {
       hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
       onPress={onPress}
     >
-      <CheckmarkIcon scale={1.25} />
+      <MaterialIcons
+        name="arrow-upward"
+        size={32}
+        color={"black"}
+      />
     </AnimatedPressable>
   );
 }
@@ -99,10 +103,17 @@ export default SendAnswerButton;
 
 const styles = StyleSheet.create({
   container: {
-    marginLeft: 10,
-    padding: 5,
-    borderRadius: 5,
     position: "absolute",
+    bottom: 0,
+    right: 0,
+    height: 32,
+    width: 32,
+    alignSelf: "flex-end",
+    margin: 8,
+    backgroundColor: "white",
+    borderRadius: 60,
+    justifyContent: "center",
+    alignItems: "center"
   },
   text: {
     fontWeight: "bold",
