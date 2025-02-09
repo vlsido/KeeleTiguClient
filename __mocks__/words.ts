@@ -1,4 +1,43 @@
-import { WordAndExamData } from "../app/Dictionary";
+import { Word, WordAndExamData } from "../app/Dictionary";
+
+export const twoWordsAndDataArray: Word[] = [
+  {
+    word: "karu",
+    type: "s",
+    forms: "karu, karu, karu",
+    usages: [
+      {
+        definitionData: [
+          {
+            definitionText: undefined,
+            fieldsOfKnowledge: [],
+            russianTranslations: [
+              "медведь"
+            ]
+          }
+        ]
+      }
+    ],
+  },
+  {
+    word: "karu+kaer",
+    type: "s",
+    forms: "+kaera kaera k'aera",
+    usages: [
+      {
+        definitionData: [
+          {
+            definitionText: undefined,
+            fieldsOfKnowledge: [],
+            russianTranslations: [
+              "ржаной костёр"
+            ],
+          }
+        ]
+      }
+    ],
+  },
+];
 
 export const twoWordsAndExamDataArray: WordAndExamData[] = [
   {
