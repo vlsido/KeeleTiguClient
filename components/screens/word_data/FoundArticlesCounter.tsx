@@ -12,27 +12,28 @@ interface FoundArticlesCounterProps {
 }
 
 function FoundArticlesCounter(props: FoundArticlesCounterProps) {
-  if (!props.wordData) {
+  if (!props.wordData || props.wordData.length === 0) {
     return null;
   }
 
-  if (props.wordData.length > 0 && props.wordData.length < 51) {
-    return (
-      <View style={styles.wordCount}>
-        <Text
-          style={styles.wordCountText}
-        >
-          {i18n.t(
-            "count_words_in_search",
-            {
-              defaultValue: "Leitud %{count} artiklit",
-              count: props.wordData.length,
-            }
-          )}
-        </Text>
-      </View>
-    )
-  }
+  return (
+    <View
+      testID="FOUND_ARTICLES_COUNTER.CONTAINER:VIEW"
+      style={styles.wordCount}>
+      <Text
+        testID="FOUND_ARTICLES_COUNTER.COUNT:TEXT"
+        style={styles.wordCountText}
+      >
+        {i18n.t(
+          "count_words_in_search",
+          {
+            defaultValue: "Leitud %{count} artiklit",
+            count: props.wordData.length,
+          }
+        )}
+      </Text>
+    </View>
+  )
 }
 
 export default FoundArticlesCounter;

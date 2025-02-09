@@ -16,7 +16,6 @@ import {
 import { useEffect } from "react";
 import { AnimatedPressable } from "../../util/AnimatedComponentsUtil";
 import { CommonColors } from "../../../constants/Colors";
-import { MaterialIcons } from "@expo/vector-icons";
 import { ArrowUpwardIcon } from "../../icons/ArrowUpwardIcon";
 
 interface SendAnswerButtonProps {
@@ -74,24 +73,21 @@ function SendAnswerButton(props: SendAnswerButtonProps) {
     }
   });
 
-  function onPress() {
-    props.onPress();
-  }
-
   if (textAnswerFieldContainerWidth === 0) {
     return null;
   }
 
   return (
     <AnimatedPressable
+      testID="SEND_ANSWER_BUTTON.ICON_CONTAINER:PRESSABLE"
       style={[
         animatedStyle,
         styles.container
       ]}
       hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-      onPress={onPress}
+      onPress={props.onPress}
     >
-      <ArrowUpwardIcon />
+      <ArrowUpwardIcon testID="SEND_ANSWER_BUTTON.SEND:ICON" />
     </AnimatedPressable>
   );
 }

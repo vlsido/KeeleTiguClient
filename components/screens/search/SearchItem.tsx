@@ -34,8 +34,12 @@ function SearchItem(props: SearchItemProps) {
   }
 
   return (
-    <View style={styles.itemContainer}>
+    <View
+      testID="SEARCH_ITEM.CONTAINER:VIEW"
+      style={styles.itemContainer}
+    >
       <TextButton
+        testID="SEARCH_ITEM.WORD:PRESSABLE"
         style={[
           styles.wordContainer,
           isHoveredIn === true ?

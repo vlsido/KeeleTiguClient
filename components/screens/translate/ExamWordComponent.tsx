@@ -11,7 +11,10 @@ import {
 import {
   gameWordsAtom,
 } from "./translateAtoms";
-import { Word, WordAndExamData } from "../../../app/dictionary";
+import {
+  Word,
+  WordAndExamData
+} from "../../../app/dictionary";
 import { CommonColors } from "../../../constants/Colors";
 import AddToDictionaryButton from "../../buttons/AddToDictionaryButton";
 
@@ -118,19 +121,25 @@ function ExamWordComponent(props: ExamWordComponentProps) {
 
   if (gameWords.length === 0) {
     return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size={32} color={CommonColors.white} />
+      <View
+        testID="EXAM_WORD_COMPONENT.NO_GAME_WORDS_CONTAINER:VIEW"
+        style={styles.loadingContainer}
+      >
+        <ActivityIndicator testID="EXAM_WORD_COMPONENT.NO_GAME_WORDS_CONTAINER.LOADING:ACTIVITY_INDICATOR" size={32} color={CommonColors.white} />
       </View>
     );
   }
 
   return (
     <>
-      <View style={styles.container}>
+      <View
+        testID="EXAM_WORD_COMPONENT.WORD_CONTAINER:VIEW"
+        style={styles.container}
+      >
         {currentWord}
       </View>
       {props.isAnswerVisible === true && (
-        <View style={styles.answerContainer}>
+        <View testID="EXAM_WORD_COMPONENT.ANSWER_CONTAINER:VIEW" style={styles.answerContainer}>
           {currentAnswer}
           {props.mode === "any" && <AddToDictionaryButton word={gameWords.at(0)} />}
         </View>

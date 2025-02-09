@@ -77,9 +77,9 @@ function TextAnswerField(props: TextAnswerFieldProps) {
 
   return (
     <View
+      testID="TEXT_ANSWER_FIELD.CONTAINER:VIEW"
       style={styles.container}
     >
-      <Text style={styles.hintText}>(ühesõnaga)</Text>
       <View style={styles.textField}>
         <View style={styles.textInputContainer}>
           <AnimatedTextInput
