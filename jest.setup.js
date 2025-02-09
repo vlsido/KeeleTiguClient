@@ -1,5 +1,9 @@
 import "react-native-gesture-handler/jestSetup";
 
+import { setUpTests as reanimatedSetUpTests } from "react-native-reanimated";
+
+reanimatedSetUpTests();
+
 jest.mock("firebase/functions", () => ({
   httpsCallable: jest.fn(() => Promise.resolve({ data: {} })),
   getFunctions: jest.fn(),

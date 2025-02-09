@@ -6,7 +6,6 @@ import {
   useRef
 } from "react";
 import {
-  Pressable,
   StyleSheet,
   Text,
   TextInput,
@@ -14,7 +13,10 @@ import {
 } from "react-native";
 import { WordAndExamData } from "./dictionary";
 import { useLocalSearchParams } from "expo-router";
-import { useAppDispatch, useAppSelector } from "../hooks/storeHooks";
+import {
+  useAppDispatch,
+  useAppSelector
+} from "../hooks/storeHooks";
 import {
   atom,
   useAtom,
@@ -29,7 +31,6 @@ import {
   isA2LevelOnAtom,
   isB1LevelOnAtom
 } from "../components/screens/translate/translateAtoms";
-import MaterialIconButton from "../components/MaterialIconButton";
 import { useHint } from "../hooks/useHint";
 import { setExamDictionary } from "../components/store/slices/dictionarySlice";
 import { SkipNextIcon } from "../components/icons/SkipNextIcon";

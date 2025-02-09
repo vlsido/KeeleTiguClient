@@ -3,7 +3,6 @@ import {
   Text,
   View
 } from "react-native";
-import Examples from "./Examples";
 import KebabMenuButton from "./KebabMenuButton";
 import Type from "./Type";
 import { router } from "expo-router";
@@ -27,7 +26,10 @@ function DictionaryItem(props: DictionaryItemProps) {
 
 
   return (
-    <View style={styles.itemContainer}>
+    <View
+      testID="DICTIONARY_ITEM.CONTAINER:VIEW"
+      style={styles.itemContainer}
+    >
       <Text style={styles.indexText}>{props.index}.</Text>
       <View style={styles.wordContainer}>
         <View>

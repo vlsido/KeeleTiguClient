@@ -7,7 +7,6 @@ import {
   View
 } from "react-native";
 import Forms from "../components/text_components/Forms";
-import TextButton from "../components/TextButton";
 import { i18n } from "../components/store/i18n";
 import { useHint } from "../hooks/useHint";
 import {
@@ -22,6 +21,7 @@ import Type from "../components/screens/dictionary/Type";
 import { Word } from "../app/Dictionary";
 import Usage from "./text_components/Usage";
 import { memo } from "react";
+import TextButton from "./buttons/TextButton";
 
 interface WordDataProps {
   wordDataArray: Word[] | null;
@@ -99,10 +99,17 @@ function WordData(props: WordDataProps) {
 
               }
               } />
-            <TextButton key={`wordIndex-${index}-add`} style={styles.addToDictionaryContainer} textStyle={styles.addToDictionaryText} text={i18n.t(
-              "add_to_dictionary",
-              { defaultValue: "Lisa sõnastikku" }
-            )} onPress={() => addToDictionary(wordData)} label="Add to dictionary" />
+            <TextButton
+              key={`wordIndex-${index}-add`}
+              style={styles.addToDictionaryContainer}
+              textStyle={styles.addToDictionaryText}
+              text={i18n.t(
+                "add_to_dictionary",
+                { defaultValue: "Lisa sõnastikku" }
+              )}
+              onPress={() => addToDictionary(wordData)}
+              label="Add to dictionary"
+            />
           </View>
         );
       })}

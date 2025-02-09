@@ -26,6 +26,7 @@ export interface TextButtonProps {
   leftSideIconSize?: number;
   leftSideIconColor?: string;
   numberOfLines?: number;
+  testID: string;
 }
 
 function TextButton(props: TextButtonProps) {
@@ -47,6 +48,7 @@ function TextButton(props: TextButtonProps) {
 
   return (
     <Pressable
+      testID={props.testID}
       style={({ pressed }) => [
         props.style,
         { opacity: pressed ? 0.75 : 1 },

@@ -1,9 +1,9 @@
-import { CommonColors } from "../constants/Colors";
 import { Link } from "expo-router";
 import {
   StyleSheet,
   Text
 } from "react-native";
+import { CommonColors } from "../../constants/Colors";
 
 function ExamLink() {
 

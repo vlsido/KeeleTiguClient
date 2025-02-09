@@ -66,7 +66,10 @@ function Search() {
       gesture={tapGesture}
       userSelect="text"
     >
-      <View style={styles.container}>
+      <View
+        testID="SEARCH.CONTAINER:VIEW"
+        style={styles.container}
+      >
         <SearchField />
         <View style={styles.wordsDataContainer}>
           {isSearchingInProcess === true ? (

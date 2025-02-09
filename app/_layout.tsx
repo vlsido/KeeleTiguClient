@@ -5,9 +5,6 @@ import AuthContextProvider from "../components/store/AuthContext";
 import WordsContextProvider from "../components/store/WordsContext";
 import { Stack } from "expo-router";
 import { CommonColors } from "../constants/Colors";
-import { View } from "react-native";
-import DictionaryLink from "../components/links/DictionaryLink";
-import SearchLink from "../components/links/SearchLink";
 import { Provider } from "react-redux";
 import { store } from "../components/store/store";
 import { useEffect } from "react";
@@ -16,7 +13,7 @@ import HintContextProvider from "../components/store/HintContext/HintContext";
 import { useAtomValue } from "jotai";
 import Footer from "../components/Footer";
 import LeftHeaderButton from "../components/buttons/LeftHeaderButton";
-import ExamLink from "../components/links/ExamLink";
+import Header from "../components/Header";
 
 export default function RootLayout() {
 
@@ -62,12 +59,7 @@ function RootLayoutStack() {
         },
         contentStyle: { backgroundColor: CommonColors.black },
         headerLeft: () => (
-          <View style={{ flexDirection: "row" }}>
-            <ExamLink />
-            <DictionaryLink />
-            <SearchLink />
-          </View>
-
+          <Header />
         ),
       }}>
       <Stack.Screen

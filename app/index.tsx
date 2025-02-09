@@ -1,10 +1,14 @@
-import { StyleSheet, View } from "react-native";
+import {
+  StyleSheet,
+  View
+} from "react-native";
 import { CommonColors } from "../constants/Colors";
 import TranslateWordsGame from "../components/screens/index/games/translate/TranslateWordsGame";
 
 export default function Index() {
   return (
     <View
+      testID="INDEX.CONTAINER:VIEW"
       style={styles.container}
     >
       <TranslateWordsGame />

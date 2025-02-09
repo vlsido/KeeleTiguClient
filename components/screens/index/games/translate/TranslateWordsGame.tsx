@@ -207,8 +207,11 @@ function TranslateWordsGame() {
   });
 
   return (
-    <View style={styles.container}>
+    <View
+      testID="TRANSLATE_WORDS_GAME.CONTAINER:VIEW"
+      style={styles.container}>
       <AnimatedPressable
+        testID="TRANSLATE_WORDS_GAME.GAME:PRESSABLE"
         style={[
           translateGameContainerAnimatedStyle,
           styles.translateButton

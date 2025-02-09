@@ -6,11 +6,14 @@ import {
   FadeOut,
   ReduceMotion,
 } from "react-native-reanimated";
-import { useAppDispatch, useAppSelector } from "../../../hooks/storeHooks";
+import {
+  useAppDispatch,
+  useAppSelector
+} from "../../../hooks/storeHooks";
 import { setMyDictionary } from "../../store/slices/dictionarySlice";
 import { AnimatedPressable } from "../../util/AnimatedComponentsUtil";
-import TextButton from "../../TextButton";
 import { CommonColors } from "../../../constants/Colors";
+import TextButton from "../../buttons/TextButton";
 
 interface KebabMenuProps {
   isVisible: boolean;

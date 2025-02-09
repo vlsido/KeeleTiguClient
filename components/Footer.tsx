@@ -6,13 +6,13 @@ import { CommonColors } from "../constants/Colors";
 function Footer() {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>
+      <Text testID="FOOTER.AUTHOR:TEXT" style={styles.text}>
         by coslavko
       </Text>
-      <Text style={styles.text}>
+      <Text testID="FOOTER.APP_NAME:TEXT" style={styles.text}>
         Examinyasha
       </Text>
-      <Text style={styles.text}>
+      <Text testID="FOOTER.APP_BUILD:TEXT" style={styles.text}>
         Build {packageJson.version}
       </Text>
     </View>

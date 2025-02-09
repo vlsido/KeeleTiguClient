@@ -3,12 +3,12 @@ import {
   View
 } from "react-native";
 import { CommonColors } from "../../../constants/Colors";
-import TextButton from "../../TextButton";
 import {
   atom,
   useAtom
 } from "jotai";
 import { useMemo } from "react";
+import TextButton from "../../buttons/TextButton";
 
 interface SearchItemProps {
   index: number;

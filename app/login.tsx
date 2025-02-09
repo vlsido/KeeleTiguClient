@@ -18,13 +18,13 @@ import {
   useAnimatedStyle,
   useSharedValue
 } from "react-native-reanimated";
-import LoginButton from "../components/LoginButton";
 import {
   atom,
   useAtom
 } from "jotai";
 import { useMemo } from "react";
 import { AnimatedTextInput } from "../components/util/AnimatedComponentsUtil";
+import LoginButton from "../components/buttons/LoginButton";
 
 function Login() {
   const [
@@ -113,14 +113,22 @@ function Login() {
         <AnimatedTextInput style={[
           { paddingLeft: 10, height: 40, borderWidth: 1, borderRadius: 3, color: CommonColors.white },
           emailAnimatedTextInputStyle
-        ]} onChange={onChangeEmail} onFocus={() => emailBorderColor.value = "gray"} />
+        ]}
+          onChange={onChangeEmail}
+          onFocus={() => emailBorderColor.value = "gray"}
+        />
       </View>
       <View style={styles.textField}>
         <Text style={styles.textInputName}>Parool</Text>
         <AnimatedTextInput style={[
           { paddingLeft: 10, height: 40, borderWidth: 1, borderRadius: 3, color: CommonColors.white },
           passwordAnimatedTextInputStyle
-        ]} onChange={onChangePassword} textContentType="password" secureTextEntry={true} onFocus={() => passwordBorderColor.value = "gray"} />
+        ]}
+          onChange={onChangePassword}
+          textContentType="password"
+          secureTextEntry={true}
+          onFocus={() => passwordBorderColor.value = "gray"}
+        />
       </View>
       <LoginButton onPress={handleLogin} isProcessing={isProcessing} />
       <Link

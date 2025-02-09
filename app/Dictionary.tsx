@@ -61,15 +61,28 @@ function Dictionary() {
 
   if (myDictionary.length === 0) {
     return (
-      <View style={styles.noWordsContainer}>
-        <Text style={styles.loadingText}>Siin pole midagi. Lisa uued sõnad eksami leheküljel.</Text>
+      <View
+        testID="DICTIONARY.WORDS_EMPTY:VIEW"
+        style={styles.noWordsContainer}
+      >
+        <Text
+          testID="DICTIONARY.WORDS_EMPTY:TEXT"
+          style={styles.loadingText}>
+          Siin pole midagi. Lisa uued sõnad eksami leheküljel.
+        </Text>
       </View>
     );
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>
+    <View
+      testID="DICTIONARY.CONTAINER:VIEW"
+      style={styles.container}
+    >
+      <Text
+        testID="DICTIONARY.WORD_COUNT:TEXT"
+        style={styles.text}
+      >
         {i18n.t(
           "count_words_in_dictionary",
           {
@@ -79,6 +92,7 @@ function Dictionary() {
         )}
       </Text>
       <FlatList
+        testID="DICTIONARY.WORDS_LIST:FLATLIST"
         data={myDictionary}
         keyExtractor={(item) => `word-${myDictionary.indexOf(item)}`}
         contentContainerStyle={{ gap: 10 }}

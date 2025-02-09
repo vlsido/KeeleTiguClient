@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 import { router } from "expo-router";
 import TextButton from "./TextButton";
-import { CommonColors } from "../constants/Colors";
+import { CommonColors } from "../../constants/Colors";
 
 function LeftHeaderButton() {
 

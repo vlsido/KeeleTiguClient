@@ -1,6 +1,5 @@
 import {
   useCallback,
-  useEffect,
   useMemo,
   useRef
 } from "react";
@@ -21,7 +20,6 @@ import {
 import { useAppSelector } from "../../../hooks/storeHooks";
 import { useHint } from "../../../hooks/useHint";
 import {
-  areResultsVisibleAtom,
   isSearchingInProcessAtom,
   queryAtom,
   resultsAtom,
@@ -310,9 +308,11 @@ function SearchField() {
 
   return (
     <>
-      <View style={[
-        styles.searchContainer,
-      ]}
+      <View
+        testID="SEARCH_FIELD.CONTAINER:VIEW"
+        style={[
+          styles.searchContainer,
+        ]}
       >
         <GestureDetector gesture={searchTapGesture}>
           <View style={[
@@ -322,6 +322,7 @@ function SearchField() {
           >
 
             <TextInput
+              testID="SEARCH_FIELD.QUERY:INPUT"
               ref={inputRef}
               placeholder="Otsi..."
               style={styles.searchInput}
@@ -331,6 +332,7 @@ function SearchField() {
               onSubmitEditing={(event: NativeSyntheticEvent<TextInputChangeEventData>) => getWordData(event.nativeEvent.text)}
             />
             <Pressable
+              testID="SEARCH_FIELD.FIND_WORD:PRESSABLE"
               onPress={() => getWordData(query)}
               style={styles.searchIconContainer}
               aria-label="Otsi sõna"

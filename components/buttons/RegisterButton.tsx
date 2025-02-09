@@ -4,18 +4,18 @@ import {
   View
 } from "react-native";
 import TextButton from "./TextButton";
-import { CommonColors } from "../constants/Colors";
+import { CommonColors } from "../../constants/Colors";
 
-interface LoginButtonProps {
+interface RegisterButtonProps {
   isProcessing: boolean;
   onPress: () => void;
 }
 
-function LoginButton(props: LoginButtonProps) {
+function RegisterButton(props: RegisterButtonProps) {
 
   if (props.isProcessing === true) {
     return (
-      <View style={styles.loginContainer}>
+      <View style={styles.registerContainer}>
         <ActivityIndicator
           color={CommonColors.white}
           size="small"
@@ -24,30 +24,31 @@ function LoginButton(props: LoginButtonProps) {
     )
   }
 
+
   return (
     <TextButton
-      text="Logi sisse"
-      style={styles.loginContainer}
-      textStyle={styles.loginText}
-      label="Login"
+      text="Register"
+      style={styles.registerContainer}
+      textStyle={styles.registerText}
+      label="Register"
       onPress={props.onPress}
     />
   );
 }
 
-export default LoginButton;
+export default RegisterButton;
 
 const styles = StyleSheet.create({
-  loginContainer: {
+  registerContainer: {
     borderRadius: 3,
     borderWidth: 1,
     borderColor: CommonColors.black,
     padding: 10,
-    backgroundColor: CommonColors.green,
     marginTop: 10,
-    marginBottom: 20
+    marginBottom: 20,
+    backgroundColor: CommonColors.yellow,
   },
-  loginText: {
+  registerText: {
     fontSize: 20,
     color: CommonColors.black,
   },

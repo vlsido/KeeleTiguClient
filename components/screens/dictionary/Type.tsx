@@ -9,7 +9,7 @@ interface TypeProps {
 }
 
 function Type(props: TypeProps) {
-  const type = () => {
+  function type() {
     switch (props.type) {
       case "s":
         return "substantiiv";
