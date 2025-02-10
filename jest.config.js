@@ -7,6 +7,8 @@ module.exports = {
     "!**/node_modules/**",
     "!**/babel.config.js",
     "!**/jest.setup.js",
+    "!**/expo-env.d.ts",
+    "!**/.expo/**",
     "!**/dist/**",
   ],
   coverageThreshold: {
