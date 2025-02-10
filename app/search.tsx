@@ -29,8 +29,6 @@ import {
 } from "../components/screens/search/searchAtoms";
 import SearchField from "../components/screens/search/SearchField";
 
-
-
 function Search() {
   const wordsDataArray = useAtomValue<Word[] | null>(wordsDataArrayAtom);
 

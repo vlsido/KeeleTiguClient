@@ -315,6 +315,7 @@ export default function Translate() {
 
   return (
     <View
+      testID="TRANSLATE.CONTAINER:VIEW"
       style={styles.container}
     >
       <View style={styles.topContainer}>
