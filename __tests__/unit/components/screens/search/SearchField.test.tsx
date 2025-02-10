@@ -1,5 +1,5 @@
-import Search from "../../../../app/search";
-import { renderWithProviders, screen } from "../../../../utils/test-utils";
+import Search from "../../../../../app/search";
+import { renderWithProviders, screen } from "../../../../../utils/test-utils";
 
 describe(
   "SearchField",

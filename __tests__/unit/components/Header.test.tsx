@@ -1,5 +1,5 @@
-import { renderWithProviders, screen } from "../../utils/test-utils";
-import Header from "../../components/Header";
+import { renderWithProviders, screen } from "../../../utils/test-utils";
+import Header from "../../../components/Header";
 
 describe(
   "Header",

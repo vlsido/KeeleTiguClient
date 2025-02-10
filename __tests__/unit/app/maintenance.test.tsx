@@ -1,5 +1,5 @@
-import Maintenance from "../../app/maintenance";
-import { renderWithProviders, screen } from "../../utils/test-utils";
+import Maintenance from "../../../app/maintenance";
+import { renderWithProviders, screen } from "../../../utils/test-utils";
 
 describe(
   "Maintenance",

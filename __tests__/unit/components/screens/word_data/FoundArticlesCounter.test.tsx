@@ -1,6 +1,6 @@
-import { twoWordsAndDataArray } from "../../../../__mocks__/words";
-import FoundArticlesCounter from "../../../../components/screens/word_data/FoundArticlesCounter";
-import { renderWithProviders, screen } from "../../../../utils/test-utils";
+import { twoWordsAndDataArray } from "../../../../../__mocks__/words";
+import FoundArticlesCounter from "../../../../../components/screens/word_data/FoundArticlesCounter";
+import { renderWithProviders, screen } from "../../../../../utils/test-utils";
 
 describe(
   "FoundArticlesCounter",

@@ -1,5 +1,5 @@
-import { renderWithProviders, screen } from "../../utils/test-utils";
-import Footer from "../../components/Footer";
+import { renderWithProviders, screen } from "../../../utils/test-utils";
+import Footer from "../../../components/Footer";
 
 describe(
   "Footer",

@@ -1,6 +1,6 @@
 import { RefObject } from "react";
-import { renderWithProviders, screen } from "../../../../utils/test-utils";
-import TextAnswerField from "../../../../components/screens/translate/TextAnswerField";
+import { renderWithProviders, screen } from "../../../../../utils/test-utils";
+import TextAnswerField from "../../../../../components/screens/translate/TextAnswerField";
 import { TextInput } from "react-native";
 
 describe(

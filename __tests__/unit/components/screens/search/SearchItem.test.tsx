@@ -1,5 +1,5 @@
-import { renderWithProviders, screen } from "../../../../utils/test-utils";
-import SearchItem from "../../../../components/screens/search/SearchItem";
+import { renderWithProviders, screen } from "../../../../../utils/test-utils";
+import SearchItem from "../../../../../components/screens/search/SearchItem";
 
 describe(
   "SearchItem",

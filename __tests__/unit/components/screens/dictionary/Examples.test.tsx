@@ -1,5 +1,5 @@
-import { renderWithProviders, screen } from "../../../../utils/test-utils";
-import Examples from "../../../../components/screens/dictionary/Examples";
+import { renderWithProviders, screen } from "../../../../../utils/test-utils";
+import Examples from "../../../../../components/screens/dictionary/Examples";
 
 describe(
   "Examples",

@@ -1,7 +1,7 @@
 import { SharedValue } from "react-native-reanimated";
-import { renderWithProviders, screen, userEvent } from "../../../../utils/test-utils";
-import SendAnswerButton from "../../../../components/screens/translate/SendAnswerButton";
-import { textAnswerFieldContainerWidthAtom } from "../../../../components/screens/translate/translateAtoms";
+import { renderWithProviders, screen, userEvent } from "../../../../../utils/test-utils";
+import SendAnswerButton from "../../../../../components/screens/translate/SendAnswerButton";
+import { textAnswerFieldContainerWidthAtom } from "../../../../../components/screens/translate/translateAtoms";
 
 describe(
   "SendAnswerButton",

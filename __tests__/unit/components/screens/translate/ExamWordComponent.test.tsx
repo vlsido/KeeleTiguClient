@@ -1,8 +1,8 @@
-import { renderWithProviders, screen } from "../../../../utils/test-utils";
-import ExamWordComponent from "../../../../components/screens/translate/ExamWordComponent";
-import { gameWordsAtom } from "../../../../components/screens/translate/translateAtoms";
-import { twoWordsAndExamDataArray } from "../../../../__mocks__/words";
-import { WordAndExamData } from "../../../../app/dictionary";
+import { renderWithProviders, screen } from "../../../../../utils/test-utils";
+import ExamWordComponent from "../../../../../components/screens/translate/ExamWordComponent";
+import { gameWordsAtom } from "../../../../../components/screens/translate/translateAtoms";
+import { twoWordsAndExamDataArray } from "../../../../../__mocks__/words";
+import { WordAndExamData } from "../../../../../app/dictionary";
 
 describe(
   "ExamWordComponent",
