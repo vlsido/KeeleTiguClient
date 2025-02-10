@@ -51,12 +51,21 @@ function WordData(props: WordDataProps) {
     );
   }
 
-  if (props.wordDataArray === null) {
-    return <Text style={styles.notFoundText}>Ei leitud!</Text>;
+  if (props.wordDataArray == null) {
+    return null;
+  }
+
+  if (props.wordDataArray.length === 0) {
+    return <Text
+      testID="WORD_DATA.NOTHING_FOUND:TEXT"
+      style={styles.notFoundText}>Ei leitud!</Text>;
   }
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView
+      testID="WORD_DATA.SCROLL_CONTAINER:VIEW"
+      style={styles.container}
+    >
       <FoundArticlesCounter wordData={props.wordDataArray} />
       {props.wordDataArray.map((
         wordData, index
@@ -67,7 +76,10 @@ function WordData(props: WordDataProps) {
         const searchStringIndex = composedWord.findIndex((wordPart) => wordPart.toLowerCase() === props.searchString);
 
         return (
-          <View key={`wordIndex-${index}`}>
+          <View
+            testID="WORD_DATA.SCROLL_CONTAINER.WORD:VIEW"
+            key={`wordIndex-${index}`}
+          >
             <Text>
               {composedWord.map((
                 wordPart, index
@@ -85,6 +97,7 @@ function WordData(props: WordDataProps) {
             <Forms key={`wordIndex-${index}-forms`} forms={wordData.forms} />
             <Type key={`wordIndex-${index}-type`} type={wordData.type} />
             <FlatList
+              testID="WORD_DATA.SCROLL_CONTAINER.WORD.USAGES:FLATLIST"
               data={wordData.usages}
               renderItem={({ item, index }) => {
                 return (
@@ -100,6 +113,7 @@ function WordData(props: WordDataProps) {
               }
               } />
             <TextButton
+              testID="WORD_DATA.SCROLL_CONTAINER.ADD_WORD:PRESSABLE"
               key={`wordIndex-${index}-add`}
               style={styles.addToDictionaryContainer}
               textStyle={styles.addToDictionaryText}

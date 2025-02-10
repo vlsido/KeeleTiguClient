@@ -19,7 +19,9 @@ function Example(props: ExampleProps) {
   const searchStringIndex = estonianExampleWords.findIndex((word) => word.toLowerCase() === props.searchString);
 
   return (
-    <View style={styles.container} >
+    <View
+      testID="EXAMPLE.CONTAINER:VIEW"
+      style={styles.container} >
       <Text>
         {estonianExampleWords.map((
           word, index
@@ -46,6 +48,7 @@ function Example(props: ExampleProps) {
         }
       </Text>
       <FlatList
+        testID="EXAMPLE.CONTAINER.TRANSLATIONS:FLATLIST"
         data={props.russianTranslations}
         renderItem={({ item, index }) => {
           return <RussianTranslation

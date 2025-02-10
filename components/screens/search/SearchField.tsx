@@ -190,11 +190,6 @@ function SearchField() {
         ) as SearchDataResults | undefined;
 
         if (response != null) {
-          if (response.queryResponse.length === 0) {
-            setWordsDataArray(null);
-            return;
-          }
-
           if (response.queryResponse.length > 1) {
             const sortedWordsArray = response.queryResponse.sort((
               a, b

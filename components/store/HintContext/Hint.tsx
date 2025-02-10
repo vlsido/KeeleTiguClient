@@ -55,6 +55,7 @@ function Hint() {
 
   return (
     <Animated.View
+      testID={"HINT.ABSOLUTE_CONTAINER:VIEW"}
       onLayout={onLayout}
       style={[
         {
@@ -71,6 +72,7 @@ function Hint() {
       exiting={FadeOut.duration(500).reduceMotion(ReduceMotion.System)}
     >
       <Animated.View
+        testID={"HINT.ABSOLUTE_CONTAINER.CONTAINER:VIEW"}
         style={[
           styles.hintAnimatedView,
           {
@@ -79,7 +81,7 @@ function Hint() {
           },
         ]}
       >
-        <Text style={[
+        <Text testID="HINT.ABSOLUTE_CONTAINER.CONTAINER.HINT:TEXT" style={[
           styles.hintText,
           { color: CommonColors.black }
         ]}>

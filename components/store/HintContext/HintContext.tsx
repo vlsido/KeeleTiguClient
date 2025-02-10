@@ -17,7 +17,6 @@ export const HintContext = createContext<HintContextProps>({
   showHint: () => { return }
 });
 
-
 function HintContextProvider({ children }: { children: React.ReactNode }) {
   const setHintText = useSetAtom(hintTextAtom);
   const setIsHintVisible = useSetAtom(isHintVisibleAtom);

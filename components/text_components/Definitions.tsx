@@ -29,7 +29,7 @@ function Definitions(props: DefinitionProps) {
         const searchStringIndex = splitDefinitionWords?.findIndex((word) => word === props.searchString);
 
         return (
-          <View key={index}>
+          <View testID={`DEFINITIONS.CONTAINER:VIEW:ITEM-${index}`} key={index}>
             <Text style={styles.definitionText}>
               {definitionMark}
               {splitDefinitionWords?.map((

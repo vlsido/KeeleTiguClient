@@ -22,12 +22,12 @@ function Type(props: TypeProps) {
       case "konj":
         return "konjunktiiv";
       default:
-        return undefined;
+        return "";
     }
   }
 
   return (
-    <Text style={styles.typeText}>
+    <Text testID="TYPE.WORD_TYPE:TEXT" style={styles.typeText}>
       {type()}
     </Text>
   );

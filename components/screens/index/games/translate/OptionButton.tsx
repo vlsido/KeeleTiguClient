@@ -16,22 +16,33 @@ interface OptionButtonProps {
 
 function OptionButton(props: OptionButtonProps) {
   return (
-    <Pressable style={[
-      styles.optionContainer,
-      { opacity: props.isSelected ? 1 : 0.75 }
-    ]} onPress={props.onPress}>
+    <Pressable
+      testID="OPTION_BUTTON.CONTAINER:PRESSABLE"
+      disabled={props.isSelected}
+      style={[
+        styles.optionContainer,
+        { opacity: props.isSelected ? 1 : 0.75 }
+      ]} onPress={props.onPress}>
       <View style={styles.verticalContainer}>
         <View>
-          <Text style={styles.optionText}>{props.text}</Text>
+          <Text
+            testID="OPTION_BUTTON.CONTAINER.OPTION_NAME:TEXT"
+            style={styles.optionText}>{props.text}</Text>
         </View>
         {props.children ? (
-          <View style={styles.childrenContainer}>
+          <View
+            testID="OPTION_BUTTON.CONTAINER.CHILDREN:VIEW"
+            style={styles.childrenContainer}
+          >
             {props.children}
           </View>
         ) : null}
       </View>
-      <View style={styles.checkmarkContainer}>
-        {props.isSelected === true && <CheckmarkIcon />}
+      <View testID="OPTION_BUTTON.CONTAINER.SELECTED:VIEW" style={styles.checkmarkContainer}>
+        {props.isSelected === true && (
+          <CheckmarkIcon
+            testID="OPTION_BUTTON.CONTAINER.SELECTED.CHECKMARK:ICON" />
+        )}
       </View>
     </Pressable>
   )

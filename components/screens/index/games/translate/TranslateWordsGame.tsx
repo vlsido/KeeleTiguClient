@@ -221,15 +221,17 @@ function TranslateWordsGame() {
         onHoverOut={() => { }}
         onPress={toggleTranslateGameOptions}
       >
-        <TranslateIcon />
+        <TranslateIcon testID="TRANSLATE_WORDS_GAME.GAME.TRANSLATION:ICON" />
         <Text style={styles.translateButtonDescription}>
           Sõnade tõlkimine
         </Text>
       </AnimatedPressable>
-      <Animated.View style={[
-        translateOptionsAnimatedStyle,
-        { overflow: "hidden", alignItems: "center" }
-      ]}>
+      <Animated.View
+        testID={"TRANSLATE_WORDS_GAME.EXPANDING:VIEW"}
+        style={[
+          translateOptionsAnimatedStyle,
+          { overflow: "hidden", alignItems: "center" }
+        ]}>
         <View
           style={[
             styles.translateOptionsContainer
@@ -287,12 +289,14 @@ function TranslateWordsGame() {
               setGameOptions("my_dictionary");
             }}
             isSelected={gameOptions === "my_dictionary"} />
-          <Pressable style={[
-            styles.startButtonContainer,
-            {
-              opacity: (gameOptions === "any" && !isA1LevelOn && !isA2LevelOn && !isB1LevelOn) ? 0.5 : 1
-            }
-          ]}
+          <Pressable
+            testID="TRANSLATE_WORDS_GAME.EXPANDING.START:PRESSABLE"
+            style={[
+              styles.startButtonContainer,
+              {
+                opacity: (gameOptions === "any" && !isA1LevelOn && !isA2LevelOn && !isB1LevelOn) ? 0.5 : 1
+              }
+            ]}
             onPress={() =>
               router.navigate({
                 pathname: "/translate", params: {
