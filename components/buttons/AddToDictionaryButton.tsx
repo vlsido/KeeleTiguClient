@@ -9,20 +9,19 @@ import {
   useSharedValue,
   withTiming
 } from "react-native-reanimated";
-import { Word } from "../../app/dictionary";
+import { Word, WordAndExamData } from "../../app/dictionary";
 import {
   useAppDispatch,
   useAppSelector
 } from "../../hooks/storeHooks";
 import { AnimatedPressable } from "../util/AnimatedComponentsUtil";
 import {
-  pushToCachedDictionary,
   pushToMyDictionary
 } from "../store/slices/dictionarySlice";
 import { useHint } from "../../hooks/useHint";
 
 interface AddToDictionaryButtonProps {
-  word: Word | undefined;
+  word: Word | WordAndExamData | undefined;
 }
 
 function AddToDictionaryButton(props: AddToDictionaryButtonProps) {
@@ -64,9 +63,14 @@ function AddToDictionaryButton(props: AddToDictionaryButtonProps) {
         return;
       }
 
-      dispatch(pushToMyDictionary(currentWord));
+      const wordToAdd: Word = {
+        word: currentWord.word,
+        type: currentWord.type,
+        forms: currentWord.forms,
+        usages: currentWord.usages
+      }
 
-      dispatch(pushToCachedDictionary(currentWord));
+      dispatch(pushToMyDictionary(wordToAdd));
 
       // Add to dictionary
       showHint(

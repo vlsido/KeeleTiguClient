@@ -10,9 +10,11 @@ import {
 } from "jotai";
 import {
   gameWordsAtom,
-  isAnswerVisibleAtom
 } from "./translateAtoms";
-import { Word } from "../../../app/dictionary";
+import {
+  Word,
+  WordAndExamData
+} from "../../../app/dictionary";
 import { CommonColors } from "../../../constants/Colors";
 import AddToDictionaryButton from "../../buttons/AddToDictionaryButton";
 
@@ -23,6 +25,7 @@ export interface ExamWord {
 
 interface ExamWordComponentProps {
   mode: "any" | "my_dictionary";
+  isAnswerVisible: boolean;
 }
 
 const currentWordAtom = atom<React.JSX.Element[]>((get) => {
@@ -34,9 +37,10 @@ const currentWordAtom = atom<React.JSX.Element[]>((get) => {
     const word = gameWords.at(0);
 
     if (word != null) {
-      word.usages.at(0)?.definitionData.at(0)?.russianTranslations.forEach((
+      word.examData.russianTranslations.forEach((
         translation, translationIndex
       ) => {
+        if (translationIndex > 2) return;
         const textElements: React.JSX.Element[] = [];
         const russianTranslationWordParts = translation.split("\"");
 
@@ -75,15 +79,14 @@ const currentAnswerAtom = atom<React.JSX.Element[]>((get) => {
   if (gameWords.length > 0) {
     const word = gameWords.at(0);
     if (word != null) {
-      const wordParts = word.word.split("+");
+      const wordParts = word.examData.word.split("+");
 
       if (wordParts.length === 1) {
-        wordElements.push(<Text key={"whole-word"} style={styles.normalText}>{word.word}</Text>);
+        wordElements.push(<Text key={"whole-word"} style={styles.normalText}>{word.examData.word}</Text>);
         return wordElements;
       }
 
       const wholeWord = wordParts.join("");
-
 
       wordElements.push(<Text key="whole-word" style={styles.normalText}>{wholeWord}</Text>);
 
@@ -110,9 +113,7 @@ const currentAnswerAtom = atom<React.JSX.Element[]>((get) => {
 });
 
 function ExamWordComponent(props: ExamWordComponentProps) {
-  const gameWords = useAtomValue<Word[]>(gameWordsAtom);
-
-  const isAnswerVisible = useAtomValue<boolean>(isAnswerVisibleAtom);
+  const gameWords = useAtomValue<Word[] | WordAndExamData[]>(gameWordsAtom);
 
   const currentWord = useAtomValue<React.JSX.Element[]>(currentWordAtom);
 
@@ -120,19 +121,25 @@ function ExamWordComponent(props: ExamWordComponentProps) {
 
   if (gameWords.length === 0) {
     return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size={32} color={CommonColors.white} />
+      <View
+        testID="EXAM_WORD_COMPONENT.NO_GAME_WORDS_CONTAINER:VIEW"
+        style={styles.loadingContainer}
+      >
+        <ActivityIndicator testID="EXAM_WORD_COMPONENT.NO_GAME_WORDS_CONTAINER.LOADING:ACTIVITY_INDICATOR" size={32} color={CommonColors.white} />
       </View>
     );
   }
 
   return (
     <>
-      <View style={styles.container}>
+      <View
+        testID="EXAM_WORD_COMPONENT.WORD_CONTAINER:VIEW"
+        style={styles.container}
+      >
         {currentWord}
       </View>
-      {isAnswerVisible === true && (
-        <View style={styles.answerContainer}>
+      {props.isAnswerVisible === true && (
+        <View testID="EXAM_WORD_COMPONENT.ANSWER_CONTAINER:VIEW" style={styles.answerContainer}>
           {currentAnswer}
           {props.mode === "any" && <AddToDictionaryButton word={gameWords.at(0)} />}
         </View>

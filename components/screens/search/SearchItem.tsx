@@ -3,12 +3,12 @@ import {
   View
 } from "react-native";
 import { CommonColors } from "../../../constants/Colors";
-import TextButton from "../../TextButton";
 import {
   atom,
   useAtom
 } from "jotai";
 import { useMemo } from "react";
+import TextButton from "../../buttons/TextButton";
 
 interface SearchItemProps {
   index: number;
@@ -34,8 +34,12 @@ function SearchItem(props: SearchItemProps) {
   }
 
   return (
-    <View style={styles.itemContainer}>
+    <View
+      testID="SEARCH_ITEM.CONTAINER:VIEW"
+      style={styles.itemContainer}
+    >
       <TextButton
+        testID="SEARCH_ITEM.WORD:PRESSABLE"
         style={[
           styles.wordContainer,
           isHoveredIn === true ?

@@ -1,4 +1,7 @@
-import { router } from "expo-router";
+import {
+  useCallback,
+  useEffect
+} from "react";
 import {
   Pressable,
   StyleSheet,
@@ -6,13 +9,14 @@ import {
   View,
   ViewStyle,
 } from "react-native";
+import { router } from "expo-router";
 import Animated, {
+  ReduceMotion,
   useAnimatedStyle,
   useSharedValue,
   withTiming
 } from "react-native-reanimated";
 import OptionButton from "./OptionButton";
-import { useEffect } from "react";
 import {
   atom,
   useAtom
@@ -22,6 +26,13 @@ import { useAppSelector } from "../../../../../hooks/storeHooks";
 import { AnimatedPressable } from "../../../../util/AnimatedComponentsUtil";
 import { TranslateIcon } from "../../../../icons/TranslateIcon";
 import { CommonColors } from "../../../../../constants/Colors";
+import {
+  isA1LevelOnAtom,
+  isA2LevelOnAtom,
+  isB1LevelOnAtom
+} from "../../../translate/translateAtoms";
+import { EWordsLevel } from "../../../../util/WordsUtil";
+
 
 const gameOptionsAtom = atom<"any" | "my_dictionary">("any");
 const gameOptionsContainerHeightAtom = atom<number>(0);
@@ -38,6 +49,20 @@ function TranslateWordsGame() {
   ] = useAtom<"any" | "my_dictionary">(gameOptionsAtom);
 
   const [
+    isA1LevelOn,
+    setIsA1LevelOn
+  ] = useAtom<boolean>(isA1LevelOnAtom);
+
+  const [
+    isA2LevelOn,
+    setIsA2LevelOn
+  ] = useAtom<boolean>(isA2LevelOnAtom);
+  const [
+    isB1LevelOn,
+    setIsB1LevelOn
+  ] = useAtom<boolean>(isB1LevelOnAtom);
+
+  const [
     gameOptionsContainerHeight,
     setGameOptionsContainerHeight
   ] = useAtom<number>(gameOptionsContainerHeightAtom);
@@ -46,6 +71,10 @@ function TranslateWordsGame() {
     isGameOptionsVisible,
     setIsGameOptionsVisible
   ] = useAtom<boolean>(isGameOptionsVisibleAtom);
+
+  const a1LevelOpacity = useSharedValue<number>(0.5);
+  const a2LevelOpacity = useSharedValue<number>(0.5);
+  const b1LevelOpacity = useSharedValue<number>(0.5);
 
   const translateOptionsHeight = useSharedValue<number>(0);
   const translateGameContainerOpacity = useSharedValue<number>(1);
@@ -61,6 +90,95 @@ function TranslateWordsGame() {
       isGameOptionsVisible
     ]
   );
+
+  useEffect(
+    () => {
+      if (gameOptions === "my_dictionary") {
+        a1LevelOpacity.value = withTiming(
+          0.5,
+          { duration: 200, reduceMotion: ReduceMotion.System }
+        );
+
+        a2LevelOpacity.value = withTiming(
+          0.5,
+          { duration: 200, reduceMotion: ReduceMotion.System }
+        );
+
+        b1LevelOpacity.value = withTiming(
+          0.5,
+          { duration: 200, reduceMotion: ReduceMotion.System }
+        );
+        return;
+      }
+
+
+      a1LevelOpacity.value = withTiming(
+        isA1LevelOn ? 1 : 0.5,
+        { duration: 200, reduceMotion: ReduceMotion.System }
+      );
+
+      a2LevelOpacity.value = withTiming(
+        isA2LevelOn ? 1 : 0.5,
+        { duration: 200, reduceMotion: ReduceMotion.System }
+      );
+
+      b1LevelOpacity.value = withTiming(
+        isB1LevelOn ? 1 : 0.5,
+        { duration: 200, reduceMotion: ReduceMotion.System }
+      );
+
+    },
+    [
+      isA1LevelOn,
+      isA2LevelOn,
+      isB1LevelOn,
+      gameOptions
+    ]
+  );
+
+  const toggleWordsLevel = useCallback(
+    (level: EWordsLevel) => {
+      switch (level) {
+        case EWordsLevel.A1:
+
+          setIsA1LevelOn(!isA1LevelOn);
+          break;
+        case EWordsLevel.A2:
+          setIsA2LevelOn(!isA2LevelOn);
+          break;
+        case EWordsLevel.B1:
+          setIsB1LevelOn(!isB1LevelOn);
+          break;
+      }
+    },
+    [
+      gameOptions,
+      setIsA1LevelOn,
+      setIsA2LevelOn,
+      setIsB1LevelOn,
+      isA1LevelOn,
+      isA2LevelOn,
+      isB1LevelOn
+    ]
+  );
+
+  const a1LevelAnimatedStyle = useAnimatedStyle<ViewStyle>(() => {
+    return {
+      opacity: a1LevelOpacity.value
+    }
+  });
+
+  const a2LevelAnimatedStyle = useAnimatedStyle<ViewStyle>(() => {
+    return {
+      opacity: a2LevelOpacity.value
+    }
+  });
+
+  const b1LevelAnimatedStyle = useAnimatedStyle<ViewStyle>(() => {
+    return {
+      opacity: b1LevelOpacity.value
+    }
+  });
 
   function toggleTranslateGameOptions() {
     translateGameContainerOpacity.value = withTiming(
@@ -89,8 +207,11 @@ function TranslateWordsGame() {
   });
 
   return (
-    <View style={styles.container}>
+    <View
+      testID="TRANSLATE_WORDS_GAME.CONTAINER:VIEW"
+      style={styles.container}>
       <AnimatedPressable
+        testID="TRANSLATE_WORDS_GAME.GAME:PRESSABLE"
         style={[
           translateGameContainerAnimatedStyle,
           styles.translateButton
@@ -100,15 +221,17 @@ function TranslateWordsGame() {
         onHoverOut={() => { }}
         onPress={toggleTranslateGameOptions}
       >
-        <TranslateIcon />
+        <TranslateIcon testID="TRANSLATE_WORDS_GAME.GAME.TRANSLATION:ICON" />
         <Text style={styles.translateButtonDescription}>
           Sõnade tõlkimine
         </Text>
       </AnimatedPressable>
-      <Animated.View style={[
-        translateOptionsAnimatedStyle,
-        { overflow: "hidden", alignItems: "center" }
-      ]}>
+      <Animated.View
+        testID={"TRANSLATE_WORDS_GAME.EXPANDING:VIEW"}
+        style={[
+          translateOptionsAnimatedStyle,
+          { overflow: "hidden", alignItems: "center" }
+        ]}>
         <View
           style={[
             styles.translateOptionsContainer
@@ -116,10 +239,43 @@ function TranslateWordsGame() {
           onLayout={(event) => {
             setGameOptionsContainerHeight(event.nativeEvent.layout.height)
           }}>
+
           <OptionButton
             text={"Suvalised sõnad"}
             onPress={() => { setGameOptions("any") }}
-            isSelected={gameOptions === "any"} />
+            isSelected={gameOptions === "any"}>
+            <AnimatedPressable
+              style={[
+                styles.languageLevelContainer,
+                a1LevelAnimatedStyle
+              ]}
+              onPress={() => toggleWordsLevel(EWordsLevel.A1)}
+              disabled={gameOptions === "my_dictionary"}
+            >
+              <Text style={styles.languageLevelText}>A1</Text>
+            </AnimatedPressable>
+            <AnimatedPressable
+              style={[
+                styles.languageLevelContainer,
+                a2LevelAnimatedStyle
+              ]}
+              onPress={() => toggleWordsLevel(EWordsLevel.A2)}
+              disabled={gameOptions === "my_dictionary"}
+            >
+              <Text style={styles.languageLevelText}>A2</Text>
+            </AnimatedPressable>
+            <AnimatedPressable
+              style={[
+                styles.languageLevelContainer,
+                b1LevelAnimatedStyle
+              ]}
+              onPress={() => toggleWordsLevel(EWordsLevel.B1)}
+
+              disabled={gameOptions === "my_dictionary"}
+            >
+              <Text style={styles.languageLevelText}>B1</Text>
+            </AnimatedPressable>
+          </OptionButton>
           <OptionButton
             text={"Sõnad mu sõnastikust"}
             onPress={() => {
@@ -133,9 +289,23 @@ function TranslateWordsGame() {
               setGameOptions("my_dictionary");
             }}
             isSelected={gameOptions === "my_dictionary"} />
-          <Pressable style={styles.startButtonContainer}
+          <Pressable
+            testID="TRANSLATE_WORDS_GAME.EXPANDING.START:PRESSABLE"
+            style={[
+              styles.startButtonContainer,
+              {
+                opacity: (gameOptions === "any" && !isA1LevelOn && !isA2LevelOn && !isB1LevelOn) ? 0.5 : 1
+              }
+            ]}
             onPress={() =>
-              router.navigate({ pathname: "/translate", params: { mode: gameOptions } })
+              router.navigate({
+                pathname: "/translate", params: {
+                  mode: gameOptions,
+                }
+              })
+            }
+            disabled={
+              gameOptions === "any" && !isA1LevelOn && !isA2LevelOn && !isB1LevelOn
             }
             aria-label="Alusta" >
             <Text style={styles.startButtonText}>Alusta</Text>
@@ -188,6 +358,16 @@ const styles = StyleSheet.create({
   startButtonText: {
     color: CommonColors.white,
     fontSize: 20
+  },
+
+  languageLevelContainer: {
+    backgroundColor: CommonColors.white,
+    opacity: 0.5,
+    borderRadius: 5,
+    padding: 10
+  },
+  languageLevelText: {
+    fontSize: 16
   },
   // gradientContainer: {
   //   padding: 10,

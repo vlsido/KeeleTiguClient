@@ -2,6 +2,7 @@ import { CommonColors } from "../constants/Colors";
 import {
   useCallback,
   useEffect,
+  useMemo,
   useRef
 } from "react";
 import {
@@ -10,65 +11,98 @@ import {
   TextInput,
   View
 } from "react-native";
-import { Word } from "./dictionary";
-import TextButton from "../components/TextButton";
+import { WordAndExamData } from "./dictionary";
 import { useLocalSearchParams } from "expo-router";
-import { useAppSelector } from "../hooks/storeHooks";
+import {
+  useAppDispatch,
+  useAppSelector
+} from "../hooks/storeHooks";
 import {
   atom,
   useAtom,
-  useSetAtom
+  useAtomValue,
 } from "jotai";
 import ExamWordComponent from "../components/screens/translate/ExamWordComponent";
 import TextAnswerField from "../components/screens/translate/TextAnswerField";
 import {
   answerAtom,
   gameWordsAtom,
-  isAnswerValidAtom,
-  isAnswerVisibleAtom
+  isA1LevelOnAtom,
+  isA2LevelOnAtom,
+  isB1LevelOnAtom
 } from "../components/screens/translate/translateAtoms";
-
-const correctCountAtom = atom<number>(0);
-const incorrectCountAtom = atom<number>(0);
-const lastIncorrectWordAtom = atom<string>("");
+import { useHint } from "../hooks/useHint";
+import { setExamDictionary } from "../components/store/slices/dictionarySlice";
+import { SkipNextIcon } from "../components/icons/SkipNextIcon";
+import { VisibilityIcon } from "../components/icons/VisibilityIcon";
+import CustomIconButton from "../components/buttons/CustomIconButton";
 
 export default function Translate() {
   const { mode } = useLocalSearchParams<{ mode: "any" | "my_dictionary" }>();
 
+  const { showHint } = useHint();
+
   const myDictionary = useAppSelector((state) => state.dictionary.myDictionary);
 
-  const cachedDictionary = useAppSelector((state) => state.dictionary.cachedDictionary);
+  const examDictionary = useAppSelector((state) => state.dictionary.examDictionary);
+
+  const dispatch = useAppDispatch();
 
   const [
     gameWords,
     setGameWords
-  ] = useAtom<Word[]>(gameWordsAtom);
+  ] = useAtom<WordAndExamData[]>(gameWordsAtom);
 
   const [
     answer,
     setAnswer
   ] = useAtom<string>(answerAtom);
 
-  const setIsAnswerValid = useSetAtom(isAnswerValidAtom);
+  const isA1LevelOn = useAtomValue(isA1LevelOnAtom);
+  const isA2LevelOn = useAtomValue(isA2LevelOnAtom);
+  const isB1LevelOn = useAtomValue(isB1LevelOnAtom);
 
-  const setIsAnswerVisible = useSetAtom(isAnswerVisibleAtom);
+  const [
+    isAnswerValid,
+    setIsAnswerValid
+  ] = useAtom<boolean>(useMemo(
+    () => atom<boolean>(false),
+    []
+  ));
+
+  const [
+    isAnswerVisible,
+    setIsAnswerVisible
+  ] = useAtom<boolean>(useMemo(
+    () => atom<boolean>(false),
+    []
+  ));
 
   const [
     correctCount,
     setCorrectCount
-  ] = useAtom<number>(correctCountAtom);
+  ] = useAtom<number>(useMemo(
+    () => atom<number>(0),
+    []
+  ));
 
   const [
     incorrectCount,
     setIncorrectCount
-  ] = useAtom<number>(incorrectCountAtom);
+  ] = useAtom<number>(useMemo(
+    () => atom<number>(0),
+    []
+  ));
 
   const [
     lastIncorrectWord,
     setLastIncorrectWord
-  ] = useAtom<string>(lastIncorrectWordAtom);
+  ] = useAtom<string>(useMemo(
+    () => atom<string>(""),
+    []
+  ));
 
-  function shuffleArray(array: Word[]) {
+  function shuffleArray(array: WordAndExamData[]) {
     let newIndex: number;
 
     array.forEach((
@@ -90,19 +124,58 @@ export default function Translate() {
     () => {
       switch (mode) {
         case "any":
-          setGameWords(shuffleArray([
-            ...cachedDictionary
-          ]));
+          const filteredDictionary = examDictionary.filter((wordAndExamData) =>
+            (wordAndExamData.examData.level === "A1" && isA1LevelOn)
+            || (wordAndExamData.examData.level === "A2" && isA2LevelOn)
+            || (wordAndExamData.examData.level === "B1" && isB1LevelOn));
+          console.log(
+            "filted",
+            filteredDictionary
+          );
+
+          if (filteredDictionary.length === 0) {
+            if (isA1LevelOn || isA2LevelOn || isB1LevelOn) {
+              dispatch({ type: "dictionary/fetchRandomWords" });
+              return;
+            }
+
+            setGameWords(shuffleArray(examDictionary));
+            return;
+          }
+
+          setGameWords(shuffleArray(filteredDictionary));
           break;
         case "my_dictionary":
-          setGameWords(shuffleArray([
-            ...myDictionary
-          ]));
+          const newExamDictionary: (WordAndExamData | null)[] = myDictionary.map((wordsAndData) => {
+            const russianTranslations = wordsAndData.usages.at(0)?.definitionData.at(0)?.russianTranslations;
+
+            if (russianTranslations === undefined || russianTranslations.length === 0) {
+              return null;
+            }
+
+            return {
+              ...wordsAndData,
+              examData: {
+                word: wordsAndData.word,
+                level: "B1",
+                russianTranslations: russianTranslations
+              }
+            }
+          });
+
+          const filteredExamDictionary = newExamDictionary.filter((wordData) => wordData !== null) as WordAndExamData[];
+
+          setGameWords(shuffleArray(filteredExamDictionary));
           break;
       }
     },
     [
-      mode === "any" ? cachedDictionary : myDictionary
+      mode === "any" ? examDictionary : myDictionary,
+      isA1LevelOn,
+      isA2LevelOn,
+      isB1LevelOn,
+      shuffleArray,
+      setGameWords
     ]
   );
 
@@ -115,16 +188,33 @@ export default function Translate() {
 
   useEffect(
     () => {
+      console.log(
+        "gameWords",
+        gameWords
+      );
       if (gameWords.length === 0) {
         refreshGameWords();
       }
     },
     [
-      gameWords
+      gameWords,
+      examDictionary
     ]
   );
 
   const textInputRef = useRef<TextInput>(null);
+
+  const removeWordFromExamDictionary = useCallback(
+    () => {
+      const newExamDictionary = examDictionary.filter((word) => word !== gameWords[0]);
+
+      dispatch(setExamDictionary(newExamDictionary));
+    },
+    [
+      examDictionary,
+      gameWords
+    ]
+  );
 
   const checkAnswer = useCallback(
     () => {
@@ -134,12 +224,18 @@ export default function Translate() {
         return;
       }
 
-      const currentWordLowercase = gameWords[0].word.split("+").join("").toLowerCase();
+      const currentWordLowercase = gameWords[0].examData.word.split("+").join("").toLowerCase();
 
       if (currentWordLowercase === answerLowercase) {
         setIsAnswerVisible(false);
-        setGameWords(gameWords.slice(1));
-        setCorrectCount(correctCount + 1);
+        removeWordFromExamDictionary();
+
+        setGameWords(gameWords.filter((
+          _, index
+        ) => index !== 0));
+        if (lastIncorrectWord !== currentWordLowercase) {
+          setCorrectCount(correctCount + 1);
+        }
       } else {
         if (lastIncorrectWord !== currentWordLowercase) {
           setLastIncorrectWord(currentWordLowercase);
@@ -152,61 +248,121 @@ export default function Translate() {
       }
 
       setAnswer("");
+
+      setTimeout(
+        () => {
+          textInputRef.current?.focus();
+
+        },
+        1000
+      );
     },
     [
       answer,
       gameWords,
       correctCount,
-      incorrectCount
+      incorrectCount,
+      textInputRef
     ]
   );
 
   function skipWord() {
     setIsAnswerVisible(false);
-    setGameWords(gameWords.slice(1));
+    removeWordFromExamDictionary();
+    setGameWords(gameWords.filter((
+      _, index
+    ) => index !== 0));
     setAnswer("");
   }
 
-  return (
-    <>
-      <View
-        style={styles.container}
-      >
-        <View style={styles.topContainer}>
-          {
-            gameWords.length === 0 ? <Text style={{ color: CommonColors.white, fontSize: 20, marginTop: 10 }}>Võtame sõnad sõnastikust...</Text> :
-              <>
-                {mode === "my_dictionary" &&
-                  <Text style={{ color: CommonColors.white, fontSize: 16 }}>
-                    On jaanud: {gameWords.length}
-                  </Text>
-                }
-                <View>
-                  <Text style={{ color: CommonColors.white, fontSize: 16 }}>
-                    Õige: {correctCount}
-                  </Text>
-                </View>
-                <Text style={{ color: CommonColors.white, fontSize: 16 }}>
-                  Vale: {incorrectCount}
-                </Text>
-              </>
-          }
+  const showWord = useCallback(
+    () => {
+      const currentWordLowercase = gameWords.at(0)?.word.split("+").join("").toLowerCase();
 
-          <ExamWordComponent mode={mode} />
+      if (currentWordLowercase === undefined) {
+        showHint(
+          "Oii, miski viga! Proovi uuesti!",
+          2500
+        );
+      }
+
+      if (currentWordLowercase !== undefined && lastIncorrectWord !== currentWordLowercase) {
+        setLastIncorrectWord(currentWordLowercase);
+        setIncorrectCount(incorrectCount + 1);
+      }
+
+      setIsAnswerValid(false);
+      setIsAnswerVisible(true);
+
+    },
+    [
+      gameWords,
+      lastIncorrectWord,
+      incorrectCount,
+      setLastIncorrectWord,
+      setIncorrectCount,
+      setIsAnswerValid,
+      setIsAnswerVisible,
+    ]
+  );
+
+  const onTextFieldFocus = useCallback(
+    () => {
+      setIsAnswerValid(true)
+    },
+    []
+  );
+
+  return (
+    <View
+      testID="TRANSLATE.CONTAINER:VIEW"
+      style={styles.container}
+    >
+      <View style={styles.topContainer}>
+        {
+          gameWords.length === 0 ? <Text style={{ color: CommonColors.white, fontSize: 20, marginTop: 10 }}>Võtame sõnad sõnastikust...</Text> :
+            <>
+              {mode === "my_dictionary" &&
+                <Text style={{ color: CommonColors.white, fontSize: 16, marginVertical: 5 }}>
+                  Veel jaanud: {gameWords.length}
+                </Text>
+              }
+              <View>
+                <Text style={{ color: CommonColors.green, fontSize: 16 }}>
+                  {"\u2713"} Õige: {correctCount}
+                </Text>
+              </View>
+              <Text style={{ color: CommonColors.red, fontSize: 16 }}>
+                <Text style={{ fontWeight: "bold" }}>{"\u2A09"}{" "}</Text>
+                Vale: {incorrectCount}
+              </Text>
+            </>
+        }
+
+        <ExamWordComponent
+          mode={mode}
+          isAnswerVisible={isAnswerVisible}
+        />
+      </View>
+      <View style={styles.bottomContainer} >
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <TextAnswerField
+            textInputRef={textInputRef}
+            onSubmit={checkAnswer}
+            onFocus={onTextFieldFocus}
+            isAnswerValid={isAnswerValid}
+          />
         </View>
-        <View style={styles.bottomContainer} >
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <TextAnswerField onSubmit={checkAnswer} textInputRef={textInputRef} />
-          </View>
-          <TextButton
-            onPress={skipWord}
-            style={styles.skipWordContainer}
-            textStyle={styles.skipWordText}
-            text="JÄRGMINE"
-            label="Next" />
+        <View style={{ flexDirection: "row", gap: 10 }}>
+          <CustomIconButton onPress={skipWord}>
+            <SkipNextIcon />
+          </CustomIconButton>
+          <CustomIconButton onPress={showWord}>
+            <VisibilityIcon />
+          </CustomIconButton>
         </View>
       </View>
-    </>
+    </View>
   );
 }
 
@@ -215,15 +371,17 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "column",
     alignItems: "center",
-    gap: "50%",
+    justifyContent: "space-between",
     backgroundColor: CommonColors.black,
     paddingVertical: 10
   },
   topContainer: {
     alignItems: "center",
+    minHeight: "35%",
   },
   bottomContainer: {
     alignItems: "center",
+    marginBottom: "55%",
   },
   skipWordContainer: {
     backgroundColor: CommonColors.white,

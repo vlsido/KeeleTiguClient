@@ -4,6 +4,7 @@ import {
   View
 } from "react-native";
 import RussianTranslation from "./RussianTranslation";
+import { CommonColors } from "../../constants/Colors";
 
 interface DefinitionProps {
   definitionData: {
@@ -23,9 +24,35 @@ function Definitions(props: DefinitionProps) {
       ) => {
         const definitionMark: string = index === 0 ? `${props.usageIndex + 1}. ` : "\u25A0 ";
 
+        const splitDefinitionWords = definition.definitionText?.split(" ");
+
+        const searchStringIndex = splitDefinitionWords?.findIndex((word) => word === props.searchString);
+
         return (
-          <View key={index}>
-            <Text style={styles.definitionText}>{definitionMark}{definition.definitionText}</Text>
+          <View testID={`DEFINITIONS.CONTAINER:VIEW:ITEM-${index}`} key={index}>
+            <Text style={styles.definitionText}>
+              {definitionMark}
+              {splitDefinitionWords?.map((
+                word, wordIndex
+              ) => {
+                const separator = wordIndex < splitDefinitionWords.length ? " " : "";
+                if (wordIndex === searchStringIndex) {
+                  return [
+                    <Text key={wordIndex} style={[
+                      wordIndex === searchStringIndex && styles.highlightedWord
+
+                    ]}>{word}</Text>,
+                    <Text>{separator}</Text>,
+                  ]
+                }
+                return (
+                  <Text key={wordIndex} style={[
+                    wordIndex === searchStringIndex && styles.highlightedWord
+
+                  ]}>{word}{separator}</Text>
+                )
+              })}
+            </Text>
             {definition.russianTranslations.map((
               translation, index
             ) => {
@@ -42,8 +69,6 @@ function Definitions(props: DefinitionProps) {
       })}
     </>
   )
-
-
 }
 
 export default Definitions;
@@ -53,4 +78,9 @@ const styles = StyleSheet.create({
     color: "rgba(243, 245, 243, 0.8)",
     fontSize: 16
   },
+  highlightedWord: {
+    backgroundColor: CommonColors.yellow,
+    color: CommonColors.black,
+    fontWeight: "bold"
+  }
 })

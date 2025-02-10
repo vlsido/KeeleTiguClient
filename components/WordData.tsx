@@ -7,7 +7,6 @@ import {
   View
 } from "react-native";
 import Forms from "../components/text_components/Forms";
-import TextButton from "../components/TextButton";
 import { i18n } from "../components/store/i18n";
 import { useHint } from "../hooks/useHint";
 import {
@@ -15,14 +14,14 @@ import {
   useAppSelector
 } from "../hooks/storeHooks";
 import {
-  pushToCachedDictionary,
   pushToMyDictionary
 } from "../components/store/slices/dictionarySlice";
 import FoundArticlesCounter from "../components/screens/word_data/FoundArticlesCounter";
 import Type from "../components/screens/dictionary/Type";
-import { Word } from "../app/Dictionary";
+import { Word } from "../app/dictionary";
 import Usage from "./text_components/Usage";
 import { memo } from "react";
+import TextButton from "./buttons/TextButton";
 
 interface WordDataProps {
   wordDataArray: Word[] | null;
@@ -45,8 +44,6 @@ function WordData(props: WordDataProps) {
 
     dispatch(pushToMyDictionary(wordToAdd));
 
-    dispatch(pushToCachedDictionary(wordToAdd));
-
     // Add to dictionary
     showHint(
       "Lisatud!",
@@ -54,12 +51,21 @@ function WordData(props: WordDataProps) {
     );
   }
 
-  if (props.wordDataArray === null) {
-    return <Text style={styles.notFoundText}>Ei leitud!</Text>;
+  if (props.wordDataArray == null) {
+    return null;
+  }
+
+  if (props.wordDataArray.length === 0) {
+    return <Text
+      testID="WORD_DATA.NOTHING_FOUND:TEXT"
+      style={styles.notFoundText}>Ei leitud!</Text>;
   }
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView
+      testID="WORD_DATA.SCROLL_CONTAINER:VIEW"
+      style={styles.container}
+    >
       <FoundArticlesCounter wordData={props.wordDataArray} />
       {props.wordDataArray.map((
         wordData, index
@@ -70,7 +76,10 @@ function WordData(props: WordDataProps) {
         const searchStringIndex = composedWord.findIndex((wordPart) => wordPart.toLowerCase() === props.searchString);
 
         return (
-          <View key={`wordIndex-${index}`}>
+          <View
+            testID="WORD_DATA.SCROLL_CONTAINER.WORD:VIEW"
+            key={`wordIndex-${index}`}
+          >
             <Text>
               {composedWord.map((
                 wordPart, index
@@ -88,6 +97,7 @@ function WordData(props: WordDataProps) {
             <Forms key={`wordIndex-${index}-forms`} forms={wordData.forms} />
             <Type key={`wordIndex-${index}-type`} type={wordData.type} />
             <FlatList
+              testID="WORD_DATA.SCROLL_CONTAINER.WORD.USAGES:FLATLIST"
               data={wordData.usages}
               renderItem={({ item, index }) => {
                 return (
@@ -102,10 +112,18 @@ function WordData(props: WordDataProps) {
 
               }
               } />
-            <TextButton key={`wordIndex-${index}-add`} style={styles.addToDictionaryContainer} textStyle={styles.addToDictionaryText} text={i18n.t(
-              "add_to_dictionary",
-              { defaultValue: "Lisa sõnastikku" }
-            )} onPress={() => addToDictionary(wordData)} label="Add to dictionary" />
+            <TextButton
+              testID="WORD_DATA.SCROLL_CONTAINER.ADD_WORD:PRESSABLE"
+              key={`wordIndex-${index}-add`}
+              style={styles.addToDictionaryContainer}
+              textStyle={styles.addToDictionaryText}
+              text={i18n.t(
+                "add_to_dictionary",
+                { defaultValue: "Lisa sõnastikku" }
+              )}
+              onPress={() => addToDictionary(wordData)}
+              label="Add to dictionary"
+            />
           </View>
         );
       })}
@@ -135,7 +153,8 @@ const styles = StyleSheet.create({
   },
   highlightedText: {
     flexDirection: "row",
-    backgroundColor: CommonColors.yellowA50,
+    color: CommonColors.black,
+    backgroundColor: CommonColors.yellow,
     marginRight: "auto",
   },
   addToDictionaryContainer: {

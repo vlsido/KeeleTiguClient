@@ -24,8 +24,14 @@ function Maintenance() {
   const maintenanceText = useAtomValue<string>(maintenanceTextAtom);
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>{maintenanceText}</Text>
+    <View
+      testID="MAINTENANCE.CONTAINER:VIEW"
+      style={styles.container}>
+      <Text
+        testID="MAINTENANCE.CONTAINER:TEXT"
+        style={styles.text}>
+        {maintenanceText}
+      </Text>
     </View>
   );
 }

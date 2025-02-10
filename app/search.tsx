@@ -15,7 +15,7 @@ import {
 import {
   runOnJS,
 } from "react-native-reanimated";
-import { Word } from "./Dictionary";
+import { Word } from "./dictionary";
 import WordData from "../components/WordData";
 import {
   Gesture,
@@ -28,8 +28,6 @@ import {
   wordsDataArrayAtom
 } from "../components/screens/search/searchAtoms";
 import SearchField from "../components/screens/search/SearchField";
-
-
 
 function Search() {
   const wordsDataArray = useAtomValue<Word[] | null>(wordsDataArrayAtom);
@@ -66,7 +64,10 @@ function Search() {
       gesture={tapGesture}
       userSelect="text"
     >
-      <View style={styles.container}>
+      <View
+        testID="SEARCH.CONTAINER:VIEW"
+        style={styles.container}
+      >
         <SearchField />
         <View style={styles.wordsDataContainer}>
           {isSearchingInProcess === true ? (

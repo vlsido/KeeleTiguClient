@@ -2,13 +2,15 @@ import tseslint from "typescript-eslint";
 import stylistic from "@stylistic/eslint-plugin";
 import react from "eslint-plugin-react";
 import disableAutofix from "eslint-plugin-disable-autofix";
+import testingLibrary from "eslint-plugin-testing-library";
 
 export default [
   ...tseslint.configs.recommended,
   {
-    files: ["**/*.{jsx,ts,tsx}"],
+    files: ["**/__tests__/**/*.[jt]s?(x)", "**/?(*.)+(spec|test).[jt]s?(x)"],
     plugins: {
       react,
+      testingLibrary,
       "@stylistic": stylistic,
       "disable-autofix": disableAutofix,
     },

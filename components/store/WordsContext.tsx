@@ -1,5 +1,6 @@
 import {
   createContext,
+  useCallback,
   useEffect
 } from "react";
 import {
@@ -8,8 +9,10 @@ import {
 } from "../../hooks/storeHooks";
 import {
   clearDictionary,
+  setExamDictionary,
   setMyDictionary
 } from "./slices/dictionarySlice";
+import { WordAndExamData } from "../../app/dictionary";
 
 interface WordsContextProps {
   cacheDictionary: () => void;
@@ -23,24 +26,52 @@ export const WordsContext = createContext<WordsContextProps>({
 
 function WordsContextProvider({ children }: { children: React.ReactNode }) {
   const myDictionary = useAppSelector((state) => state.dictionary.myDictionary);
-  const cachedDictionary = useAppSelector((state) => state.dictionary.cachedDictionary);
+  const examDictionary = useAppSelector((state) => state.dictionary.examDictionary);
 
   const dispatch = useAppDispatch();
 
   useEffect(
     () => {
+
       // IDEA: probably can do this without useEffect
-      if (cachedDictionary.length < 3) {
+      if (examDictionary.length < 3) {
         dispatch({ type: "dictionary/fetchRandomWords" });
+        return;
       }
+
+      if (examDictionary.length === 0) {
+        const cachedWordsAndExamData = localStorage.getItem("wordsAndExamData");
+
+        if (cachedWordsAndExamData != null) {
+          const parsedCachedWordsAndExamData: WordAndExamData[] = JSON.parse(cachedWordsAndExamData);
+          if (parsedCachedWordsAndExamData.length > 0) {
+            dispatch(setExamDictionary(parsedCachedWordsAndExamData));
+            return;
+
+          }
+        }
+      }
+
+      if (examDictionary.length > 0) {
+        localStorage.setItem(
+          "wordsAndExamData",
+          JSON.stringify(examDictionary)
+        )
+
+      }
+
     },
     [
-      cachedDictionary
+      examDictionary
     ]
   );
 
   useEffect(
     () => {
+      console.log(
+        "my",
+        myDictionary
+      );
       if (myDictionary.length > 0) {
         cacheDictionary();
       }
@@ -52,12 +83,12 @@ function WordsContextProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(
     () => {
-      getCachedDictionary();
+      getExamDictionary();
     },
     []
   );
 
-  function getCachedDictionary() {
+  function getExamDictionary() {
     const cached = localStorage.getItem("myDictionary");
 
     const myDictionaryCached = cached != null ? JSON.parse(cached) : [];
@@ -65,18 +96,23 @@ function WordsContextProvider({ children }: { children: React.ReactNode }) {
     dispatch(setMyDictionary(myDictionaryCached));
   }
 
-  function cacheDictionary() {
-    localStorage.setItem(
-      "myDictionary",
-      JSON.stringify(myDictionary)
-    );
-  }
+  const cacheDictionary = useCallback(
+    () => {
+      localStorage.setItem(
+        "myDictionary",
+        JSON.stringify(myDictionary)
+      );
+    },
+    [
+      myDictionary
+    ]
+  );
 
   function clearAllCache() {
     dispatch(clearDictionary());
 
     localStorage.removeItem("myDictionary");
-    localStorage.removeItem("cachedWordsAndData");
+    localStorage.removeItem("wordsAndExamData");
     localStorage.removeItem("allWords");
   }
 

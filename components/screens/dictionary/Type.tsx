@@ -9,7 +9,7 @@ interface TypeProps {
 }
 
 function Type(props: TypeProps) {
-  const type = () => {
+  function type() {
     switch (props.type) {
       case "s":
         return "substantiiv";
@@ -22,12 +22,12 @@ function Type(props: TypeProps) {
       case "konj":
         return "konjunktiiv";
       default:
-        return undefined;
+        return "";
     }
   }
 
   return (
-    <Text style={styles.typeText}>
+    <Text testID="TYPE.WORD_TYPE:TEXT" style={styles.typeText}>
       {type()}
     </Text>
   );

@@ -1,5 +1,4 @@
 import {
-  useAtom,
   useSetAtom
 } from "jotai";
 import {
@@ -18,7 +17,6 @@ import {
 } from "react-native-reanimated";
 import {
   answerAtom,
-  isAnswerValidAtom,
   textAnswerFieldContainerWidthAtom
 } from "./translateAtoms";
 import { useEffect } from "react";
@@ -29,15 +27,12 @@ import { CommonColors } from "../../../constants/Colors";
 interface TextAnswerFieldProps {
   onSubmit: () => void;
   textInputRef: React.RefObject<TextInput>;
+  isAnswerValid: boolean;
+  onFocus: () => void;
 }
 
 function TextAnswerField(props: TextAnswerFieldProps) {
   const setAnswer = useSetAtom(answerAtom);
-
-  const [
-    isAnswerValid,
-    setIsAnswerValid
-  ] = useAtom<boolean>(isAnswerValidAtom);
 
   const setTextAnswerFieldContainerWidth = useSetAtom(textAnswerFieldContainerWidthAtom);
 
@@ -59,14 +54,14 @@ function TextAnswerField(props: TextAnswerFieldProps) {
 
   useEffect(
     () => {
-      if (isAnswerValid === false) {
+      if (props.isAnswerValid === false) {
         borderColor.value = "red";
       } else {
         borderColor.value = "gray";
       }
     },
     [
-      isAnswerValid
+      props.isAnswerValid
     ]
   );
 
@@ -82,24 +77,26 @@ function TextAnswerField(props: TextAnswerFieldProps) {
 
   return (
     <View
+      testID="TEXT_ANSWER_FIELD.CONTAINER:VIEW"
       style={styles.container}
     >
-      <Text style={styles.hintText}>(ühesõnaga)</Text>
-      <View>
-        <AnimatedTextInput
-          ref={props.textInputRef}
-          tabIndex={0}
-          onLayout={(event) => setTextAnswerFieldContainerWidth(event.nativeEvent.layout.width)}
-          style={[
-            styles.inputText,
-            animatedStyle
-          ]}
-          placeholder="Kirjuta vastust siia..."
-          placeholderTextColor={CommonColors.whiteA50}
-          onFocus={() => setIsAnswerValid(true)}
-          onChange={(event) => onChange(event.nativeEvent.text)}
-          onSubmitEditing={onSubmit}
-        />
+      <View style={styles.textField}>
+        <View style={styles.textInputContainer}>
+          <AnimatedTextInput
+            ref={props.textInputRef}
+            tabIndex={0}
+            onLayout={(event) => setTextAnswerFieldContainerWidth(event.nativeEvent.layout.width)}
+            style={[
+              styles.textInput,
+              animatedStyle
+            ]}
+            placeholder="Kirjuta vastust siia..."
+            placeholderTextColor={CommonColors.whiteA50}
+            onFocus={props.onFocus}
+            onChange={(event) => onChange(event.nativeEvent.text)}
+            onSubmitEditing={onSubmit}
+          />
+        </View>
         <SendAnswerButton opacity={sendAnswerButtonOpacity} onPress={onSubmit} />
       </View>
     </View>
@@ -114,17 +111,42 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  inputText: {
+  inputField: {
     borderWidth: 2,
-    borderRadius: 5,
+    borderRadius: 15,
+
+  },
+  inputText: {
     paddingVertical: 10,
     fontSize: 16,
-    textAlign: "center",
     color: CommonColors.white,
+    textAlign: "center",
   },
   hintText: {
     fontSize: 12,
     color: "rgba(241, 242, 241, 0.8)",
     marginBottom: 5,
-  }
+  },
+  textField: {
+    width: "100%",
+    borderRadius: 20,
+    borderColor: CommonColors.white,
+    borderWidth: 1
+  },
+  textInputContainer: {
+    minHeight: 64,
+    flex: 1,
+    width: "100%",
+    borderRadius: 20,
+  },
+  textInput: {
+    fontSize: 16,
+    padding: 15,
+    borderRadius: 20,
+    textAlign: "center",
+    color: "rgb(233,234,233)",
+    flex: 1,
+  },
+
+
 });

@@ -2,7 +2,6 @@ import {
   atom,
   useAtom
 } from "jotai";
-import RegisterButton from "../components/RegisterButton";
 import { callCloudFunction } from "../components/util/CloudFunctions";
 import { auth } from "../components/util/FirebaseConfig";
 import { SignupData } from "../constants/ApiTypes";
@@ -29,8 +28,8 @@ import {
 } from "react-native-reanimated";
 import { useMemo } from "react";
 import { AnimatedTextInput } from "../components/util/AnimatedComponentsUtil";
-import { OperationError } from "../components/errors/OperationError";
 import { useHint } from "../hooks/useHint";
+import RegisterButton from "../components/buttons/RegisterButton";
 
 function Register() {
   const { showHint } = useHint();

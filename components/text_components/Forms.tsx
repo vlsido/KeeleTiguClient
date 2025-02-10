@@ -16,8 +16,12 @@ function Forms(props: FormsProps) {
   );
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.formsText} >{fixedForms}</Text>
+    <View
+      testID="FORMS.CONTAINER:VIEW"
+      style={styles.container}>
+      <Text
+        testID="FORMS.CONTAINER.FORMS:TEXT"
+        style={styles.formsText} >{fixedForms}</Text>
     </View>
   );
 }

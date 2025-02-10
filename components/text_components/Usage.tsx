@@ -22,7 +22,9 @@ interface UsageProps {
 function Usage(props: UsageProps) {
 
   return (
-    <View style={styles.container}>
+    <View
+      testID="USAGE.CONTAINER:VIEW"
+      style={styles.container}>
       <Definitions
         definitionData={props.definitionData}
         usageIndex={props.index}

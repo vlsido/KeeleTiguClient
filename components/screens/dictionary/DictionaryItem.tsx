@@ -3,16 +3,18 @@ import {
   Text,
   View
 } from "react-native";
-import Examples from "./Examples";
-import KebabMenuButton from "./KebabMenuButton";
 import Type from "./Type";
 import { router } from "expo-router";
-import { useContext } from "react";
+import { useCallback, useContext } from "react";
 import { WordsContext } from "../../store/WordsContext";
 import { Word } from "../../../app/dictionary";
 import Forms from "../../text_components/Forms";
 import { CommonColors } from "../../../constants/Colors";
 import Usage from "../../text_components/Usage";
+import CustomIconButton from "../../buttons/CustomIconButton";
+import { TrashIcon } from "../../icons/TrashIcon";
+import { useAppDispatch, useAppSelector } from "../../../hooks/storeHooks";
+import { setMyDictionary } from "../../store/slices/dictionarySlice";
 
 interface DictionaryItemProps extends Word {
   index: number;
@@ -20,14 +22,30 @@ interface DictionaryItemProps extends Word {
 
 function DictionaryItem(props: DictionaryItemProps) {
   const { clearAllCache } = useContext(WordsContext);
+
+  const myDictionary = useAppSelector((state) => state.dictionary.myDictionary);
+  const dispatch = useAppDispatch();
+
   if (props.word == "" || props.usages == null) {
     clearAllCache();
     router.replace("/");
   };
 
+  const onRemoveWord = useCallback(() => {
+    const myUpdatedDictionary = myDictionary.filter((word) => word.word !== props.word);
+
+    dispatch(setMyDictionary(myUpdatedDictionary));
+
+    if (myDictionary.length === 0) {
+      localStorage.removeItem("myDictionary");
+    }
+  }, []);
 
   return (
-    <View style={styles.itemContainer}>
+    <View
+      testID="DICTIONARY_ITEM.CONTAINER:VIEW"
+      style={styles.itemContainer}
+    >
       <Text style={styles.indexText}>{props.index}.</Text>
       <View style={styles.wordContainer}>
         <View>
@@ -52,7 +70,9 @@ function DictionaryItem(props: DictionaryItemProps) {
 
         </View>
       </View>
-      <KebabMenuButton word={props.word} />
+      <CustomIconButton onPress={onRemoveWord}>
+        <TrashIcon />
+      </CustomIconButton>
     </View>
   );
 }
@@ -64,7 +84,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "flex-start",
     alignItems: "flex-start",
-    width: "90%",
+    width: "80%",
   },
   wordContainer: {
     width: "95%",

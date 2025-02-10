@@ -1,17 +1,23 @@
-import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { Word } from "../../../app/dictionary";
+import {
+  PayloadAction,
+  createSlice
+} from "@reduxjs/toolkit";
+import {
+  Word,
+  WordAndExamData
+} from "../../../app/dictionary";
 import { RootState } from "../store";
 import { WordWithoutData } from "../../util/WordsUtil";
 
-interface DictionaryState {
+export interface DictionaryState {
   myDictionary: Word[],
-  cachedDictionary: Word[],
+  examDictionary: WordAndExamData[],
   words: WordWithoutData[]
 }
 
 const initialState: DictionaryState = {
   myDictionary: [],
-  cachedDictionary: [],
+  examDictionary: [],
   words: []
 }
 
@@ -29,15 +35,15 @@ export const dictionarySlice = createSlice({
     ) => {
       state.myDictionary.push(action.payload);
     },
-    setCachedDictionary: (
-      state, action: PayloadAction<Word[]>
+    setExamDictionary: (
+      state, action: PayloadAction<WordAndExamData[]>
     ) => {
-      state.cachedDictionary = action.payload;
+      state.examDictionary = action.payload;
     },
-    pushToCachedDictionary: (
-      state, action: PayloadAction<Word>
+    pushToExamDictionary: (
+      state, action: PayloadAction<WordAndExamData>
     ) => {
-      state.cachedDictionary.push(action.payload);
+      state.examDictionary.push(action.payload);
     },
     setWords: (
       state, action: PayloadAction<WordWithoutData[]>
@@ -46,7 +52,7 @@ export const dictionarySlice = createSlice({
     },
     clearDictionary: (state) => {
       state.myDictionary = [];
-      state.cachedDictionary = [];
+      state.examDictionary = [];
       state.words = [];
     }
   },
@@ -56,15 +62,15 @@ export const dictionarySlice = createSlice({
 export const {
   setMyDictionary,
   pushToMyDictionary,
-  setCachedDictionary,
-  pushToCachedDictionary,
+  setExamDictionary,
+  pushToExamDictionary,
   setWords,
   clearDictionary
 } = dictionarySlice.actions;
 
 export const selectMyDictionary = (state: RootState) => state.dictionary.myDictionary;
 
-export const selectCachedDictionary = (state: RootState) => state.dictionary.cachedDictionary;
+export const selectExamDictionary = (state: RootState) => state.dictionary.examDictionary;
 
 export const selectWords = (state: RootState) => state.dictionary.words;
 

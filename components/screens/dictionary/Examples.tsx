@@ -1,3 +1,4 @@
+import { View } from "react-native";
 import Example from "../../text_components/Example";
 
 interface ExamplesProps {
@@ -14,7 +15,7 @@ function Examples(props: ExamplesProps) {
   }
 
   return (
-    <>
+    <View testID="EXAMPLES.CONTAINER:VIEW">
       {props.examples.map((
         example, index
       ) => {
@@ -26,7 +27,7 @@ function Examples(props: ExamplesProps) {
             searchString={props.searchString} />
         );
       })}
-    </>
+    </View>
   )
 }
 

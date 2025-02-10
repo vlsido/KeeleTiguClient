@@ -79,7 +79,7 @@ function RussianTranslation(props: RussianTranslationProps) {
   });
 
   return (
-    <Text>{textElements}</Text>
+    <Text testID="RUSSIAN_TRANSLATION.TRANSLATION:TEXT">{textElements}</Text>
   )
 }
 
