@@ -1,4 +1,4 @@
-import { Word, WordAndExamData } from "../app/Dictionary";
+import { Word, WordAndExamData } from "../app/dictionary";
 
 export const twoWordsAndDataArray: Word[] = [
   {

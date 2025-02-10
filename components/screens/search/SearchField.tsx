@@ -33,7 +33,7 @@ import Animated, {
   useSharedValue
 } from "react-native-reanimated";
 import { callCloudFunction } from "../../util/CloudFunctions";
-import { Word } from "../../../app/Dictionary";
+import { Word } from "../../../app/dictionary";
 import {
   Gesture,
   GestureDetector

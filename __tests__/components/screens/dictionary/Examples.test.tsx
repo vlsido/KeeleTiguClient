@@ -5,7 +5,7 @@ describe(
   "Examples",
   () => {
     test(
-      "renders correctly",
+      "renders correctly if examples are present",
       () => {
         const examples = [
           {
@@ -22,6 +22,31 @@ describe(
         />);
 
         expect(screen.getByTestId("EXAMPLES.CONTAINER:VIEW")).toBeOnTheScreen();
+      }
+    )
+
+    test(
+      "Does not render if examples is undefined",
+      () => {
+
+        renderWithProviders(<Examples
+          examples={undefined}
+          searchString="karu"
+        />);
+
+        expect(screen.queryByTestId("EXAMPLES.CONTAINER:VIEW")).not.toBeOnTheScreen();
+      }
+    )
+
+    test(
+      "Does not render if examples length is 0",
+      () => {
+        renderWithProviders(<Examples
+          examples={[]}
+          searchString="karu"
+        />);
+
+        expect(screen.queryByTestId("EXAMPLES.CONTAINER:VIEW")).not.toBeOnTheScreen();
       }
     )
   }

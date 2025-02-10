@@ -15,7 +15,7 @@ import {
 import {
   runOnJS,
 } from "react-native-reanimated";
-import { Word } from "./Dictionary";
+import { Word } from "./dictionary";
 import WordData from "../components/WordData";
 import {
   Gesture,

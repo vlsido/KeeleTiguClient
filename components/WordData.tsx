@@ -18,7 +18,7 @@ import {
 } from "../components/store/slices/dictionarySlice";
 import FoundArticlesCounter from "../components/screens/word_data/FoundArticlesCounter";
 import Type from "../components/screens/dictionary/Type";
-import { Word } from "../app/Dictionary";
+import { Word } from "../app/dictionary";
 import Usage from "./text_components/Usage";
 import { memo } from "react";
 import TextButton from "./buttons/TextButton";

@@ -1,4 +1,4 @@
-import { twoWordsAndDataArray, twoWordsAndExamDataArray } from "../../../../__mocks__/words";
+import { twoWordsAndDataArray } from "../../../../__mocks__/words";
 import FoundArticlesCounter from "../../../../components/screens/word_data/FoundArticlesCounter";
 import { renderWithProviders, screen } from "../../../../utils/test-utils";
 
@@ -15,7 +15,6 @@ describe(
       }
     );
 
-
     test(
       "Does not render if wordData length is 0",
       () => {
@@ -25,7 +24,6 @@ describe(
         expect(screen.queryByTestId("FOUND_ARTICLES_COUNTER.COUNT:TEXT")).not.toBeOnTheScreen();
       }
     );
-
 
     test(
       "Render correctly if wordData is present",

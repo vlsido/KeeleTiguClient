@@ -1,5 +1,5 @@
 import { screen } from "@testing-library/react-native";
-import { Word } from "../../../../app/Dictionary";
+import { Word } from "../../../../app/dictionary";
 import { renderWithProviders } from "../../../../utils/test-utils";
 import DictionaryItem from "../../../../components/screens/dictionary/DictionaryItem";
 

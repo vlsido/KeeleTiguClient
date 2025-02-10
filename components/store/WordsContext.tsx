@@ -12,7 +12,7 @@ import {
   setExamDictionary,
   setMyDictionary
 } from "./slices/dictionarySlice";
-import { WordAndExamData } from "../../app/Dictionary";
+import { WordAndExamData } from "../../app/dictionary";
 
 interface WordsContextProps {
   cacheDictionary: () => void;

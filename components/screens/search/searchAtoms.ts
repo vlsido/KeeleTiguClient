@@ -1,6 +1,6 @@
 import { atom } from "jotai";
 import { WordWithoutData } from "../../util/WordsUtil";
-import { Word } from "../../../app/Dictionary";
+import { Word } from "../../../app/dictionary";
 import { atomWithListeners } from "../../store/atoms";
 
 export const queryAtom = atom<string>("");
