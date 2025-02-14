@@ -16,7 +16,7 @@ import {
   WordAndExamData
 } from "../../../app/dictionary";
 import { CommonColors } from "../../../constants/Colors";
-import AddToDictionaryButton from "../../buttons/AddToDictionaryButton";
+import AddToDictionaryButton from "../../buttons/AddToDictionaryIconButton";
 
 export interface ExamWord {
   word: string;
@@ -140,7 +140,9 @@ function ExamWordComponent(props: ExamWordComponentProps) {
       </View>
       {props.isAnswerVisible === true && (
         <View testID="EXAM_WORD_COMPONENT.ANSWER_CONTAINER:VIEW" style={styles.answerContainer}>
-          {currentAnswer}
+          <Text style={{ textAlign: "center" }}>
+            {currentAnswer}
+          </Text>
           {props.mode === "any" && <AddToDictionaryButton word={gameWords.at(0)} />}
         </View>
       )}

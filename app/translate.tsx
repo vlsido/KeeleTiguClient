@@ -320,32 +320,31 @@ export default function Translate() {
     >
       <View style={styles.topContainer}>
         {
-          gameWords.length === 0 ? <Text style={{ color: CommonColors.white, fontSize: 20, marginTop: 10 }}>Võtame sõnad sõnastikust...</Text> :
+          gameWords.length === 0 ? <Text style={styles.loadingWordsText}>Võtame sõnad sõnastikust...</Text> :
             <>
               {mode === "my_dictionary" &&
-                <Text style={{ color: CommonColors.white, fontSize: 16, marginVertical: 5 }}>
+                <Text style={styles.wordsLeftText}>
                   Veel jaanud: {gameWords.length}
                 </Text>
               }
               <View>
-                <Text style={{ color: CommonColors.green, fontSize: 16 }}>
+                <Text style={styles.rightWordsText}>
                   {"\u2713"} Õige: {correctCount}
                 </Text>
               </View>
-              <Text style={{ color: CommonColors.red, fontSize: 16 }}>
-                <Text style={{ fontWeight: "bold" }}>{"\u2A09"}{" "}</Text>
+              <Text style={styles.wrongWordsText}>
+                <Text style={styles.bold}>{"\u2A09"}{" "}</Text>
                 Vale: {incorrectCount}
               </Text>
             </>
         }
-
         <ExamWordComponent
           mode={mode}
           isAnswerVisible={isAnswerVisible}
         />
       </View>
       <View style={styles.bottomContainer} >
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
+        <View style={[styles.row, { alignItems: "center" }]}>
           <TextAnswerField
             textInputRef={textInputRef}
             onSubmit={checkAnswer}
@@ -353,7 +352,7 @@ export default function Translate() {
             isAnswerValid={isAnswerValid}
           />
         </View>
-        <View style={{ flexDirection: "row", gap: 10 }}>
+        <View style={[styles.row, { gap: 10 }]}>
           <CustomIconButton onPress={skipWord}>
             <SkipNextIcon />
           </CustomIconButton>
@@ -362,7 +361,7 @@ export default function Translate() {
           </CustomIconButton>
         </View>
       </View>
-    </View>
+    </View >
   );
 }
 
@@ -379,22 +378,32 @@ const styles = StyleSheet.create({
     alignItems: "center",
     minHeight: "35%",
   },
+  loadingWordsText: {
+    color: CommonColors.white,
+    fontSize: 20,
+    marginTop: 10
+  },
+  wordsLeftText: {
+    color: CommonColors.white,
+    fontSize: 16,
+    marginVertical: 5
+  },
+  rightWordsText: {
+    color: CommonColors.green,
+    fontSize: 16
+  },
+  wrongWordsText: {
+    color: CommonColors.red,
+    fontSize: 16
+  },
   bottomContainer: {
     alignItems: "center",
     marginBottom: "55%",
   },
-  skipWordContainer: {
-    backgroundColor: CommonColors.white,
-    padding: 10,
-    borderRadius: 3,
-    borderWidth: 1,
-    borderColor: CommonColors.white,
-    marginTop: 10,
-    marginBottom: 10,
+  bold: {
+    fontWeight: "bold"
   },
-  skipWordText: {
-    color: CommonColors.black,
-    fontSize: 16,
-    fontWeight: "bold",
+  row: {
+    flexDirection: "row"
   }
 })

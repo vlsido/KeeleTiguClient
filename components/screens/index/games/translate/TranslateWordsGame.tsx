@@ -334,6 +334,7 @@ const styles = StyleSheet.create({
   translateButtonDescription: {
     color: CommonColors.white,
     fontSize: 18,
+    textAlign: "center",
     marginTop: 10
   },
   translateOptionsContainer: {
