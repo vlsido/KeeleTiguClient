@@ -7,13 +7,14 @@ import { Stack } from "expo-router";
 import { CommonColors } from "../constants/Colors";
 import { Provider } from "react-redux";
 import store from "../components/store/store";
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import { useAppDispatch } from "../hooks/storeHooks";
 import HintContextProvider from "../components/store/HintContext/HintContext";
 import { useAtomValue } from "jotai";
 import Footer from "../components/Footer";
 import LeftHeaderButton from "../components/buttons/LeftHeaderButton";
 import Header from "../components/Header";
+import Loading from "../components/Loading";
 
 export default function RootLayout() {
 
@@ -61,7 +62,11 @@ function RootLayoutStack() {
         headerLeft: () => (
           <Header />
         ),
-      }}>
+      }}
+      screenLayout={({ children }) => (
+        <Suspense fallback={<Loading />}>{children}</Suspense>
+      )}
+    >
       <Stack.Screen
         redirect={!isUnderMaintenance}
         name="maintenance"
