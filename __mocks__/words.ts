@@ -2,6 +2,7 @@ import { Word, WordAndExamData } from "../app/dictionary";
 
 export const twoWordsAndDataArray: Word[] = [
   {
+    index: 17062,
     word: "karu",
     type: "s",
     forms: "karu, karu, karu",
@@ -20,6 +21,7 @@ export const twoWordsAndDataArray: Word[] = [
     ],
   },
   {
+    index: 17064,
     word: "karu+kaer",
     type: "s",
     forms: "+kaera kaera k'aera",

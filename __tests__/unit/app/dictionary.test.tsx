@@ -34,6 +34,7 @@ describe(
         const initialDictionary: DictionaryState = {
           myDictionary: [
             {
+              index: 17062,
               word: "karu",
               type: "s",
               forms: "karu, karu, karu",
