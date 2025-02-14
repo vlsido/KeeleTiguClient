@@ -52,26 +52,29 @@ function ConfigContextProvider({ children }: { children: React.ReactNode }) {
     () => {
       remoteConfig.settings.minimumFetchIntervalMillis = 600000; // 600000ms = 10 minutes
 
-      remoteConfig.defaultConfig = { current_build_version: "1.0.0", is_under_maintenance: false, maintenance_text: "Uuendame appi, proovige uuesti hiljem!" };
+      remoteConfig.defaultConfig = {
+        last_cache_invalidation_timestamp: 1739391134,
+        is_under_maintenance: false,
+        maintenance_text: "Uuendame appi, proovige uuesti hiljem!"
+      };
 
       fetchAndActivate(remoteConfig).
         then(() => {
 
-          const currentBuildVersion = getValue(
+          const lastCacheInvalidationTimestamp = getValue(
             remoteConfig,
-            "current_build_version"
+            "last_cache_invalidation_timestamp"
           ).asString();
 
-          const cachedBuildVersion = localStorage.getItem("current_build_version");
+          const cachedLastCacheInvalidationTimestamp = localStorage.getItem("last_cache_invalidation_timestamp");
 
-          if (cachedBuildVersion == null || currentBuildVersion !== cachedBuildVersion) {
+          if (cachedLastCacheInvalidationTimestamp == null || lastCacheInvalidationTimestamp !== cachedLastCacheInvalidationTimestamp) {
             localStorage.setItem(
-              "current_build_version",
-              currentBuildVersion
+              "last_cache_invalidation_timestamp",
+              lastCacheInvalidationTimestamp
             );
-            removeCache().then(() => {
-              loadTranslations("ee");
-            });
+            removeCache();
+            loadTranslations("ee");
 
             return;
           }
@@ -97,22 +100,21 @@ function ConfigContextProvider({ children }: { children: React.ReactNode }) {
             "error fetching config",
             error
           );
-          removeCache().then(() => {
-            loadTranslations("ee");
-          });
+          loadTranslations("ee");
         });
 
     },
     []
   );
 
-  async function removeCache() {
+  function removeCache() {
+    localStorage.removeItem("myDictionary");
     localStorage.removeItem("allWords");
     localStorage.removeItem("wordsAndExamData");
     dispatch(clearDictionary());
   }
 
-  async function loadTranslations(locale: string) {
+  function loadTranslations(locale: string) {
     i18n.defaultLocale = locale;
     i18n.locale = locale;
 
