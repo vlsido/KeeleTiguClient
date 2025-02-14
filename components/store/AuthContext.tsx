@@ -30,15 +30,19 @@ function AuthContextProvider({ children }: { children: React.ReactNode }) {
         onAuthStateChanged(
           auth,
           async (user) => {
-            if (user) {
-              if (user.isAnonymous) {
-              } else if (!user.isAnonymous) {
-                if (user.displayName == null) {
-                  await syncNicknameWithDB(user.uid);
+            try {
+              if (user) {
+                if (user.isAnonymous) {
+                } else if (!user.isAnonymous) {
+                  if (user.displayName == null) {
+                    await syncNicknameWithDB(user.uid);
+                  }
                 }
+              } else {
+                await signInAnonymously(auth);
               }
-            } else {
-              await signInAnonymously(auth);
+            } catch (error) {
+              console.error("auth/error", error);
             }
           }
         );
