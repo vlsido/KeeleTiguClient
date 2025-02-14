@@ -4,13 +4,10 @@ import {
   View
 } from "react-native";
 import Type from "./Type";
-import { router } from "expo-router";
 import {
   memo,
-  useContext,
   useMemo
 } from "react";
-import { WordsContext } from "../../store/WordsContext";
 import { Word } from "../../../app/dictionary";
 import Forms from "../../text_components/Forms";
 import { CommonColors } from "../../../constants/Colors";

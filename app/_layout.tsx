@@ -14,7 +14,10 @@ import Footer from "../components/Footer";
 import LeftHeaderButton from "../components/buttons/LeftHeaderButton";
 import Header from "../components/Header";
 import Loading from "../components/Loading";
-import { setExamDictionary, setMyDictionary } from "../components/store/slices/dictionarySlice";
+import {
+  setExamDictionary,
+  setMyDictionary
+} from "../components/store/slices/dictionarySlice";
 import { WordAndExamData } from "./dictionary";
 
 export default function RootLayout() {
