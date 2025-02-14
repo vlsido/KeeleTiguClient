@@ -51,7 +51,10 @@ function TextButton(props: TextButtonProps) {
       testID={props.testID}
       style={({ pressed }) => [
         props.style,
-        { opacity: pressed ? 0.75 : 1 },
+        {
+          transitionDuration: "150ms",
+          opacity: pressed ? 0.75 : 1
+        },
       ]}
       onPress={props.onPress}
       disabled={props.disabledBool}
