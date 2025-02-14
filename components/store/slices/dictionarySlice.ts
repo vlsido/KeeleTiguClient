@@ -29,11 +29,28 @@ export const dictionarySlice = createSlice({
       state, action: PayloadAction<Word[]>
     ) => {
       state.myDictionary = action.payload;
+      localStorage.setItem(
+        "myDictionary",
+        JSON.stringify(action.payload)
+      );
     },
     pushToMyDictionary: (
       state, action: PayloadAction<Word>
     ) => {
       state.myDictionary.push(action.payload);
+      localStorage.setItem(
+        "myDictionary",
+        JSON.stringify(state.myDictionary)
+      );
+    },
+    removeIndexFromMyDictionary: (
+      state, action: PayloadAction<number>
+    ) => {
+      state.myDictionary = state.myDictionary.filter((word) => word.index !== action.payload)
+      localStorage.setItem(
+        "myDictionary",
+        JSON.stringify(state.myDictionary)
+      );
     },
     setExamDictionary: (
       state, action: PayloadAction<WordAndExamData[]>
@@ -62,6 +79,7 @@ export const dictionarySlice = createSlice({
 export const {
   setMyDictionary,
   pushToMyDictionary,
+  removeIndexFromMyDictionary,
   setExamDictionary,
   pushToExamDictionary,
   setWords,

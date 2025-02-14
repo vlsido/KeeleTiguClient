@@ -345,10 +345,10 @@ function SearchField() {
           <FlatList
             data={results}
             contentContainerStyle={{ backgroundColor: CommonColors.white }}
-            renderItem={({ item, index }) => <SearchItem word={item.word} index={index + 1} onPress={getWordData} />}
+            renderItem={({ item }) => <SearchItem word={item.word} onPress={getWordData} />}
             keyExtractor={(
-              item, index
-            ) => `item-${item}-${index}`}
+              item
+            ) => `item-${item.index}`}
           />
         </Animated.View>
       </GestureDetector>

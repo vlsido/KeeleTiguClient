@@ -6,7 +6,7 @@ import WordsContextProvider from "../components/store/WordsContext";
 import { Stack } from "expo-router";
 import { CommonColors } from "../constants/Colors";
 import { Provider } from "react-redux";
-import { store } from "../components/store/store";
+import store from "../components/store/store";
 import { useEffect } from "react";
 import { useAppDispatch } from "../hooks/storeHooks";
 import HintContextProvider from "../components/store/HintContext/HintContext";

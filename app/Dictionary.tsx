@@ -9,7 +9,12 @@ import { i18n } from "../components/store/i18n";
 import { CommonColors } from "../constants/Colors";
 import { useAppSelector } from "../hooks/storeHooks";
 import DictionaryItem from "../components/screens/dictionary/DictionaryItem";
-import { memo } from "react";
+import {
+  memo,
+  useEffect,
+  useMemo
+} from "react";
+import { atom, useAtom } from "jotai";
 
 export interface DictionaryRequest {
   page: number;
@@ -28,6 +33,7 @@ export interface OnlyWordsResponse {
 }
 
 export interface Word {
+  index: number;
   word: string;
   type: "s" | "adj" | "adv" | "v" | "konj" | undefined;
   forms: string | undefined;
@@ -57,7 +63,17 @@ export interface DictionaryResponse {
 }
 
 function Dictionary() {
+  const [myDictionaryState, setMyDictionaryState] =
+    useAtom<Word[]>(useMemo(() => atom<Word[]>([]), []));
   const myDictionary = useAppSelector((state) => state.dictionary.myDictionary);
+
+  useEffect(() => {
+    if (myDictionary.length === 0) return;
+
+    if (myDictionaryState.length === 0) {
+      setMyDictionaryState(myDictionary);
+    }
+  }, [myDictionary]);
 
   if (myDictionary.length === 0) {
     return (
@@ -68,7 +84,7 @@ function Dictionary() {
         <Text
           testID="DICTIONARY.WORDS_EMPTY:TEXT"
           style={styles.loadingText}>
-          Siin pole midagi. Lisa uued sõnad eksami leheküljel.
+          Siin pole midagi. Lisa uued sõnad eksami leheküljel või otsingus.
         </Text>
       </View>
     );
@@ -93,16 +109,15 @@ function Dictionary() {
       </Text>
       <FlatList
         testID="DICTIONARY.WORDS_LIST:FLATLIST"
-        data={myDictionary}
-        keyExtractor={(item) => `word-${myDictionary.indexOf(item)}`}
-        contentContainerStyle={{ gap: 10 }}
-        renderItem={({ item, index }) => <DictionaryItem {...item} index={index + 1} />}
+        data={myDictionaryState}
+        keyExtractor={(item) => item.index.toString()}
+        renderItem={({ item, index }) => <DictionaryItem {...item} length={index + 1} />}
       />
     </View>
   );
 }
 
-export default memo(Dictionary);
+export default Dictionary;
 
 const styles = StyleSheet.create({
   noWordsContainer: {
@@ -123,6 +138,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     flexDirection: "column",
     backgroundColor: "#222322"
+  },
+  separator: {
+    height: 10
   },
   loadingText: {
     fontSize: 20,

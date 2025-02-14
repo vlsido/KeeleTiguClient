@@ -15,13 +15,19 @@ const rootReducer = combineReducers({
 export const setupStore = (preloadedState?: Partial<RootState>) => {
   return configureStore({
     reducer: rootReducer,
-    // middleware: (getDefaultMiddleware) => getDefaultMiddleware({ thunk: false }).concat(sagaMiddleware),
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware({ thunk: false }).concat(sagaMiddleware),
     preloadedState
   });
-
 }
 
-// sagaMiddleware.run(watchDictionarySaga);
+const store = configureStore({
+  reducer: {
+    dictionary: dictionaryReducer,
+  },
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware({ thunk: false }).concat(sagaMiddleware)
+});
+
+sagaMiddleware.run(watchDictionarySaga);
 
 export const storeAtom = atomWithStore(setupStore());
 
@@ -31,5 +37,5 @@ export type AppStore = ReturnType<typeof setupStore>;
 
 export type AppDispatch = AppStore["dispatch"];
 
-export const store = setupStore();
+export default store;
 

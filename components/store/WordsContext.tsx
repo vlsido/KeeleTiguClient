@@ -32,7 +32,6 @@ function WordsContextProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(
     () => {
-
       // IDEA: probably can do this without useEffect
       if (examDictionary.length < 3) {
         dispatch({ type: "dictionary/fetchRandomWords" });
@@ -58,26 +57,13 @@ function WordsContextProvider({ children }: { children: React.ReactNode }) {
           JSON.stringify(examDictionary)
         )
 
+        // dispatch(setMyDictionary(examDictionary));
+
       }
 
     },
     [
       examDictionary
-    ]
-  );
-
-  useEffect(
-    () => {
-      console.log(
-        "my",
-        myDictionary
-      );
-      if (myDictionary.length > 0) {
-        cacheDictionary();
-      }
-    },
-    [
-      myDictionary
     ]
   );
 
@@ -92,6 +78,8 @@ function WordsContextProvider({ children }: { children: React.ReactNode }) {
     const cached = localStorage.getItem("myDictionary");
 
     const myDictionaryCached = cached != null ? JSON.parse(cached) : [];
+
+    console.log("MYDICTCACEHD", myDictionaryCached);
 
     dispatch(setMyDictionary(myDictionaryCached));
   }
