@@ -42,7 +42,7 @@ function Definitions(props: DefinitionProps) {
                       wordIndex === searchStringIndex && styles.highlightedWord
 
                     ]}>{word}</Text>,
-                    <Text>{separator}</Text>,
+                    <Text key={`${wordIndex}-separator`}>{separator}</Text>,
                   ]
                 }
                 return (

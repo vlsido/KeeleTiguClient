@@ -1,5 +1,6 @@
 import {
   StyleSheet,
+  Text,
   View
 } from "react-native";
 import Definitions from "./Definitions";
@@ -16,7 +17,7 @@ interface UsageProps {
     estonianExample: string;
     russianTranslations: string[];
   }[] | undefined;
-  index: number;
+  usageIndex: number;
 }
 
 function Usage(props: UsageProps) {
@@ -26,8 +27,8 @@ function Usage(props: UsageProps) {
       testID="USAGE.CONTAINER:VIEW"
       style={styles.container}>
       <Definitions
+        usageIndex={props.usageIndex}
         definitionData={props.definitionData}
-        usageIndex={props.index}
         searchString={props.searchString} />
       <Examples
         examples={props.examples}
