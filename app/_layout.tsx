@@ -2,19 +2,20 @@ import ConfigContextProvider, {
   isUnderMaintenanceAtom
 } from "../components/store/ConfigContext";
 import AuthContextProvider from "../components/store/AuthContext";
-import WordsContextProvider from "../components/store/WordsContext";
 import { Stack } from "expo-router";
 import { CommonColors } from "../constants/Colors";
 import { Provider } from "react-redux";
 import store from "../components/store/store";
 import { Suspense, useEffect } from "react";
-import { useAppDispatch } from "../hooks/storeHooks";
+import { useAppDispatch, useAppSelector } from "../hooks/storeHooks";
 import HintContextProvider from "../components/store/HintContext/HintContext";
 import { useAtomValue } from "jotai";
 import Footer from "../components/Footer";
 import LeftHeaderButton from "../components/buttons/LeftHeaderButton";
 import Header from "../components/Header";
 import Loading from "../components/Loading";
+import { setExamDictionary, setMyDictionary } from "../components/store/slices/dictionarySlice";
+import { WordAndExamData } from "./dictionary";
 
 export default function RootLayout() {
 
@@ -23,12 +24,10 @@ export default function RootLayout() {
       <ConfigContextProvider>
         <HintContextProvider>
           <AuthContextProvider>
-            <WordsContextProvider>
-              <>
-                <RootLayoutStack />
-                <Footer />
-              </>
-            </WordsContextProvider>
+            <>
+              <RootLayoutStack />
+              <Footer />
+            </>
           </AuthContextProvider>
         </HintContextProvider >
       </ConfigContextProvider>
@@ -41,12 +40,56 @@ function RootLayoutStack() {
 
   const dispatch = useAppDispatch();
 
+  const examDictionary = useAppSelector((state) => state.dictionary.examDictionary);
+
+
   useEffect(
     () => {
       dispatch({ type: "dictionary/fetchWordsRequest" })
+      getExamDictionary();
     },
     []
   );
+
+  useEffect(
+    () => {
+      if (examDictionary.length === 0) {
+        const cachedWordsAndExamData = localStorage.getItem("wordsAndExamData");
+
+        if (cachedWordsAndExamData != null) {
+          const parsedCachedWordsAndExamData: WordAndExamData[] = JSON.parse(cachedWordsAndExamData);
+          if (parsedCachedWordsAndExamData.length > 0) {
+            dispatch(setExamDictionary(parsedCachedWordsAndExamData));
+            return;
+
+          }
+        }
+      }
+
+      if (examDictionary.length < 3) {
+        dispatch({ type: "dictionary/fetchRandomWords" });
+        return;
+      }
+
+      if (examDictionary.length > 0) {
+        localStorage.setItem(
+          "wordsAndExamData",
+          JSON.stringify(examDictionary)
+        )
+      }
+    },
+    [
+      examDictionary
+    ]
+  );
+
+  function getExamDictionary() {
+    const cached = localStorage.getItem("myDictionary");
+
+    const myDictionaryCached = cached != null ? JSON.parse(cached) : [];
+
+    dispatch(setMyDictionary(myDictionaryCached));
+  }
 
   return (
     <Stack
