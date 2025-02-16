@@ -222,11 +222,19 @@ function SearchField() {
     switch (queryLanguage) {
       case "estonian":
         return words.sort((a, b) => {
-          return getEstonianWordPriority(a, query) - getEstonianWordPriority(b, query);
+          const priorityDiff = getEstonianWordPriority(a, query) - getEstonianWordPriority(b, query);
+
+          if (priorityDiff !== 0) return priorityDiff;
+
+          return a.word.localeCompare(b.word);
         });
       case "russian":
         return words.sort((a, b) => {
-          return getRussianWordPriority(a, query) - getRussianWordPriority(b, query);
+          const priorityDiff = getRussianWordPriority(a, query) - getRussianWordPriority(b, query);
+
+          if (priorityDiff !== 0) return priorityDiff;
+
+          return a.word.localeCompare(b.word);
         });
     }
 
