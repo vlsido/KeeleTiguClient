@@ -1,16 +1,16 @@
-import { CommonColors } from "../../constants/Colors";
-import { Link } from "expo-router";
 import {
+  Pressable,
   StyleSheet,
   Text
 } from "react-native";
+import { CommonColors } from "../../constants/Colors";
 
-function DictionaryLink() {
+function DictionaryLink({ onPress }) {
 
   return (
-    <Link href="/dictionary" style={styles.linkContainer}>
+    <Pressable onPress={() => onPress("dictionary")} style={styles.linkContainer}>
       <Text style={styles.linkText}>Minu Sõnastik</Text>
-    </Link>
+    </Pressable>
   )
 }
 

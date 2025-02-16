@@ -1,13 +1,16 @@
+import {
+  Pressable,
+  StyleSheet,
+  Text
+} from "react-native";
 import { CommonColors } from "../../constants/Colors";
-import { Link } from "expo-router";
-import { StyleSheet, Text } from "react-native";
 
-function SearchLink() {
+function SearchLink({ onPress }) {
 
   return (
-    <Link href="/search" style={styles.linkContainer}>
+    <Pressable onPress={() => onPress("search")} style={styles.linkContainer}>
       <Text style={styles.linkText}>Otsi</Text>
-    </Link>
+    </Pressable>
   )
 }
 
