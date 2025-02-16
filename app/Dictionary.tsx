@@ -1,4 +1,8 @@
 import {
+  useCallback,
+  useMemo
+} from "react";
+import {
   FlatList,
   StyleSheet,
   Text,
@@ -10,11 +14,10 @@ import { CommonColors } from "../constants/Colors";
 import { useAppSelector } from "../hooks/storeHooks";
 import DictionaryItem from "../components/screens/dictionary/DictionaryItem";
 import {
-  memo,
-  useEffect,
-  useMemo
-} from "react";
-import { atom, useAtom } from "jotai";
+  atom,
+  useAtom
+} from "jotai";
+import { useFocusEffect } from "expo-router";
 
 export interface DictionaryRequest {
   page: number;
@@ -67,13 +70,13 @@ function Dictionary() {
     useAtom<Word[]>(useMemo(() => atom<Word[]>([]), []));
   const myDictionary = useAppSelector((state) => state.dictionary.myDictionary);
 
-  useEffect(() => {
-    if (myDictionary.length === 0) return;
+  useFocusEffect(
+    useCallback(() => {
+      if (myDictionary.length === 0) return;
 
-    if (myDictionaryState.length === 0) {
       setMyDictionaryState(myDictionary);
-    }
-  }, [myDictionary]);
+    }, [myDictionary])
+  );
 
   if (myDictionary.length === 0) {
     return (
