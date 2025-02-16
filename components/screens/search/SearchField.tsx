@@ -238,7 +238,7 @@ function SearchField() {
         return;
       }
 
-      const wordLowerCase = word.toLowerCase();
+      const wordLowerCase = word.toLowerCase().trim();
 
       if (wordLowerCase === searchString) {
         return;
@@ -267,7 +267,11 @@ function SearchField() {
         if (response != null) {
           if (response.queryResponse.length > 1) {
 
-            const sortedWordsArray: Word[] = sortWords(response.queryResponse, wordLowerCase, language);
+            const sortedWordsArray: Word[] = sortWords(
+              response.queryResponse,
+              wordLowerCase,
+              language
+            );
 
             setWordsDataArray(sortedWordsArray);
             return;
