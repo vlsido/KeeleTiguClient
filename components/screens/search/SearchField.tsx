@@ -33,7 +33,7 @@ import Animated, {
   useSharedValue
 } from "react-native-reanimated";
 import { callCloudFunction } from "../../util/CloudFunctions";
-import { Word } from "../../../app/dictionary";
+import { Word, WordAndExamData } from "../../../app/dictionary";
 import {
   Gesture,
   GestureDetector
@@ -44,7 +44,7 @@ import SearchItem from "./SearchItem";
 import { CommonColors } from "../../../constants/Colors";
 
 interface SearchDataResults {
-  queryResponse: Word[];
+  queryResponse: WordAndExamData[];
 }
 
 function SearchField() {
@@ -156,6 +156,82 @@ function SearchField() {
     []
   );
 
+  function getEstonianWordPriority(wordObj: Word, query: string) {
+    if (wordObj.word
+      .toLowerCase()
+      .startsWith(query)) return 0;
+
+    if (wordObj.usages
+      .some((usage) => usage.definitionData
+        .some((definition) => definition
+          .definitionText?.toLowerCase()
+          .startsWith(query)))) return 1;
+
+    if (wordObj.usages
+      .some((usage) => usage.definitionData
+        .some((definition) => definition
+          .definitionText?.toLowerCase()
+          .startsWith(query)))) return 2;
+
+    if (wordObj.usages
+      .some((usage) => usage
+        .examples?.some((example) => example.estonianExample
+          .toLowerCase()
+          .includes(query)))) return 3;
+
+    return 4;
+  }
+
+  function getRussianWordPriority(wordObj: Word, query: string) {
+    if (wordObj.word.toLowerCase().startsWith(query)) return 0;
+
+    if (wordObj.usages
+      .some((usage) => usage.definitionData
+        .some((definition) => definition.russianTranslations
+          .some((russianTranslation) => russianTranslation
+            .toLowerCase()
+            .replaceAll("\"", "")
+            .startsWith(query))))
+    ) return 1;
+
+    if (wordObj.usages
+      .some((usage) => usage.definitionData
+        .some((definition) => definition.russianTranslations
+          .some((russianTranslation) => russianTranslation
+            .toLowerCase()
+            .replaceAll("\"", "")
+            .includes(query))))
+    ) return 2;
+
+    if (wordObj.usages
+      .some((usage) => usage
+        .examples?.some((example) => example.russianTranslations
+          .some((russianTranslation) => russianTranslation
+            .toLowerCase()
+            .replaceAll("\"", "")
+            .includes(query))))) return 3;
+
+    return 4;
+  }
+
+  function sortWords(
+    words: Word[],
+    query: string,
+    queryLanguage: "russian" | "estonian",
+  ) {
+    switch (queryLanguage) {
+      case "estonian":
+        return words.sort((a, b) => {
+          return getEstonianWordPriority(a, query) - getEstonianWordPriority(b, query);
+        });
+      case "russian":
+        return words.sort((a, b) => {
+          return getRussianWordPriority(a, query) - getRussianWordPriority(b, query);
+        });
+    }
+
+  }
+
   const getWordData = useCallback(
     async (word: string) => {
       if (word === "") {
@@ -167,7 +243,6 @@ function SearchField() {
       if (wordLowerCase === searchString) {
         return;
       }
-
 
       makeResultsUnvisible();
 
@@ -191,17 +266,8 @@ function SearchField() {
 
         if (response != null) {
           if (response.queryResponse.length > 1) {
-            const sortedWordsArray = response.queryResponse.sort((
-              a, b
-            ) => {
-              const aStartsWith = a.word.toLowerCase().startsWith(wordLowerCase);
-              const bStartsWith = b.word.toLowerCase().startsWith(wordLowerCase);
 
-              if (aStartsWith && !bStartsWith) return -1;
-              if (!aStartsWith && bStartsWith) return 1;
-
-              return a.word.localeCompare(b.word);
-            });
+            const sortedWordsArray: Word[] = sortWords(response.queryResponse, wordLowerCase, language);
 
             setWordsDataArray(sortedWordsArray);
             return;
@@ -234,6 +300,7 @@ function SearchField() {
     [
       detectLanguage,
       showHint,
+      sortWords,
       searchString
     ]
   );
