@@ -55,9 +55,10 @@ function Example(props: ExampleProps) {
             key={index}
             translation={item}
             searchString={props.searchString}
-            russianText={styles.russianExample}
-            russianAccentText={styles.russianAccentText}
-            highlightedText={styles.highlightedRussianText}
+            textStyle={styles.russianExample}
+            accentTextStyle={styles.russianAccentText}
+            highlightedTextStyle={styles.highlightedRussianText}
+            highlightedAccentTextStyle={styles.highlightedRussianAccentText}
           />
         }}
       />
@@ -90,9 +91,13 @@ const styles = StyleSheet.create({
   },
   highlightedRussianText: {
     flexDirection: "row",
-    backgroundColor: "#393080",
-    color: CommonColors.yellow,
-    marginRight: "auto",
+    backgroundColor: CommonColors.olive,
+    color: "black",
+  },
+  highlightedRussianAccentText: {
+    flexDirection: "row",
+    backgroundColor: CommonColors.olive,
+    color: CommonColors.darkRed,
   },
   highlightedEstonianText: {
     color: CommonColors.black,

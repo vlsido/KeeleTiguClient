@@ -60,7 +60,12 @@ function Definitions(props: DefinitionProps) {
                 <RussianTranslation
                   key={index}
                   translation={translation}
-                  searchString={props.searchString} />
+                  searchString={props.searchString}
+                  textStyle={styles.russianExample}
+                  accentTextStyle={styles.russianAccentText}
+                  highlightedTextStyle={styles.highlightedRussianText}
+                  highlightedAccentTextStyle={styles.highlightedRussianAccentText}
+                />
               );
             })}
           </View>
@@ -82,5 +87,25 @@ const styles = StyleSheet.create({
     backgroundColor: CommonColors.yellow,
     color: CommonColors.black,
     fontWeight: "bold"
-  }
+  },
+  russianExample: {
+    color: CommonColors.yellow,
+    fontSize: 16,
+    fontWeight: "bold"
+  },
+  russianAccentText: {
+    color: CommonColors.red,
+    fontSize: 16,
+    fontWeight: "bold"
+  },
+  highlightedRussianText: {
+    flexDirection: "row",
+    backgroundColor: CommonColors.olive,
+    color: "black",
+  },
+  highlightedRussianAccentText: {
+    flexDirection: "row",
+    backgroundColor: CommonColors.olive,
+    color: CommonColors.darkRed,
+  },
 })
