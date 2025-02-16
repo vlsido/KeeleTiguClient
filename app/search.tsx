@@ -57,8 +57,6 @@ function Search() {
     ]
   );
 
-
-
   return (
     <GestureDetector
       gesture={tapGesture}
