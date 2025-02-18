@@ -22,6 +22,7 @@ function SettingsButton() {
 
   return (
     <MaterialIconButton
+      testID={"SETTINGS_BUTTON.ICON:PRESSABLE"}
       onPress={toggleSettings}
       iconStyle={styles.container}
       color={CommonColors.white}
