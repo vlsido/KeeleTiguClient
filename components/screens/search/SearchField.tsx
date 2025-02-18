@@ -157,15 +157,11 @@ function SearchField() {
   );
 
   function getEstonianWordPriority(wordObj: Word, query: string) {
-    if (wordObj.word
-      .toLowerCase()
-      .startsWith(query)) return 0;
+    const wordLowerCase = wordObj.word.replaceAll("+", "").toLowerCase();
 
-    if (wordObj.usages
-      .some((usage) => usage.definitionData
-        .some((definition) => definition
-          .definitionText?.toLowerCase()
-          .startsWith(query)))) return 1;
+    if (wordLowerCase.startsWith(query)) return 0;
+
+    if (wordLowerCase.includes(query)) return 1;
 
     if (wordObj.usages
       .some((usage) => usage.definitionData
@@ -174,12 +170,18 @@ function SearchField() {
           .startsWith(query)))) return 2;
 
     if (wordObj.usages
+      .some((usage) => usage.definitionData
+        .some((definition) => definition
+          .definitionText?.toLowerCase()
+          .includes(query)))) return 3;
+
+    if (wordObj.usages
       .some((usage) => usage
         .examples?.some((example) => example.estonianExample
           .toLowerCase()
-          .includes(query)))) return 3;
+          .includes(query)))) return 4;
 
-    return 4;
+    return 5;
   }
 
   function getRussianWordPriority(wordObj: Word, query: string) {
@@ -246,9 +248,9 @@ function SearchField() {
         return;
       }
 
-      const wordLowerCase = word.toLowerCase().trim();
+      const wordNormalized = word.replaceAll("+", "").toLowerCase().trim();
 
-      if (wordLowerCase === searchString) {
+      if (wordNormalized === searchString) {
         return;
       }
 
@@ -256,7 +258,7 @@ function SearchField() {
 
       setQuery(word);
 
-      setSearchString(wordLowerCase);
+      setSearchString(wordNormalized);
 
       const language = detectLanguage(word);
 
@@ -277,7 +279,7 @@ function SearchField() {
 
             const sortedWordsArray: Word[] = sortWords(
               response.queryResponse,
-              wordLowerCase,
+              wordNormalized,
               language
             );
 
