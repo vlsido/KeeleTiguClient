@@ -60,6 +60,8 @@ function TextButton(props: TextButtonProps) {
       disabled={props.disabledBool}
       hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
       aria-label={props.label}
+      role="button"
+      accessibilityLabelledBy="buttonLabel"
       onHoverIn={props.onHoverIn}
       onHoverOut={props.onHoverOut}
     >
@@ -70,7 +72,12 @@ function TextButton(props: TextButtonProps) {
           color={props.leftSideIconColor}
         />
       )}
-      <Text numberOfLines={props.numberOfLines} ellipsizeMode="tail" style={props.textStyle}>
+      <Text
+        nativeID="buttonLabel"
+        style={props.textStyle}
+        numberOfLines={props.numberOfLines}
+        ellipsizeMode="tail"
+      >
         {props.text}
       </Text>
     </Pressable>
