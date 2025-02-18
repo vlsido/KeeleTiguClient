@@ -56,6 +56,13 @@ export const dictionarySlice = createSlice({
       state, action: PayloadAction<WordAndExamData[]>
     ) => {
       state.examDictionary = action.payload;
+
+      if (action.payload.length > 0) {
+        localStorage.setItem(
+          "wordsAndExamData",
+          JSON.stringify(action.payload)
+        )
+      }
     },
     pushToExamDictionary: (
       state, action: PayloadAction<WordAndExamData>
