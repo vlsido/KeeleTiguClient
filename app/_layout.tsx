@@ -1,7 +1,7 @@
 import ConfigContextProvider, {
   isUnderMaintenanceAtom
-} from "../components/store/ConfigContext";
-import AuthContextProvider from "../components/store/AuthContext";
+} from "../components/contexts/ConfigContext";
+import AuthContextProvider from "../components/contexts/AuthContext";
 import { Stack } from "expo-router";
 import { CommonColors } from "../constants/Colors";
 import { Provider } from "react-redux";
@@ -19,6 +19,7 @@ import {
   setMyDictionary
 } from "../components/store/slices/dictionarySlice";
 import { WordAndExamData } from "./dictionary";
+import SettingsWrapper from "../components/wrappers/SettingsWrapper";
 
 export default function RootLayout() {
 
@@ -27,10 +28,12 @@ export default function RootLayout() {
       <ConfigContextProvider>
         <HintContextProvider>
           <AuthContextProvider>
-            <>
-              <RootLayoutStack />
-              <Footer />
-            </>
+            <SettingsWrapper>
+              <>
+                <RootLayoutStack />
+                <Footer />
+              </>
+            </SettingsWrapper>
           </AuthContextProvider>
         </HintContextProvider >
       </ConfigContextProvider>
@@ -74,12 +77,6 @@ function RootLayoutStack() {
         return;
       }
 
-      if (examDictionary.length > 0) {
-        localStorage.setItem(
-          "wordsAndExamData",
-          JSON.stringify(examDictionary)
-        )
-      }
     },
     [
       examDictionary
@@ -105,9 +102,10 @@ function RootLayoutStack() {
           fontWeight: "bold",
         },
         contentStyle: { backgroundColor: CommonColors.black },
-        headerLeft: () => (
+        header: () => (
           <Header />
-        ),
+
+        )
       }}
       screenLayout={({ children }) => (
         <Suspense fallback={<Loading />}>{children}</Suspense>
