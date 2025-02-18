@@ -13,6 +13,6 @@
       "many": "Найдено %{count} слов",
       "other": "Найдено %{count} слов"
     },
-    }
+    "SettingsMenu.turn_on_accent_letters": "Подсвечивать ударения у русских слов"
   }
 }
