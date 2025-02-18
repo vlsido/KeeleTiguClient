@@ -27,7 +27,7 @@ function RussianTranslation(props: RussianTranslationProps) {
     "\"",
     ""
   ).split(" ").
-    findIndex((word) => word === props.searchString);
+    findIndex((word) => props.searchString !== undefined && word.includes(props.searchString));
 
   const textElements: React.JSX.Element[] = [];
 
