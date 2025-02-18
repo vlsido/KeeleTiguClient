@@ -42,7 +42,12 @@ function WordData(props: WordDataProps) {
 
         const composedWord = wordData.word.split("+");
 
-        const searchStringIndex = composedWord.findIndex((wordPart) => wordPart.toLowerCase() === props.searchString);
+        let searchStringIndex = composedWord.findIndex((wordPart) => wordPart.toLowerCase() === props.searchString);
+
+        if (searchStringIndex === -1) {
+          const joinedWord = composedWord.join("").toLowerCase();
+          searchStringIndex = joinedWord === props.searchString ? -2 : -1;
+        }
 
         return (
           <View
@@ -57,7 +62,7 @@ function WordData(props: WordDataProps) {
                 return (
                   <Text key={`wordIndex-${index}-text`} style={[
                     styles.wordText,
-                    index === searchStringIndex && styles.highlightedText
+                    (index === searchStringIndex || searchStringIndex === -2) && styles.highlightedText
                   ]}>
                     {separator}{wordPart}
                   </Text>)
