@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import ExamLink from "./links/ExamLink";
 import DictionaryLink from "./links/DictionaryLink";
 import SearchLink from "./links/SearchLink";
@@ -7,6 +7,8 @@ import {
   router,
   useNavigation
 } from "expo-router";
+import Settings from "./settings/SettingsButton";
+import { CommonColors } from "../constants/Colors";
 
 function Header() {
 
@@ -41,12 +43,30 @@ function Header() {
   }, [navigation]);
 
   return (
-    <View testID="HEADER.CONTAINER:VIEW" style={{ flexDirection: "row" }}>
-      <ExamLink onPress={onPress} />
-      <DictionaryLink onPress={onPress} />
-      <SearchLink onPress={onPress} />
+    <View testID="HEADER.CONTAINER:VIEW" style={styles.container}>
+      <View testID="HEADER.CONTAINER.LINKS_CONTAINER:VIEW" style={styles.linksContainer}>
+        <ExamLink onPress={onPress} />
+        <DictionaryLink onPress={onPress} />
+        <SearchLink onPress={onPress} />
+      </View>
+      <Settings />
     </View>
   );
 }
 
 export default Header;
+
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    backgroundColor: CommonColors.black,
+    width: "100%",
+    flex: 1
+  },
+  linksContainer: {
+    flexDirection: "row",
+  }
+
+})
