@@ -1,10 +1,10 @@
 import {
   Pressable,
   StyleSheet,
+  Switch,
   Text,
   View
 } from "react-native"
-import { CheckmarkIcon } from "../../../../icons/CheckmarkIcon";
 import { CommonColors } from "../../../../../constants/Colors";
 
 interface OptionButtonProps {
@@ -38,11 +38,12 @@ function OptionButton(props: OptionButtonProps) {
           </View>
         ) : null}
       </View>
-      <View testID="OPTION_BUTTON.CONTAINER.SELECTED:VIEW" style={styles.checkmarkContainer}>
-        {props.isSelected === true && (
-          <CheckmarkIcon
-            testID="OPTION_BUTTON.CONTAINER.SELECTED.CHECKMARK:ICON" />
-        )}
+      <View testID="OPTION_BUTTON.CONTAINER.SELECTED:VIEW" style={styles.switchContainer}>
+        <Switch
+          value={props.isSelected}
+          trackColor={{ false: CommonColors.white, true: CommonColors.white }}
+          thumbColor={CommonColors.saladGreen}
+        />
       </View>
     </Pressable>
   )
@@ -57,8 +58,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 10,
     minHeight: 64,
-    borderBottomWidth: 1,
     width: "100%",
+    backgroundColor: CommonColors.black,
+    borderWidth: 1,
+    borderColor: CommonColors.whiteAlternative,
+    borderRadius: 15,
     paddingVertical: 10
   },
   optionText: {
@@ -77,7 +81,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 10
   },
-  checkmarkContainer: {
+  switchContainer: {
     minHeight: 36,
     minWidth: 36,
     alignItems: "center",

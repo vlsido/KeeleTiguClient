@@ -16,10 +16,6 @@ function SettingsButton() {
     setIsSettingsMenuOpen(!isSettingsMenuOpen);
   }, [isSettingsMenuOpen]);
 
-  // const onButtonLayout = useCallback((layoutEvent: LayoutChangeEvent) => {
-  //
-  // }, []);
-
   return (
     <MaterialIconButton
       testID={"SETTINGS_BUTTON.ICON:PRESSABLE"}

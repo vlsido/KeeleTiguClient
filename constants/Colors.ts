@@ -12,11 +12,13 @@ const tintColorDark = "#fff";
 export const CommonColors = {
   white: "#F3FFF3",
   whiteA50: "#F3FFF380",
+  whiteAlternative: "#E2D0D0",
   black: "#212221",
   blackA50: "#21222180",
   blackAlternative: "#221E29",
   green: "#62DD7D",
   olive: "#CCFF02",
+  saladGreen: "#719525",
   yellow: "#EBA575",
   yellowA50: "#EBA57580",
   orange: "rgba(255, 180, 255, 1)",
