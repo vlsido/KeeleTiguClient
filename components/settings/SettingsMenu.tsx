@@ -1,5 +1,6 @@
 import {
   StyleSheet,
+  Switch,
   Text,
   View
 } from "react-native";
@@ -33,20 +34,24 @@ function SettingsMenu(props: SettingsMenuProps) {
         .duration(133)
       }
     >
-      <DraggableView
-        testID="SETTINGS_MENU.CONTAINER.DRAG_BAR:VIEW"
-        style={styles.dragBar}
-        uid="settingsMenu"
-      />
-
-      <View>
-        <Text>
-          {i18n.t("SettingsMenu.turn_on_accent_letters", {
-            defaultValue: "Teha vene sõna rõhke nähtavaks"
-          })}
-        </Text>
+      <View
+        testID="SETTINGS_MENU.CONTAINER.MENU:VIEW"
+        style={styles.menu}
+      >
+        <View style={styles.option}>
+          <Text>
+            {i18n.t("SettingsMenu.turn_on_accent_letters", {
+              defaultValue: "Teha vene sõna rõhke nähtavaks"
+            })}
+          </Text>
+          <View style={styles.checkBox}>
+            <Text style={styles.checkBoxIndicatorText}>
+              X
+            </Text>
+          </View>
+        </View>
       </View>
-    </Animated.View>
+    </Animated.View >
   );
 }
 
@@ -56,19 +61,30 @@ const styles = StyleSheet.create({
   container: {
     position: "absolute",
     zIndex: 1,
-    top: 200,
-    left: 100,
-    height: 200,
-    width: 300,
-    backgroundColor: CommonColors.white,
-    borderRadius: 20
+    top: 0,
+    bottom: 0,
+    right: 0,
+    left: 0,
+    justifyContent: "center",
+    alignItems: "center"
   },
-  dragBar: {
-    width: "80%",
-    height: 10,
-    backgroundColor: "white",
-    borderBottomLeftRadius: 30,
-    borderBottomRightRadius: 30,
-    alignSelf: "center"
+  menu: {
+    width: "25%",
+    backgroundColor: CommonColors.white,
+    padding: 30,
+    borderRadius: 30
+  },
+  option: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  checkBox: {
+    borderWidth: 1,
+    borderColor: "black"
+  },
+  checkBoxIndicatorText: {
+    fontSize: 24,
+    fontWeight: "bold"
   }
 });

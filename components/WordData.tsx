@@ -9,7 +9,7 @@ import {
 import Forms from "../components/text_components/Forms";
 import FoundArticlesCounter from "../components/screens/word_data/FoundArticlesCounter";
 import Type from "../components/screens/dictionary/Type";
-import { Word } from "../app/dictionary";
+import { Word } from "../app/(tabs)/dictionary";
 import Usage from "./text_components/Usage";
 import AddToDictionaryTextButton from "./buttons/AddToDictionaryTextButton";
 

@@ -3,6 +3,7 @@ import ConfigContextProvider, {
 } from "../components/contexts/ConfigContext";
 import AuthContextProvider from "../components/contexts/AuthContext";
 import { Stack } from "expo-router";
+import { TabList, TabSlot, TabTrigger, Tabs } from "expo-router/ui";
 import { CommonColors } from "../constants/Colors";
 import { Provider } from "react-redux";
 import store from "../components/store/store";
@@ -18,8 +19,10 @@ import {
   setExamDictionary,
   setMyDictionary
 } from "../components/store/slices/dictionarySlice";
-import { WordAndExamData } from "./dictionary";
+import { WordAndExamData } from "./(tabs)/dictionary";
 import SettingsWrapper from "../components/wrappers/SettingsWrapper";
+import { Text } from "react-native";
+import RootLayoutTabs from "./(tabs)/_layout";
 
 export default function RootLayout() {
 
@@ -31,7 +34,6 @@ export default function RootLayout() {
             <SettingsWrapper>
               <>
                 <RootLayoutStack />
-                <Footer />
               </>
             </SettingsWrapper>
           </AuthContextProvider>
@@ -40,6 +42,7 @@ export default function RootLayout() {
     </Provider>
   );
 }
+
 
 function RootLayoutStack() {
   const isUnderMaintenance = useAtomValue(isUnderMaintenanceAtom);
@@ -102,40 +105,18 @@ function RootLayoutStack() {
           fontWeight: "bold",
         },
         contentStyle: { backgroundColor: CommonColors.black },
-        header: () => (
-          <Header />
-
-        )
       }}
-      screenLayout={({ children }) => (
-        <Suspense fallback={<Loading />}>{children}</Suspense>
-      )}
     >
+      <Stack.Screen
+        redirect={isUnderMaintenance}
+        name="(tabs)"
+        options={{ headerShown: false }} />
       <Stack.Screen
         redirect={!isUnderMaintenance}
         name="maintenance"
         options={{
           title: "",
         }} />
-      <Stack.Screen
-        redirect={isUnderMaintenance}
-        name="index"
-        options={{
-          title: "",
-        }} />
-      <Stack.Screen
-        redirect={isUnderMaintenance}
-        name="dictionary"
-        options={{
-          title: "",
-        }} />
-      <Stack.Screen
-        redirect={isUnderMaintenance}
-        name="search"
-        options={{
-          title: "",
-        }}
-      />
       <Stack.Screen
         redirect={isUnderMaintenance}
         name="translate"

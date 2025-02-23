@@ -1,6 +1,6 @@
 import { screen, userEvent, waitFor } from "@testing-library/react-native";
 import { renderWithProviders } from "../../utils/test-utils";
-import Index from "../../app/index";
+import Index from "../../app/(tabs)/index";
 
 describe(
   "Game start flow",

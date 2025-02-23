@@ -8,7 +8,7 @@ import {
   memo,
   useMemo
 } from "react";
-import { Word } from "../../../app/dictionary";
+import { Word } from "../../../app/(tabs)/dictionary";
 import Forms from "../../text_components/Forms";
 import { CommonColors } from "../../../constants/Colors";
 import Usage from "../../text_components/Usage";

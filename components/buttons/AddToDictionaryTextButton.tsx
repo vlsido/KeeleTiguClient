@@ -3,7 +3,7 @@ import { useHint } from "../../hooks/useHint";
 import { useAppDispatch, useAppSelector } from "../../hooks/storeHooks";
 import { pushToMyDictionary } from "../store/slices/dictionarySlice";
 import { useCallback } from "react";
-import { Word } from "../../app/dictionary";
+import { Word } from "../../app/(tabs)/dictionary";
 import TextButton from "./TextButton";
 import { i18n } from "../store/i18n";
 import { CommonColors } from "../../constants/Colors";

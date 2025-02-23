@@ -8,11 +8,11 @@ import {
   Text,
   View
 } from "react-native";
-import { WordWithoutData } from "../components/util/WordsUtil";
-import { i18n } from "../components/store/i18n";
-import { CommonColors } from "../constants/Colors";
-import { useAppSelector } from "../hooks/storeHooks";
-import DictionaryItem from "../components/screens/dictionary/DictionaryItem";
+import { WordWithoutData } from "../../components/util/WordsUtil";
+import { i18n } from "../../components/store/i18n";
+import { CommonColors } from "../../constants/Colors";
+import { useAppSelector } from "../../hooks/storeHooks";
+import DictionaryItem from "../../components/screens/dictionary/DictionaryItem";
 import {
   atom,
   useAtom
@@ -78,7 +78,7 @@ function Dictionary() {
     }, [myDictionary])
   );
 
-  if (myDictionary.length === 0) {
+  if (myDictionary.length === 0 || myDictionaryState.length === 0) {
     return (
       <View
         testID="DICTIONARY.WORDS_EMPTY:VIEW"
@@ -93,6 +93,7 @@ function Dictionary() {
     );
   }
 
+  console.log("myDIctionaryState", myDictionaryState);
   return (
     <View
       testID="DICTIONARY.CONTAINER:VIEW"
@@ -123,6 +124,15 @@ function Dictionary() {
 export default Dictionary;
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    width: "100%",
+    paddingLeft: 10,
+    paddingVertical: 15,
+    justifyContent: "center",
+    flexDirection: "column",
+    backgroundColor: "#222322"
+  },
   noWordsContainer: {
     flex: 1,
     width: "100%",
@@ -130,15 +140,6 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     justifyContent: "center",
     alignItems: "center",
-    flexDirection: "column",
-    backgroundColor: "#222322"
-  },
-  container: {
-    flex: 1,
-    width: "100%",
-    paddingLeft: 10,
-    paddingVertical: 15,
-    justifyContent: "center",
     flexDirection: "column",
     backgroundColor: "#222322"
   },

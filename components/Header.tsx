@@ -62,6 +62,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     backgroundColor: CommonColors.black,
+    borderBottomWidth: 1,
+    borderColor: CommonColors.whiteA50,
     width: "100%",
     flex: 1
   },

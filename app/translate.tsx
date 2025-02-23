@@ -11,7 +11,7 @@ import {
   TextInput,
   View
 } from "react-native";
-import { WordAndExamData } from "./dictionary";
+import { WordAndExamData } from "./(tabs)/dictionary";
 import { useLocalSearchParams } from "expo-router";
 import {
   useAppDispatch,

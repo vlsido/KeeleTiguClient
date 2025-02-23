@@ -1,5 +1,5 @@
 import { atom } from "jotai";
-import { WordAndExamData } from "../../../app/dictionary";
+import { WordAndExamData } from "../../../app/(tabs)/dictionary";
 
 export const gameWordsAtom = atom<WordAndExamData[]>([]);
 export const answerAtom = atom<string>("");
