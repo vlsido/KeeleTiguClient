@@ -14,6 +14,8 @@ import { CommonColors } from "../../constants/Colors";
 import { i18n } from "../store/i18n";
 import { useAtom } from "jotai";
 import { isSettingsMenuOpenAtom } from "./settingsAtoms";
+import MaterialIconButton from "../buttons/MaterialIconButton";
+import { MaterialIcons } from "@expo/vector-icons";
 
 interface SettingsMenuProps {
 }
@@ -26,18 +28,31 @@ function SettingsMenu(props: SettingsMenuProps) {
   if (!isSettingsMenuOpen) return null;
 
   return (
-    <Animated.View
+    <View
       testID={"SETTINGS_MENU.CONTAINER:VIEW"}
       style={styles.container}
-      exiting={FadeOut
-        .reduceMotion(ReduceMotion.System)
-        .duration(133)
-      }
     >
-      <View
+      <Animated.View
         testID="SETTINGS_MENU.CONTAINER.MENU:VIEW"
         style={styles.menu}
+        entering={FadeIn
+          .reduceMotion(ReduceMotion.System)
+          .duration(133)
+        }
+        exiting={FadeOut
+          .reduceMotion(ReduceMotion.System)
+          .duration(133)
+        }
       >
+        <MaterialIcons
+          testID="SETTINGS_MENU_CONTAINER.MENU.CLOSE:PRESSABLE"
+          name="close"
+          size={32}
+          color={CommonColors.white}
+          onPress={() => setIsSettingsOpen(false)}
+          style={styles.closeButtonContainer}
+          ariaLabel="Close menu"
+        />
         <View style={styles.option}>
           <Text>
             {i18n.t("SettingsMenu.turn_on_accent_letters", {
@@ -50,8 +65,8 @@ function SettingsMenu(props: SettingsMenuProps) {
             </Text>
           </View>
         </View>
-      </View>
-    </Animated.View >
+      </Animated.View>
+    </View >
   );
 }
 
@@ -69,10 +84,16 @@ const styles = StyleSheet.create({
     alignItems: "center"
   },
   menu: {
-    width: "25%",
-    backgroundColor: CommonColors.white,
-    padding: 30,
+    backgroundColor: "black",
+    borderWidth: 1,
+    borderColor: CommonColors.whiteAlternative,
+    padding: 10,
     borderRadius: 30
+  },
+  closeButtonContainer: {
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "flex-end"
   },
   option: {
     flexDirection: "row",

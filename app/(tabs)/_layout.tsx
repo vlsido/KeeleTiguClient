@@ -1,22 +1,61 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import { TabList, TabSlot, TabTrigger, Tabs } from "expo-router/ui";
-import { StyleSheet, Text } from "react-native";
+import { StyleSheet } from "react-native";
 import { CommonColors } from "../../constants/Colors";
+import { ExamIcon } from "../../components/icons/ExamIcon";
+import { DictionaryIcon } from "../../components/icons/DictionaryIcon";
+import Header from "../../components/Header";
+import { useNavigation } from "expo-router";
+import { useEffect, useMemo } from "react";
+import { atom, useAtom } from "jotai";
+
+type Tab = "index" | "dictionary" | "search";
 
 function RootLayoutTabs() {
+  const navigationState = useNavigation().getState();
+
+  const [focusedTab, setFocusedTab] = useAtom<Tab>(
+    useMemo(() => atom<Tab>("index"), []));
+
+  useEffect(() => {
+    console.log("effect");
+    const currentIndex = navigationState?.routes.at(0)?.state?.index;
+
+    if (currentIndex == null) return;
+
+    const tab = navigationState?.routes.at(0)?.state?.routeNames?.at(currentIndex);
+
+    if (tab != null) {
+      setFocusedTab(tab as Tab);
+    }
+  }, [navigationState]);
 
   return (
     <Tabs style={styles.container}>
+      <Header />
       <TabSlot style={styles.slot} />
       <TabList style={styles.tabList}>
-        <TabTrigger style={styles.buttonContainer} name="index" href="/">
-          <MaterialIcons name="home" size={32} color={CommonColors.black} />
+        <TabTrigger
+          style={[styles.buttonContainer, focusedTab === "index" && { borderColor: "white", borderWidth: 3 }]}
+          name="index"
+          href="/">
+          <ExamIcon color={CommonColors.white} />
         </TabTrigger>
-        <TabTrigger style={styles.buttonContainer} name="dictionary" href="/dictionary">
-          <MaterialIcons name="book" size={32} color={CommonColors.black} />
+        <TabTrigger
+          style={[styles.buttonContainer, focusedTab === "dictionary" && { borderColor: "white", borderWidth: 3 }]}
+          name="dictionary"
+          href="/dictionary">
+          <DictionaryIcon color={CommonColors.white} />
         </TabTrigger>
-        <TabTrigger style={styles.buttonContainer} name="search" href="/search">
-          <MaterialIcons name="search" size={32} color={CommonColors.black} />
+        <TabTrigger
+          style={[styles.buttonContainer, focusedTab === "search" && { borderColor: "white", borderWidth: 3 }]}
+          name="search"
+          href="/search">
+          <MaterialIcons
+            name="search"
+            size={32}
+            color={CommonColors.white}
+          />
         </TabTrigger>
       </TabList>
     </Tabs>
@@ -33,17 +72,24 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   tabList: {
-    justifyContent: "space-between",
-    alignSelf: "center",
     width: "100%",
-    maxWidth: 600
+    justifyContent: "space-between",
+    backgroundColor: CommonColors.saladGreen,
+    alignSelf: "center",
+    borderColor: CommonColors.whiteAlternative,
+    borderWidth: 2,
+    borderRadius: 60,
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    marginBottom: "2.5%",
+    maxWidth: 250
   },
   buttonContainer: {
-    backgroundColor: CommonColors.white,
+    backgroundColor: "rgba(21,22,21,0.8)",
     height: 48,
     width: 48,
-    padding: 5,
-    borderRadius: 5,
-    borderWidth: 2
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 60,
   }
 })
