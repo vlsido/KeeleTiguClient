@@ -14,7 +14,7 @@ import {
 import {
   Word,
   WordAndExamData
-} from "../../../app/dictionary";
+} from "../../../app/(tabs)/dictionary";
 import { CommonColors } from "../../../constants/Colors";
 import AddToDictionaryButton from "../../buttons/AddToDictionaryIconButton";
 

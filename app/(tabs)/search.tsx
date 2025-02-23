@@ -3,7 +3,7 @@ import {
   StyleSheet,
   View,
 } from "react-native";
-import { CommonColors } from "../constants/Colors";
+import { CommonColors } from "../../constants/Colors";
 import {
   useCallback,
   useMemo,
@@ -16,7 +16,7 @@ import {
   runOnJS,
 } from "react-native-reanimated";
 import { Word } from "./dictionary";
-import WordData from "../components/WordData";
+import WordData from "../../components/WordData";
 import {
   Gesture,
   GestureDetector
@@ -26,8 +26,8 @@ import {
   isSearchingInProcessAtom,
   searchStringAtom,
   wordsDataArrayAtom
-} from "../components/screens/search/searchAtoms";
-import SearchField from "../components/screens/search/SearchField";
+} from "../../components/screens/search/searchAtoms";
+import SearchField from "../../components/screens/search/SearchField";
 
 function Search() {
   const wordsDataArray = useAtomValue<Word[] | null>(wordsDataArrayAtom);

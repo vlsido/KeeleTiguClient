@@ -2,8 +2,8 @@ import {
   StyleSheet,
   View
 } from "react-native";
-import { CommonColors } from "../constants/Colors";
-import TranslateWordsGame from "../components/screens/index/games/translate/TranslateWordsGame";
+import TranslateWordsGame from "../../components/screens/index/games/translate/TranslateWordsGame";
+import { CommonColors } from "../../constants/Colors";
 
 export default function Index() {
   return (

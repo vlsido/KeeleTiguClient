@@ -5,7 +5,7 @@ import {
 import {
   Word,
   WordAndExamData
-} from "../../../app/dictionary";
+} from "../../../app/(tabs)/dictionary";
 import { RootState } from "../store";
 import { WordWithoutData } from "../../util/WordsUtil";
 
@@ -78,6 +78,9 @@ export const dictionarySlice = createSlice({
       state.myDictionary = [];
       state.examDictionary = [];
       state.words = [];
+      localStorage.removeItem("myDictionary");
+      localStorage.removeItem("allWords");
+      localStorage.removeItem("wordsAndExamData");
     }
   },
 });

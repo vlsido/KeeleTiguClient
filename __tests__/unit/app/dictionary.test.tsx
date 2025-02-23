@@ -1,4 +1,4 @@
-import Dictionary from "../../../app/dictionary";
+import Dictionary from "../../../app/(tabs)/dictionary";
 import { renderWithProviders, screen } from "../../../utils/test-utils";
 import { DictionaryState } from "../../../components/store/slices/dictionarySlice";
 

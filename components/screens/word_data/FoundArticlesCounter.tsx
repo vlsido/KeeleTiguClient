@@ -3,7 +3,7 @@ import {
   Text,
   View
 } from "react-native";
-import { Word } from "../../../app/dictionary";
+import { Word } from "../../../app/(tabs)/dictionary";
 import { i18n } from "../../store/i18n";
 import { CommonColors } from "../../../constants/Colors";
 
