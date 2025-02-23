@@ -64,7 +64,10 @@ function DictionaryItem(props: DictionaryItemProps) {
 
         </View>
       </View>
-      <CustomIconButton onPress={onRemoveWord}>
+      <CustomIconButton
+        testID="DICTIONARY_ITEM.CONTAINER.REMOVE_ICON:PRESSABLE"
+        onPress={onRemoveWord}
+      >
         <TrashIcon />
       </CustomIconButton>
     </View>
