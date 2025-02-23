@@ -1,6 +1,7 @@
 import { Pressable } from "react-native";
 
 interface CustomIconButtonProps {
+  testID: string;
   onPress: () => void;
   children: React.ReactNode;
 }
@@ -8,6 +9,7 @@ interface CustomIconButtonProps {
 function CustomIconButton(props: CustomIconButtonProps) {
   return (
     <Pressable
+      testID={props.testID}
       style={({ pressed }) => [
         {
           opacity: pressed ? 0.5 : 1,
