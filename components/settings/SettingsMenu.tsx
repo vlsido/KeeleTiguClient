@@ -1,4 +1,6 @@
 import {
+  Image,
+  Pressable,
   StyleSheet,
   Switch,
   Text,
@@ -9,13 +11,13 @@ import Animated, {
   FadeOut,
   ReduceMotion
 } from "react-native-reanimated";
-import DraggableView from "../views/DraggableView";
 import { CommonColors } from "../../constants/Colors";
 import { i18n } from "../store/i18n";
-import { useAtom } from "jotai";
+import { atom, useAtom } from "jotai";
 import { isSettingsMenuOpenAtom } from "./settingsAtoms";
-import MaterialIconButton from "../buttons/MaterialIconButton";
 import { MaterialIcons } from "@expo/vector-icons";
+import { useMemo } from "react";
+import OverlayHint from "../overlays/OverlayHint";
 
 interface SettingsMenuProps {
 }
@@ -23,6 +25,9 @@ interface SettingsMenuProps {
 function SettingsMenu(props: SettingsMenuProps) {
   const [isSettingsMenuOpen, setIsSettingsOpen] =
     useAtom<boolean>(isSettingsMenuOpenAtom);
+
+  const [isAboutThisAppHintVisible, setIsAboutThisAppHintVisible] =
+    useAtom<boolean>(useMemo(() => atom<boolean>(false), []));
 
 
   if (!isSettingsMenuOpen) return null;
@@ -53,19 +58,52 @@ function SettingsMenu(props: SettingsMenuProps) {
           style={styles.closeButtonContainer}
           ariaLabel="Close menu"
         />
-        <View style={styles.option}>
-          <Text>
-            {i18n.t("SettingsMenu.turn_on_accent_letters", {
-              defaultValue: "Teha vene sõna rõhke nähtavaks"
-            })}
-          </Text>
-          <View style={styles.checkBox}>
-            <Text style={styles.checkBoxIndicatorText}>
-              X
+        <View style={styles.options}>
+          <View style={styles.optionContainer}>
+            <Text style={styles.optionText}>
+              {i18n.t("SettingsMenu.language", {
+                defaultValue: "Keel"
+              })}
             </Text>
+            <View style={styles.switchContainer}>
+              <Switch />
+            </View>
+          </View>
+          <View style={styles.optionContainer}>
+            <Text style={styles.optionText}>
+              {i18n.t("SettingsMenu.turn_on_accent_letters", {
+                defaultValue: "Teha vene sõna rõhke nähtavaks"
+              })}
+            </Text>
+            <View style={styles.switchContainer}>
+              <Switch />
+            </View>
           </View>
         </View>
+        <View style={styles.footer}>
+          <Pressable
+            style={styles.aboutThisAppButtonContainer}
+            onPress={() => setIsAboutThisAppHintVisible(true)}
+          >
+            <Text style={styles.aboutThisAppText}>
+              {i18n.t("SettingsMenu.about_this_app", { defaultValue: "Sellest appist" })}
+            </Text>
+          </Pressable>
+        </View>
       </Animated.View>
+      <OverlayHint
+        isVisible={isAboutThisAppHintVisible}
+        onClose={() => setIsAboutThisAppHintVisible(false)}
+      >
+        <View style={styles.appIconContainer}>
+          <Image
+            source={require("../../assets/images/favicon.png")}
+            style={{ height: 64, width: 64 }}
+            resizeMode="contain"
+          />
+        </View>
+        <Text style={styles.aboutThisAppHeader}>Examinyasha</Text>
+      </OverlayHint>
     </View >
   );
 }
@@ -88,24 +126,49 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: CommonColors.whiteAlternative,
     padding: 10,
-    borderRadius: 30
+    borderRadius: 30,
+    gap: 10
   },
   closeButtonContainer: {
     width: "100%",
     flexDirection: "row",
     justifyContent: "flex-end"
   },
-  option: {
+  options: {
+    gap: 10,
+    marginBottom: 30
+  },
+  optionContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    backgroundColor: CommonColors.black,
+    gap: 10,
+    padding: 10,
+    borderRadius: 10,
   },
-  checkBox: {
-    borderWidth: 1,
-    borderColor: "black"
+  optionText: {
+    color: "white"
   },
-  checkBoxIndicatorText: {
-    fontSize: 24,
-    fontWeight: "bold"
-  }
+  footer: {
+    width: "100%",
+    gap: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 5
+  },
+  aboutThisAppButtonContainer: {
+
+  },
+  aboutThisAppText: {
+    color: CommonColors.blue,
+    fontSize: 12
+  },
+  appIconContainer: {
+    width: 64,
+    height: 64,
+  },
+  aboutThisAppHeader: {
+    fontSize: 18,
+    color: "white"
+  },
 });
