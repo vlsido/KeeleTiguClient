@@ -1,5 +1,4 @@
 import {
-  Image,
   Pressable,
   StyleSheet,
   Switch,
@@ -17,7 +16,12 @@ import { atom, useAtom } from "jotai";
 import { isSettingsMenuOpenAtom } from "./settingsAtoms";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useMemo } from "react";
-import OverlayHint from "../overlays/OverlayHint";
+import AboutThisAppHint from "../hints/AboutThisAppHint";
+
+import packageJson from "../../package.json";
+import LanguageDropdown from "../dropdowns/LanguageDropdown";
+import { useAppDispatch, useAppSelector } from "../../hooks/storeHooks";
+import { toggleHighlightRussianAccentLetters } from "../store/slices/settingsSlice";
 
 interface SettingsMenuProps {
 }
@@ -29,13 +33,28 @@ function SettingsMenu(props: SettingsMenuProps) {
   const [isAboutThisAppHintVisible, setIsAboutThisAppHintVisible] =
     useAtom<boolean>(useMemo(() => atom<boolean>(false), []));
 
+  const highlightRussianAccentLetters = useAppSelector((state) => state.settings.highlightRussianAccentLetters);
+
+  const dispatch = useAppDispatch();
+
+  function toggleHighlight() {
+    dispatch(toggleHighlightRussianAccentLetters());
+  }
 
   if (!isSettingsMenuOpen) return null;
 
   return (
-    <View
+    <Animated.View
       testID={"SETTINGS_MENU.CONTAINER:VIEW"}
       style={styles.container}
+      entering={FadeIn
+        .reduceMotion(ReduceMotion.System)
+        .duration(133)
+      }
+      exiting={FadeOut
+        .reduceMotion(ReduceMotion.System)
+        .duration(133)
+      }
     >
       <Animated.View
         testID="SETTINGS_MENU.CONTAINER.MENU:VIEW"
@@ -59,52 +78,48 @@ function SettingsMenu(props: SettingsMenuProps) {
           ariaLabel="Close menu"
         />
         <View style={styles.options}>
-          <View style={styles.optionContainer}>
+          <View style={[styles.optionContainer, { zIndex: 1 }]}>
             <Text style={styles.optionText}>
-              {i18n.t("SettingsMenu.language", {
+              {i18n.t("SettingsMenu_language", {
                 defaultValue: "Keel"
               })}
             </Text>
-            <View style={styles.switchContainer}>
-              <Switch />
-            </View>
+            <LanguageDropdown />
           </View>
           <View style={styles.optionContainer}>
             <Text style={styles.optionText}>
-              {i18n.t("SettingsMenu.turn_on_accent_letters", {
+              {i18n.t("SettingsMenu_turn_on_accent_letters", {
                 defaultValue: "Teha vene sõna rõhke nähtavaks"
               })}
             </Text>
             <View style={styles.switchContainer}>
-              <Switch />
+              <Switch
+                value={highlightRussianAccentLetters}
+                onValueChange={toggleHighlight} />
             </View>
           </View>
         </View>
         <View style={styles.footer}>
           <Pressable
-            style={styles.aboutThisAppButtonContainer}
+            style={styles.footerItemContainer}
             onPress={() => setIsAboutThisAppHintVisible(true)}
           >
             <Text style={styles.aboutThisAppText}>
-              {i18n.t("SettingsMenu.about_this_app", { defaultValue: "Sellest appist" })}
+              {i18n.t("SettingsMenu_about_this_app", { defaultValue: "Sellest appist" })}
             </Text>
           </Pressable>
+          <View style={styles.footerItemContainer}>
+            <Text style={styles.buildText}>
+              Build {packageJson.version}
+            </Text>
+          </View>
         </View>
       </Animated.View>
-      <OverlayHint
+      <AboutThisAppHint
         isVisible={isAboutThisAppHintVisible}
         onClose={() => setIsAboutThisAppHintVisible(false)}
-      >
-        <View style={styles.appIconContainer}>
-          <Image
-            source={require("../../assets/images/favicon.png")}
-            style={{ height: 64, width: 64 }}
-            resizeMode="contain"
-          />
-        </View>
-        <Text style={styles.aboutThisAppHeader}>Examinyasha</Text>
-      </OverlayHint>
-    </View >
+      />
+    </Animated.View >
   );
 }
 
@@ -119,7 +134,8 @@ const styles = StyleSheet.create({
     right: 0,
     left: 0,
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.75)"
   },
   menu: {
     backgroundColor: "black",
@@ -130,9 +146,7 @@ const styles = StyleSheet.create({
     gap: 10
   },
   closeButtonContainer: {
-    width: "100%",
-    flexDirection: "row",
-    justifyContent: "flex-end"
+    alignSelf: "flex-end"
   },
   options: {
     gap: 10,
@@ -153,22 +167,21 @@ const styles = StyleSheet.create({
   footer: {
     width: "100%",
     gap: 10,
+    flexDirection: "row",
     paddingHorizontal: 10,
     paddingVertical: 5
   },
-  aboutThisAppButtonContainer: {
-
+  footerItemContainer: {
+    flex: 1,
+    alignItems: "center"
   },
   aboutThisAppText: {
     color: CommonColors.blue,
-    fontSize: 12
+    fontSize: 14
   },
-  appIconContainer: {
-    width: 64,
-    height: 64,
-  },
-  aboutThisAppHeader: {
-    fontSize: 18,
-    color: "white"
-  },
+  buildText: {
+    color: CommonColors.white,
+    fontSize: 14
+  }
+
 });
