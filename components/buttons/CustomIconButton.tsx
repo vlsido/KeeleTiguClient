@@ -1,9 +1,13 @@
-import { Pressable } from "react-native";
+import {
+  Pressable,
+  PressableProps,
+  StyleProp,
+  ViewStyle
+} from "react-native";
 
-interface CustomIconButtonProps {
+interface CustomIconButtonProps extends PressableProps {
   testID: string;
-  onPress: () => void;
-  children: React.ReactNode;
+  style?: StyleProp<ViewStyle>
 }
 
 function CustomIconButton(props: CustomIconButtonProps) {
@@ -18,6 +22,7 @@ function CustomIconButton(props: CustomIconButtonProps) {
           justifyContent: "center",
           alignItems: "center",
         },
+        props.style
       ]}
       onPress={props.onPress}
       hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
