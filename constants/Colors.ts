@@ -16,7 +16,7 @@ export const CommonColors = {
   black: "#212221",
   blackA50: "#21222180",
   blackAlternative: "#221E29",
-  green: "#62DD7D",
+  green: "#4ECB71",
   olive: "#CCFF02",
   saladGreen: "#719525",
   yellow: "#EBA575",
@@ -25,7 +25,7 @@ export const CommonColors = {
   purple: "#8375EB",
   red: "#EB7575",
   darkRed: "#540808",
-  blue: "#75B2EB",
+  blue: "#2EEDFF",
   purpleA10: "rgba(255, 0, 200, 0.1)",
 }
 

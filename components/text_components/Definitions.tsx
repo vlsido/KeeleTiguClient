@@ -5,6 +5,7 @@ import {
 } from "react-native";
 import RussianTranslation from "./RussianTranslation";
 import { CommonColors } from "../../constants/Colors";
+import { useAppSelector } from "../../hooks/storeHooks";
 
 interface DefinitionProps {
   definitionData: {
@@ -17,6 +18,8 @@ interface DefinitionProps {
 }
 
 function Definitions(props: DefinitionProps) {
+  const highlightRussianAccentLetters = useAppSelector((state) => state.settings.highlightRussianAccentLetters);
+
   return (
     <>
       {props.definitionData.map((
@@ -62,9 +65,17 @@ function Definitions(props: DefinitionProps) {
                   translation={translation}
                   searchString={props.searchString}
                   textStyle={styles.russianExample}
-                  accentTextStyle={styles.russianAccentText}
+                  accentTextStyle={
+                    highlightRussianAccentLetters === true
+                      ? styles.russianAccentText
+                      : styles.russianExample
+                  }
                   highlightedTextStyle={styles.highlightedRussianText}
-                  highlightedAccentTextStyle={styles.highlightedRussianAccentText}
+                  highlightedAccentTextStyle={
+                    highlightRussianAccentLetters === true
+                      ? styles.highlightedRussianAccentText
+                      : styles.highlightedRussianText
+                  }
                 />
               );
             })}
@@ -84,8 +95,8 @@ const styles = StyleSheet.create({
     fontSize: 16
   },
   highlightedWord: {
-    backgroundColor: CommonColors.yellow,
-    color: CommonColors.black,
+    backgroundColor: "white",
+    color: "black",
     fontWeight: "bold"
   },
   russianExample: {
@@ -94,18 +105,18 @@ const styles = StyleSheet.create({
     fontWeight: "bold"
   },
   russianAccentText: {
-    color: CommonColors.red,
+    color: "red",
     fontSize: 16,
     fontWeight: "bold"
   },
   highlightedRussianText: {
     flexDirection: "row",
-    backgroundColor: CommonColors.olive,
+    backgroundColor: "white",
     color: "black",
   },
   highlightedRussianAccentText: {
     flexDirection: "row",
-    backgroundColor: CommonColors.olive,
-    color: CommonColors.darkRed,
+    backgroundColor: "white",
+    color: "red",
   },
 })
