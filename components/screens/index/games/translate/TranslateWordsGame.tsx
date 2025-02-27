@@ -1,6 +1,7 @@
 import {
   useCallback,
-  useEffect
+  useEffect,
+  useMemo
 } from "react";
 import {
   Pressable,
@@ -11,7 +12,7 @@ import {
   ViewStyle,
 } from "react-native";
 import { router } from "expo-router";
-import Animated, {
+import {
   ReduceMotion,
   useAnimatedStyle,
   useSharedValue,
@@ -33,9 +34,10 @@ import {
 } from "../../../translate/translateAtoms";
 import { EWordsLevel } from "../../../../util/WordsUtil";
 import { i18n } from "../../../../store/i18n";
+import Checkbox from "../../../../buttons/Checkbox";
+import { TranslateGameMode } from "../../../../../constants/types";
 
-const gameOptionsAtom = atom<"any" | "my_dictionary">("any");
-
+const gameOptionsAtom = atom<TranslateGameMode>("any");
 
 function TranslateWordsGame() {
   const myDictionary = useAppSelector((state) => state.dictionary.myDictionary);
@@ -45,7 +47,13 @@ function TranslateWordsGame() {
   const [
     gameOptions,
     setGameOptions
-  ] = useAtom<"any" | "my_dictionary">(gameOptionsAtom);
+  ] = useAtom<TranslateGameMode>(gameOptionsAtom);
+
+  const [numberOfWords, setNumberOfWords] = useAtom<number>(useMemo(() => atom<number>(20), []));
+
+  const [isUnlimitedGame, setIsUnlimitedGame] = useAtom<boolean>(useMemo(() => atom<boolean>(false), []));
+
+  const [isNumberOfWordsValid, setIsNumberOfWordsValid] = useAtom<boolean>(useMemo(() => atom<boolean>(true), []));
 
   const [
     isA1LevelOn,
@@ -56,6 +64,7 @@ function TranslateWordsGame() {
     isA2LevelOn,
     setIsA2LevelOn
   ] = useAtom<boolean>(isA2LevelOnAtom);
+
   const [
     isB1LevelOn,
     setIsB1LevelOn
@@ -68,7 +77,7 @@ function TranslateWordsGame() {
 
   useEffect(
     () => {
-      if (gameOptions === "my_dictionary") {
+      if (gameOptions === "my_dictionary" || gameOptions === "") {
         a1LevelOpacity.value = withTiming(
           0.5,
           { duration: 200, reduceMotion: ReduceMotion.System }
@@ -155,54 +164,123 @@ function TranslateWordsGame() {
     }
   });
 
+  const onCheckboxPress = useCallback((isChecked: boolean) => {
+    setIsNumberOfWordsValid(true);
+    setIsUnlimitedGame(isChecked);
+  }, []);
+
+  const onChangeNumberOfWords = useCallback((text: string) => {
+    setIsNumberOfWordsValid(true);
+
+    if (text.length === 0) {
+      setNumberOfWords(0);
+
+      return;
+    }
+
+    const charCode = text.charCodeAt(text.length - 1);
+
+    if (charCode >= 48 && charCode <= 57) {
+      setNumberOfWords(parseInt(text));
+    }
+  }, []);
+
+  const toggleOption = useCallback((option: "any" | "my_dictionary") => {
+    switch (option) {
+      case "any":
+        if (gameOptions === "any") return setGameOptions("");
+        if (gameOptions === "my_dictionary") return setGameOptions("all");
+        if (gameOptions === "all") return setGameOptions("my_dictionary");
+        if (gameOptions === "") return setGameOptions("any");
+        break;
+      case "my_dictionary":
+        if (gameOptions === "any") return setGameOptions("all");
+        if (gameOptions === "my_dictionary") return setGameOptions("");
+        if (gameOptions === "all") return setGameOptions("any");
+        if (gameOptions === "") return setGameOptions("my_dictionary");
+        break;
+    }
+  }, [gameOptions]);
+
+  const startGame = useCallback(() => {
+    if (!isUnlimitedGame && numberOfWords === 0) {
+      setIsNumberOfWordsValid(false);
+      return;
+    }
+
+    if (gameOptions === "any" && !isA1LevelOn && !isA2LevelOn && !isB1LevelOn) return;
+
+    if (gameOptions === "") return;
+
+    router.navigate({
+      pathname: "/translate", params: {
+        mode: gameOptions,
+        quantity: isUnlimitedGame ? "0" : numberOfWords.toString()
+      }
+    })
+  }, [
+    numberOfWords,
+    isUnlimitedGame,
+    gameOptions,
+    isA1LevelOn,
+    isA2LevelOn,
+    isB1LevelOn,
+    router,
+  ]);
+
   return (
     <View
       testID="TRANSLATE_WORDS_GAME.CONTAINER:VIEW"
       style={styles.container}>
       <View style={styles.headerTextContainer}>
         <Text style={styles.headerText}>
-          {i18n.t("TranslateWordsGame.translate_words", { defaultValue: "Sõnade tõlkimine" })}
+          {i18n.t("TranslateWordsGame_translate_words", { defaultValue: "Sõnade tõlkimine" })}
         </Text>
       </View>
       <View style={styles.numberOfWords}>
         <View style={styles.numberOfWordsHeaderTextContainer}>
           <Text style={styles.numberOfWordsHeaderText}>
-            {i18n.t("TranslateWordsGame.number_of_words", { defaultValue: "Sõnade arv" })}
+            {i18n.t("TranslateWordsGame_number_of_words", { defaultValue: "Sõnade arv" })}
           </Text>
         </View>
         <View style={styles.row}>
-          <View style={styles.numberOfWordsTextInputContainer}>
+          <View style={[
+            styles.numberOfWordsTextInputContainer,
+            { opacity: isUnlimitedGame === true ? 0.25 : 1 },
+            !isNumberOfWordsValid && { borderColor: "red" }
+          ]}>
             <TextInput
-              style={styles.numberOfWordsTextInput}
-              placeholder="20"
+              style={[styles.numberOfWordsTextInput, { pointerEvents: isUnlimitedGame === true ? "none" : "auto" }]}
               inputMode="numeric"
+              placeholder="20"
+              value={numberOfWords.toString()}
+              onChangeText={(text: string) => onChangeNumberOfWords(text)}
             />
           </View>
           <View style={styles.unlimitedWordsContainer}>
             <View style={styles.unlimitedWordsTextContainer}>
               <Text style={styles.unlimitedWordsText}>
-                {i18n.t("TranslateWordsGame.unlimited_words", { defaultValue: "Piiritu" })}
+                {i18n.t("TranslateWordsGame_unlimited_words", { defaultValue: "Piiritu" })}
               </Text>
             </View>
-            <View style={styles.checkboxContainer}>
-              <Text style={styles.checkboxText}>
-                ✔
-              </Text>
-            </View>
+            <Checkbox
+              testID="TRANSLATE_WORDS_GAME.CONTAINER.NUMBER_OF_WORDS.UNLIMITED_WORDS.CHECKBOX:PRESSABLE"
+              onPress={onCheckboxPress}
+            />
           </View>
         </View>
       </View>
       <OptionButton
-        text={"Suvalised sõnad"}
-        onPress={() => { setGameOptions("any") }}
-        isSelected={gameOptions === "any"}>
+        text={i18n.t("TranslateWordsGame_random_words", { defaultValue: "Suvalised sõnad" })}
+        onPress={() => toggleOption("any")}
+        isSelected={gameOptions === "any" || gameOptions === "all"}>
         <AnimatedPressable
           style={[
             styles.languageLevelContainer,
             a1LevelAnimatedStyle
           ]}
           onPress={() => toggleWordsLevel(EWordsLevel.A1)}
-          disabled={gameOptions === "my_dictionary"}
+          disabled={gameOptions === "my_dictionary" || gameOptions === ""}
         >
           <Text style={styles.languageLevelText}>A1</Text>
         </AnimatedPressable>
@@ -212,7 +290,7 @@ function TranslateWordsGame() {
             a2LevelAnimatedStyle
           ]}
           onPress={() => toggleWordsLevel(EWordsLevel.A2)}
-          disabled={gameOptions === "my_dictionary"}
+          disabled={gameOptions === "my_dictionary" || gameOptions === ""}
         >
           <Text style={styles.languageLevelText}>A2</Text>
         </AnimatedPressable>
@@ -222,25 +300,24 @@ function TranslateWordsGame() {
             b1LevelAnimatedStyle
           ]}
           onPress={() => toggleWordsLevel(EWordsLevel.B1)}
-
-          disabled={gameOptions === "my_dictionary"}
+          disabled={gameOptions === "my_dictionary" || gameOptions === ""}
         >
           <Text style={styles.languageLevelText}>B1</Text>
         </AnimatedPressable>
       </OptionButton>
       <OptionButton
-        text={"Sõnad mu sõnastikust"}
+        text={i18n.t("TranslateWordsGame_words_from_my_dictionary", { defaultValue: "Sõnad mu sõnastikust" })}
         onPress={() => {
           if (myDictionary.length < 1) {
             showHint(
-              "Sõnastik on tühi",
+              i18n.t("Hint_dictionary_is_empty", { defaultValue: "Sõnastik on tühi!" }),
               2500
             );
             return;
           }
-          setGameOptions("my_dictionary");
+          toggleOption("my_dictionary");
         }}
-        isSelected={gameOptions === "my_dictionary"} />
+        isSelected={gameOptions === "my_dictionary" || gameOptions === "all"} />
       <View style={styles.startContainer}>
         <Pressable
           testID="TRANSLATE_WORDS_GAME.EXPANDING.START:PRESSABLE"
@@ -250,19 +327,13 @@ function TranslateWordsGame() {
               opacity: (gameOptions === "any" && !isA1LevelOn && !isA2LevelOn && !isB1LevelOn) ? 0.5 : 1
             }
           ]}
-          onPress={() =>
-            router.navigate({
-              pathname: "/translate", params: {
-                mode: gameOptions,
-              }
-            })
-          }
+          onPress={startGame}
           disabled={
             gameOptions === "any" && !isA1LevelOn && !isA2LevelOn && !isB1LevelOn
           }
-          aria-label="Alusta" >
+          aria-label={i18n.t("start", { defaultValue: "Alusta" })} >
           <Text style={styles.startButtonText}>
-            {i18n.t("TranslateWordsGame.start", { defaultValue: "ALUSTA" })}
+            {i18n.t("TranslateWordsGame_start", { defaultValue: "ALUSTA" })}
           </Text>
         </Pressable>
       </View>
@@ -317,12 +388,12 @@ const styles = StyleSheet.create({
     borderColor: CommonColors.whiteAlternative,
     borderRadius: 5,
     justifyContent: "center",
-    paddingHorizontal: 15,
-    paddingVertical: 10
   },
   numberOfWordsTextInput: {
-    fontSize: 12,
-    color: "white"
+    fontSize: 14,
+    color: "white",
+    paddingHorizontal: 15,
+    paddingVertical: 10
   },
   unlimitedWordsContainer: {
     paddingHorizontal: 10,
@@ -335,7 +406,7 @@ const styles = StyleSheet.create({
     alignItems: "center"
   },
   unlimitedWordsText: {
-    fontSize: 12,
+    fontSize: 14,
     color: "white"
   },
   checkboxContainer: {

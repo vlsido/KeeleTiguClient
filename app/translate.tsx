@@ -12,7 +12,7 @@ import {
   View
 } from "react-native";
 import { WordAndExamData } from "./(tabs)/dictionary";
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import {
   useAppDispatch,
   useAppSelector
@@ -36,9 +36,14 @@ import { setExamDictionary } from "../components/store/slices/dictionarySlice";
 import { SkipNextIcon } from "../components/icons/SkipNextIcon";
 import { VisibilityIcon } from "../components/icons/VisibilityIcon";
 import CustomIconButton from "../components/buttons/CustomIconButton";
+import { i18n } from "../components/store/i18n";
+import AnswerStatusOverlay from "../components/overlays/AnswerStatusOverlay";
+import TranslateWordsGameResults, { ResultsData } from "../components/screens/translate/results/TranslateWordsGameResults";
+import { TranslateGameMode } from "../constants/types";
+
 
 export default function Translate() {
-  const { mode } = useLocalSearchParams<{ mode: "any" | "my_dictionary" }>();
+  const { mode, quantity } = useLocalSearchParams<{ mode: TranslateGameMode, quantity: string }>();
 
   const { showHint } = useHint();
 
@@ -48,10 +53,21 @@ export default function Translate() {
 
   const dispatch = useAppDispatch();
 
+  const textInputRef = useRef<TextInput>(null);
+
+  const [wasPopulated, setWasPopulated] =
+    useAtom<boolean>(useMemo(
+      () => atom<boolean>(false),
+      []
+    ));
+
   const [
     gameWords,
     setGameWords
   ] = useAtom<WordAndExamData[]>(gameWordsAtom);
+
+  const [resultsData, setResultsData] =
+    useAtom<ResultsData[]>(useMemo(() => atom<ResultsData[]>([]), []));
 
   const [
     answer,
@@ -61,6 +77,7 @@ export default function Translate() {
   const isA1LevelOn = useAtomValue(isA1LevelOnAtom);
   const isA2LevelOn = useAtomValue(isA2LevelOnAtom);
   const isB1LevelOn = useAtomValue(isB1LevelOnAtom);
+
 
   const [
     isAnswerValid,
@@ -120,6 +137,29 @@ export default function Translate() {
     return array;
   }
 
+  function getExamDictionaryFromMyDictionary() {
+    const newExamDictionary: (WordAndExamData | null)[] = myDictionary.map((wordsAndData) => {
+      const russianTranslations = wordsAndData.usages.at(0)?.definitionData.at(0)?.russianTranslations;
+
+      if (russianTranslations === undefined || russianTranslations.length === 0) {
+        return null;
+      }
+
+      return {
+        ...wordsAndData,
+        examData: {
+          word: wordsAndData.word,
+          level: "B1",
+          russianTranslations: russianTranslations
+        }
+      }
+    });
+
+    const filteredExamDictionary = newExamDictionary.filter((wordData) => wordData !== null) as WordAndExamData[];
+
+    return filteredExamDictionary;
+  }
+
   const refreshGameWords = useCallback(
     () => {
       switch (mode) {
@@ -128,49 +168,87 @@ export default function Translate() {
             (wordAndExamData.examData.level === "A1" && isA1LevelOn)
             || (wordAndExamData.examData.level === "A2" && isA2LevelOn)
             || (wordAndExamData.examData.level === "B1" && isB1LevelOn));
-          console.log(
-            "filted",
-            filteredDictionary
-          );
 
           if (filteredDictionary.length === 0) {
             if (isA1LevelOn || isA2LevelOn || isB1LevelOn) {
               dispatch({ type: "dictionary/fetchRandomWords" });
               return;
             }
+            if (quantity !== "0") {
+              const numberOfWordsInt = parseInt(quantity);
 
-            setGameWords(shuffleArray(examDictionary));
-            return;
+              if (!isNaN(numberOfWordsInt)) {
+
+                setGameWords(shuffleArray(examDictionary.slice(0, numberOfWordsInt)));
+              }
+            } else {
+              setGameWords(shuffleArray(examDictionary));
+            }
           }
 
-          setGameWords(shuffleArray(filteredDictionary));
+
+          if (quantity !== "0") {
+            const numberOfWordsInt = parseInt(quantity);
+
+            if (!isNaN(numberOfWordsInt)) {
+              setGameWords(shuffleArray(filteredDictionary.slice(0, numberOfWordsInt)));
+            }
+          } else {
+            setGameWords(shuffleArray(filteredDictionary));
+          }
+
           break;
         case "my_dictionary":
-          const newExamDictionary: (WordAndExamData | null)[] = myDictionary.map((wordsAndData) => {
-            const russianTranslations = wordsAndData.usages.at(0)?.definitionData.at(0)?.russianTranslations;
+          const newExamDictionary: WordAndExamData[] = getExamDictionaryFromMyDictionary();
 
-            if (russianTranslations === undefined || russianTranslations.length === 0) {
-              return null;
+
+          if (quantity !== "0") {
+            const numberOfWordsInt = parseInt(quantity);
+
+            if (!isNaN(numberOfWordsInt)) {
+              setGameWords(shuffleArray(newExamDictionary.slice(0, numberOfWordsInt)));
             }
+          } else {
+            setGameWords(shuffleArray(newExamDictionary));
+          }
 
-            return {
-              ...wordsAndData,
-              examData: {
-                word: wordsAndData.word,
-                level: "B1",
-                russianTranslations: russianTranslations
+          break;
+        case "all":
+          const dictionary: WordAndExamData[] = getExamDictionaryFromMyDictionary();
+
+          const filteredExamDictionary = examDictionary.filter((wordAndExamData) =>
+            (wordAndExamData.examData.level === "A1" && isA1LevelOn)
+            || (wordAndExamData.examData.level === "A2" && isA2LevelOn)
+            || (wordAndExamData.examData.level === "B1" && isB1LevelOn));
+
+          if (quantity !== "0") {
+            const numberOfWordsInt = parseInt(quantity);
+
+            if (!isNaN(numberOfWordsInt)) {
+
+              // Up to half of the size of the array is populated with words from user's dictionary
+              const wordsToPlay = dictionary.slice(0, Math.floor(numberOfWordsInt / 2));
+
+              for (const item of filteredExamDictionary) {
+                if (wordsToPlay.length < numberOfWordsInt + 1) {
+                  wordsToPlay.push(item);
+                } else {
+                  break;
+                }
               }
+
+              setGameWords(shuffleArray(wordsToPlay));
             }
-          });
-
-          const filteredExamDictionary = newExamDictionary.filter((wordData) => wordData !== null) as WordAndExamData[];
-
-          setGameWords(shuffleArray(filteredExamDictionary));
+          } else {
+            const wordsToPlay = dictionary.concat(filteredExamDictionary);
+            setGameWords(shuffleArray(wordsToPlay));
+          }
           break;
       }
     },
     [
-      mode === "any" ? examDictionary : myDictionary,
+      examDictionary,
+      myDictionary,
       isA1LevelOn,
       isA2LevelOn,
       isB1LevelOn,
@@ -179,30 +257,18 @@ export default function Translate() {
     ]
   );
 
-  useEffect(
-    () => {
+  useEffect(() => {
+    if (quantity !== "0" && wasPopulated === true) return;
+
+    console.log("gameWords", gameWords);
+    console.log("examDic", examDictionary);
+    if (examDictionary.length > 0 && gameWords.length === 0) {
       refreshGameWords();
-    },
-    []
-  );
-
-  useEffect(
-    () => {
-      console.log(
-        "gameWords",
-        gameWords
-      );
-      if (gameWords.length === 0) {
-        refreshGameWords();
-      }
-    },
-    [
-      gameWords,
-      examDictionary
-    ]
-  );
-
-  const textInputRef = useRef<TextInput>(null);
+      setWasPopulated(true);
+    }
+  }, [
+    examDictionary
+  ]);
 
   const removeWordFromExamDictionary = useCallback(
     () => {
@@ -235,11 +301,21 @@ export default function Translate() {
         ) => index !== 0));
         if (lastIncorrectWord !== currentWordLowercase) {
           setCorrectCount(correctCount + 1);
+          setResultsData([...resultsData, {
+            word: gameWords[0],
+            answer: currentWordLowercase,
+            userAnswer: answerLowercase
+          }]);
         }
       } else {
         if (lastIncorrectWord !== currentWordLowercase) {
           setLastIncorrectWord(currentWordLowercase);
           setIncorrectCount(incorrectCount + 1);
+          setResultsData([...resultsData, {
+            word: gameWords[0],
+            answer: currentWordLowercase,
+            userAnswer: answerLowercase
+          }]);
         }
 
         setIsAnswerValid(false);
@@ -269,10 +345,17 @@ export default function Translate() {
   function skipWord() {
     setIsAnswerVisible(false);
     removeWordFromExamDictionary();
-    setGameWords(gameWords.filter((
+    const newGameWords = gameWords.filter((
       _, index
-    ) => index !== 0));
+    ) => index !== 0)
+
+    setGameWords(newGameWords);
+
     setAnswer("");
+
+    if (newGameWords.length === 0 && resultsData.length === 0) {
+      router.replace("/");
+    }
   }
 
   const showWord = useCallback(
@@ -281,7 +364,7 @@ export default function Translate() {
 
       if (currentWordLowercase === undefined) {
         showHint(
-          "Oii, miski viga! Proovi uuesti!",
+          i18n.t("error_try_again", { defaultValue: "Oii, miski viga! Proovi uuesti!" }),
           2500
         );
       }
@@ -289,6 +372,11 @@ export default function Translate() {
       if (currentWordLowercase !== undefined && lastIncorrectWord !== currentWordLowercase) {
         setLastIncorrectWord(currentWordLowercase);
         setIncorrectCount(incorrectCount + 1);
+        setResultsData([...resultsData, {
+          word: gameWords[0],
+          answer: currentWordLowercase,
+          userAnswer: " "
+        }]);
       }
 
       setIsAnswerValid(false);
@@ -313,6 +401,62 @@ export default function Translate() {
     []
   );
 
+  function getScoreColor() {
+    if (correctCount + incorrectCount === 0) return CommonColors.green;
+
+    const correctPercentage = (correctCount * 100) / (correctCount + incorrectCount);
+
+    if (correctPercentage > 90) {
+      return CommonColors.green;
+    } else if (correctPercentage > 75) {
+      return "yellow";
+    } else if (correctPercentage >= 50) {
+      return "orange";
+    } else {
+      return "red";
+    }
+  }
+
+  const restartGame = useCallback(() => {
+    const newGameWords: WordAndExamData[] = resultsData.map((result) => {
+      return result.word;
+    });
+
+    setGameWords(newGameWords);
+
+    setCorrectCount(0);
+    setIncorrectCount(0);
+
+    setResultsData([]);
+
+  }, [resultsData]);
+
+  const restartToFixMistakes = useCallback(() => {
+    const newGameWords: WordAndExamData[] = resultsData.map((result) => {
+      if (result.answer !== result.userAnswer) return result.word;
+
+      return null;
+    }).filter((word) => word !== null) as WordAndExamData[];
+
+    setGameWords(newGameWords);
+
+    setCorrectCount(0);
+    setIncorrectCount(0);
+
+    setResultsData([]);
+
+  }, [resultsData]);
+
+  if (gameWords.length === 0 && resultsData.length > 0) {
+    return <TranslateWordsGameResults
+      results={resultsData}
+      correctCount={correctCount}
+      incorrectCount={incorrectCount}
+      onRestart={restartGame}
+      onRestartToFixMistakes={restartToFixMistakes}
+    />
+  }
+
   return (
     <View
       testID="TRANSLATE.CONTAINER:VIEW"
@@ -320,22 +464,22 @@ export default function Translate() {
     >
       <View style={styles.topContainer}>
         {
-          gameWords.length === 0 ? <Text style={styles.loadingWordsText}>Võtame sõnad sõnastikust...</Text> :
+          gameWords.length === 0
+            ? <Text style={styles.loadingWordsText}>
+              {i18n.t("Translate_taking_words_from_dictionary", { defaultValue: "Võtame sõnad sõnastikust..." })}
+            </Text>
+            :
             <>
               {mode === "my_dictionary" &&
                 <Text style={styles.wordsLeftText}>
-                  Veel jaanud: {gameWords.length}
+                  {i18n.t("Translate_words_remaining", { defaultValue: "%{count} sõnad on jaanud", count: gameWords.length })}
                 </Text>
               }
               <View>
-                <Text style={styles.rightWordsText}>
-                  {"\u2713"} Õige: {correctCount}
+                <Text style={[styles.scoreText, { color: getScoreColor() }]}>
+                  {correctCount}/{correctCount + incorrectCount}
                 </Text>
               </View>
-              <Text style={styles.wrongWordsText}>
-                <Text style={styles.bold}>{"\u2A09"}{" "}</Text>
-                Vale: {incorrectCount}
-              </Text>
             </>
         }
         <ExamWordComponent
@@ -343,24 +487,32 @@ export default function Translate() {
           isAnswerVisible={isAnswerVisible}
         />
       </View>
-      <View style={styles.bottomContainer} >
-        <View style={[styles.row, { alignItems: "center" }]}>
-          <TextAnswerField
-            textInputRef={textInputRef}
-            onSubmit={checkAnswer}
-            onFocus={onTextFieldFocus}
-            isAnswerValid={isAnswerValid}
-          />
-        </View>
-        <View style={[styles.row, { gap: 10 }]}>
-          <CustomIconButton onPress={skipWord}>
+      <View testID="TRANSLATE.CONTAINER.BOTTOM_CONTAINER:VIEW" style={styles.interactiveContainer} >
+        <TextAnswerField
+          textInputRef={textInputRef}
+          onSubmit={checkAnswer}
+          onFocus={onTextFieldFocus}
+          isAnswerValid={isAnswerValid}
+        />
+        <View style={[styles.row]}>
+          <CustomIconButton
+            testID="TRANSLATE.CONTAINER.BOTTOM_CONTAINER.SKIP_ICON:PRESSABLE"
+            style={styles.buttonBackground}
+            onPress={skipWord}>
             <SkipNextIcon />
           </CustomIconButton>
-          <CustomIconButton onPress={showWord}>
+          <CustomIconButton
+            testID="TRANSLATE.CONTAINER.BOTTOM_CONTAINER.SHOW_ICON:PRESSABLE"
+
+            style={styles.buttonBackground}
+            onPress={showWord}>
             <VisibilityIcon />
           </CustomIconButton>
         </View>
       </View>
+      <AnswerStatusOverlay
+        correctCount={correctCount}
+        incorrectCount={incorrectCount} />
     </View >
   );
 }
@@ -388,22 +540,29 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginVertical: 5
   },
-  rightWordsText: {
-    color: CommonColors.green,
-    fontSize: 16
+  scoreText: {
+    fontSize: 16,
+    fontWeight: "bold"
   },
-  wrongWordsText: {
-    color: CommonColors.red,
-    fontSize: 16
-  },
-  bottomContainer: {
+  interactiveContainer: {
+    position: "absolute",
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    alignSelf: "center",
     alignItems: "center",
-    marginBottom: "55%",
+    gap: 10
   },
   bold: {
     fontWeight: "bold"
   },
   row: {
-    flexDirection: "row"
+    flexDirection: "row",
+    gap: 10
+  },
+  buttonBackground: {
+    backgroundColor: "black",
+    borderRadius: 5
   }
 })

@@ -18,7 +18,6 @@ function OptionButton(props: OptionButtonProps) {
   return (
     <Pressable
       testID="OPTION_BUTTON.CONTAINER:PRESSABLE"
-      disabled={props.isSelected}
       style={[
         styles.optionContainer,
         { opacity: props.isSelected ? 1 : 0.75 }
