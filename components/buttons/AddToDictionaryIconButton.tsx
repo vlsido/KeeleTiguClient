@@ -19,9 +19,11 @@ import {
   pushToMyDictionary
 } from "../store/slices/dictionarySlice";
 import { useHint } from "../../hooks/useHint";
+import { i18n } from "../store/i18n";
 
 interface AddToDictionaryButtonProps {
   word: Word | WordAndExamData | undefined;
+  backgroundStyle: "light" | "dark"
 }
 
 function AddToDictionaryIconButton(props: AddToDictionaryButtonProps) {
@@ -56,7 +58,7 @@ function AddToDictionaryIconButton(props: AddToDictionaryButtonProps) {
     if (currentWord !== undefined) {
       if (myDictionary.find((word) => word.word === currentWord.word)) {
         showHint(
-          "Sõna on juba sõnastikus!",
+          i18n.t("already_in_dictionary", { defaultValue: "Sõna on juba sõnastikus!" }),
           2500
         );
         return;
@@ -74,12 +76,12 @@ function AddToDictionaryIconButton(props: AddToDictionaryButtonProps) {
 
       // Add to dictionary
       showHint(
-        "Lisatud!",
+        i18n.t("added", { defaultValue: "Lisatud!" }),
         2500
       );
     } else {
       showHint(
-        "Error! No words loaded.",
+        i18n.t("error", { defaultValue: "Tekkis viga!" }),
         2500
       );
     }
@@ -90,10 +92,11 @@ function AddToDictionaryIconButton(props: AddToDictionaryButtonProps) {
     <AnimatedPressable onPress={onPress}
       style={[
         animatedStyle,
-        styles.container
+        styles.container,
+        { backgroundColor: props.backgroundStyle === "light" ? "#fff" : "#000" }
       ]}
     >
-      <AddToDictionaryIcon />
+      <AddToDictionaryIcon color={props.backgroundStyle === "light" ? "#000" : "#fff"} />
     </AnimatedPressable>
   )
 }

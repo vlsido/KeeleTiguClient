@@ -20,7 +20,7 @@ function AddToDictionaryTextButton(props: AddToDictionaryTextButtonProps) {
   const addToDictionary = useCallback(() => {
     if (myDictionary.find((word) => word.word === props.wordData.word)) {
       showHint(
-        "Sõna on juba sõnastikus!",
+        i18n.t("already_in_dictionary", { defaultValue: "Sõna on juba sõnastikus!" }),
         2500
       );
       return;
@@ -30,7 +30,7 @@ function AddToDictionaryTextButton(props: AddToDictionaryTextButtonProps) {
 
     // Add to dictionary
     showHint(
-      "Lisatud!",
+      i18n.t("added", { defaultValue: "Lisatud!" }),
       2500
     );
   }, [props.wordData, myDictionary]);
