@@ -18,7 +18,6 @@ function RootLayoutTabs() {
     useMemo(() => atom<Tab>("index"), []));
 
   useEffect(() => {
-    console.log("effect");
     const currentIndex = navigationState?.routes.at(0)?.state?.index;
 
     if (currentIndex == null) return;
@@ -36,19 +35,19 @@ function RootLayoutTabs() {
       <TabSlot style={styles.slot} />
       <TabList style={styles.tabList}>
         <TabTrigger
-          style={[styles.buttonContainer, focusedTab === "index" && { borderColor: "white", borderWidth: 3 }]}
+          style={[styles.buttonContainer, focusedTab === "index" && styles.active]}
           name="index"
           href="/">
           <ExamIcon color={CommonColors.white} />
         </TabTrigger>
         <TabTrigger
-          style={[styles.buttonContainer, focusedTab === "dictionary" && { borderColor: "white", borderWidth: 3 }]}
+          style={[styles.buttonContainer, focusedTab === "dictionary" && styles.active]}
           name="dictionary"
           href="/dictionary">
           <DictionaryIcon color={CommonColors.white} />
         </TabTrigger>
         <TabTrigger
-          style={[styles.buttonContainer, focusedTab === "search" && { borderColor: "white", borderWidth: 3 }]}
+          style={[styles.buttonContainer, focusedTab === "search" && styles.active]}
           name="search"
           href="/search">
           <MaterialIcons
@@ -71,6 +70,10 @@ const styles = StyleSheet.create({
   slot: {
     flex: 1,
   },
+  active: {
+    borderColor: "white",
+    borderWidth: 3
+  },
   tabList: {
     width: "100%",
     justifyContent: "space-between",
@@ -82,7 +85,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 10,
     marginBottom: "2.5%",
-    maxWidth: 250
+    maxWidth: 250,
   },
   buttonContainer: {
     backgroundColor: "rgba(21,22,21,0.8)",
