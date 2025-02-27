@@ -87,13 +87,12 @@ function Dictionary() {
         <Text
           testID="DICTIONARY.WORDS_EMPTY:TEXT"
           style={styles.loadingText}>
-          Siin pole midagi. Lisa uued sõnad eksami leheküljel või otsingus.
+          {i18n.t("Dictionary_empty", { defaultValue: "Siin pole midagi. Lisa uued sõnad testi leheküljel või otsingus." })}
         </Text>
       </View>
     );
   }
 
-  console.log("myDIctionaryState", myDictionaryState);
   return (
     <View
       testID="DICTIONARY.CONTAINER:VIEW"
@@ -114,6 +113,7 @@ function Dictionary() {
       <FlatList
         testID="DICTIONARY.WORDS_LIST:FLATLIST"
         data={myDictionaryState}
+        contentContainerStyle={styles.listContainer}
         keyExtractor={(item) => item.index.toString()}
         renderItem={({ item, index }) => <DictionaryItem {...item} length={index + 1} />}
       />
@@ -127,9 +127,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: "100%",
-    paddingLeft: 10,
-    paddingVertical: 15,
+    paddingHorizontal: 15,
     justifyContent: "center",
+    alignItems: "center",
     flexDirection: "column",
     backgroundColor: "#222322"
   },
@@ -160,4 +160,8 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 16
   },
+  listContainer: {
+    gap: 10,
+    marginVertical: 10,
+  }
 });
