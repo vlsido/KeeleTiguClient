@@ -14,13 +14,13 @@ import {
   ViewStyle
 } from "react-native";
 import {
+  atom,
   useAtom,
   useSetAtom,
 } from "jotai";
 import { useAppSelector } from "../../../hooks/storeHooks";
 import { useHint } from "../../../hooks/useHint";
 import {
-  isSearchingInProcessAtom,
   queryAtom,
   resultsAtom,
   searchStringAtom,
@@ -42,6 +42,8 @@ import { SearchIcon } from "../../icons/SearchIcon";
 import { FlatList } from "react-native";
 import SearchItem from "./SearchItem";
 import { CommonColors } from "../../../constants/Colors";
+import { i18n } from "../../store/i18n";
+import LoadingIndicator from "../../indicators/LoadingIndicator";
 
 interface SearchDataResults {
   queryResponse: WordAndExamData[];
@@ -67,13 +69,16 @@ function SearchField() {
     setSearchString
   ] = useAtom<string>(searchStringAtom);
 
-  const setIsSearchingInProcess = useSetAtom(isSearchingInProcessAtom);
+  const [isSearching, setIsSearching] =
+    useAtom<boolean>(useMemo(() => atom<boolean>(false), []));
+
   const setWordsDataArray = useSetAtom(wordsDataArrayAtom);
 
 
   const inputRef = useRef<TextInput | null>(null);
 
   const searchFieldHeight = useSharedValue<number>(0);
+  const searchFieldWidth = useSharedValue<number>(0);
   const searchListOpacity = useSharedValue<number>(0);
   const searchListPointerEvents = useSharedValue<"auto" | "none">("none");
 
@@ -254,6 +259,7 @@ function SearchField() {
         return;
       }
 
+
       makeResultsUnvisible();
 
       setQuery(word);
@@ -268,7 +274,7 @@ function SearchField() {
       }
 
       try {
-        setIsSearchingInProcess(true);
+        setIsSearching(true);
         const response = await callCloudFunction(
           "GetWordData_Node",
           { word: word, language }
@@ -308,7 +314,7 @@ function SearchField() {
         }
 
       } finally {
-        setIsSearchingInProcess(false);
+        setIsSearching(false);
       }
     },
     [
@@ -370,6 +376,8 @@ function SearchField() {
   const onSearchFieldLayout = useCallback(
     (event: LayoutChangeEvent) => {
       searchFieldHeight.value = event.nativeEvent.layout.height + 15;
+      searchFieldWidth.value = event.nativeEvent.layout.width;
+
     },
     []
   );
@@ -378,7 +386,8 @@ function SearchField() {
     return {
       opacity: searchListOpacity.value,
       pointerEvents: searchListPointerEvents.value,
-      top: searchFieldHeight.value
+      top: searchFieldHeight.value,
+      width: searchFieldWidth.value
     };
   });
 
@@ -400,7 +409,7 @@ function SearchField() {
             <TextInput
               testID="SEARCH_FIELD.QUERY:INPUT"
               ref={inputRef}
-              placeholder="Otsi..."
+              placeholder={i18n.t("SearchField_search_placeholder", { defaultValue: "Otsi..." })}
               style={styles.searchInput}
               value={query}
               onChangeText={(text) => onChangeText(text)}
@@ -411,9 +420,11 @@ function SearchField() {
               testID="SEARCH_FIELD.FIND_WORD:PRESSABLE"
               onPress={() => getWordData(query)}
               style={styles.searchIconContainer}
-              aria-label="Otsi sõna"
+              aria-label={i18n.t("SearchField_search_word", { defaultValue: "Otsi sõna" })}
             >
-              <SearchIcon />
+              {isSearching === true
+                ? <LoadingIndicator color="black" />
+                : <SearchIcon />}
             </Pressable>
           </View>
         </GestureDetector>
@@ -461,7 +472,7 @@ const styles = StyleSheet.create({
   },
   searchInput: {
     padding: 10,
-    borderRadius: 10,
+    borderRadius: 60,
     backgroundColor: CommonColors.white,
     fontSize: 16,
     width: "100%",
@@ -472,7 +483,9 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     width: 36,
     height: 36,
-    marginLeft: 10
+    marginLeft: 10,
+    justifyContent: "center",
+    alignItems: "center"
   },
   searchResultsContainer: {
     paddingTop: 10,
