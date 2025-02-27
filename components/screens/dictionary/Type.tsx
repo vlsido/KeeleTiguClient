@@ -3,6 +3,7 @@ import {
   Text
 } from "react-native";
 import { CommonColors } from "../../../constants/Colors";
+import { i18n } from "../../store/i18n";
 
 interface TypeProps {
   type: "s" | "v" | "adj" | "adv" | "konj" | undefined;
@@ -12,15 +13,15 @@ function Type(props: TypeProps) {
   function type() {
     switch (props.type) {
       case "s":
-        return "substantiiv";
+        return i18n.t("Type_noun", { defaultValue: "substantiiv" });
       case "v":
-        return "verb";
+        return i18n.t("Type_verb", { defaultValue: "verb" });
       case "adj":
-        return "adjektiiv";
+        return i18n.t("Type_adjective", { defaultValue: "adjektiiv" });
       case "adv":
-        return "adverb";
+        return i18n.t("Type_adverb", { defaultValue: "adverb" });
       case "konj":
-        return "konjunktiiv";
+        return i18n.t("Type_subjunctive", { defaultValue: "konjunktiiv" });
       default:
         return "";
     }
