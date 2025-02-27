@@ -1,5 +1,4 @@
 import {
-  ActivityIndicator,
   StyleSheet,
   Text,
   View
@@ -17,6 +16,9 @@ import {
 } from "../../../app/(tabs)/dictionary";
 import { CommonColors } from "../../../constants/Colors";
 import AddToDictionaryButton from "../../buttons/AddToDictionaryIconButton";
+import store from "../../store/store";
+import LoadingIndicator from "../../indicators/LoadingIndicator";
+import { TranslateGameMode } from "../../../constants/types";
 
 export interface ExamWord {
   word: string;
@@ -24,12 +26,14 @@ export interface ExamWord {
 }
 
 interface ExamWordComponentProps {
-  mode: "any" | "my_dictionary";
+  mode: TranslateGameMode;
   isAnswerVisible: boolean;
 }
 
 const currentWordAtom = atom<React.JSX.Element[]>((get) => {
   const wordElements: React.JSX.Element[] = [];
+
+  const highlightRussianAccentLetters = store.getState().settings.highlightRussianAccentLetters;
 
   const gameWords = get(gameWordsAtom);
 
@@ -55,7 +59,7 @@ const currentWordAtom = atom<React.JSX.Element[]>((get) => {
           } else {
             // The part after the quote, where the first letter is the accent
             textElements.push(
-              <Text key={`russian-${translationIndex}-current-word-part-${index}`} style={styles.accentedText}>{wordPart[0]}</Text>,
+              <Text key={`russian-${translationIndex}-current-word-part-${index}`} style={highlightRussianAccentLetters === true ? styles.accentedText : styles.normalText}>{wordPart[0]}</Text>,
               <Text key={`russina-${translationIndex}-current-word-part-${index}-rest`} style={styles.normalText}>{wordPart.slice(1)}</Text>
             );
           }
@@ -125,7 +129,9 @@ function ExamWordComponent(props: ExamWordComponentProps) {
         testID="EXAM_WORD_COMPONENT.NO_GAME_WORDS_CONTAINER:VIEW"
         style={styles.loadingContainer}
       >
-        <ActivityIndicator testID="EXAM_WORD_COMPONENT.NO_GAME_WORDS_CONTAINER.LOADING:ACTIVITY_INDICATOR" size={32} color={CommonColors.white} />
+        <LoadingIndicator
+          testID="EXAM_WORD_COMPONENT.NO_GAME_WORDS_CONTAINER.LOADING:ACTIVITY_INDICATOR"
+          color={CommonColors.white} />
       </View>
     );
   }
@@ -143,7 +149,9 @@ function ExamWordComponent(props: ExamWordComponentProps) {
           <Text style={{ textAlign: "center" }}>
             {currentAnswer}
           </Text>
-          {props.mode === "any" && <AddToDictionaryButton word={gameWords.at(0)} />}
+          {props.mode === "any" || props.mode === "all" && <AddToDictionaryButton
+            word={gameWords.at(0)}
+            backgroundStyle="dark" />}
         </View>
       )}
     </>
