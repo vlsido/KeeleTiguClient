@@ -1,9 +1,11 @@
 import { I18n } from "i18n-js";
+import en from "i18n-js/json/en.json";
 import ee from "i18n-js/json/en.json";
 import ru from "i18n-js/json/ru.json";
 
 export const i18n = new I18n({
   ...ee,
+  ...en,
   ...ru,
 });
 

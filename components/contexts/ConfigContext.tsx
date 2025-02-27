@@ -9,14 +9,14 @@ import {
   useEffect
 } from "react";
 import { app } from "../util/FirebaseConfig";
-import { i18n } from "../store/i18n";
-import ee from "../store/translations/ee.json"
 import { useAppDispatch } from "../../hooks/storeHooks";
 import { clearDictionary } from "../store/slices/dictionarySlice";
 import {
   atom,
   useSetAtom
 } from "jotai";
+import { loadSettings } from "../store/slices/settingsSlice";
+import { i18n } from "../store/i18n";
 
 interface ConfigContextProps {
   remoteConfig: RemoteConfig | null;
@@ -35,21 +35,23 @@ function ConfigContextProvider({ children }: { children: React.ReactNode }) {
 
   const setIsUnderMaintenance = useSetAtom(isUnderMaintenanceAtom);
 
-  // if (__DEV__) {
-  //   useEffect(
-  //     () => {
-  //       const unsubscribe = i18n.onChange(() => {
-  //         console.log("I18n has changed!");
-  //       });
-  //
-  //       return unsubscribe;
-  //     },
-  //     []
-  //   );
-  // }
+  if (__DEV__) {
+    useEffect(
+      () => {
+        const unsubscribe = i18n.onChange((event) => {
+          console.log("I18n has changed!", event);
+        });
+
+        return unsubscribe;
+      },
+      []
+    );
+  }
 
   useEffect(
     () => {
+      dispatch(loadSettings());
+
       remoteConfig.settings.minimumFetchIntervalMillis = 600000; // 600000ms = 10 minutes
 
       remoteConfig.defaultConfig = {
@@ -60,7 +62,6 @@ function ConfigContextProvider({ children }: { children: React.ReactNode }) {
 
       fetchAndActivate(remoteConfig).
         then(() => {
-
           const lastCacheInvalidationTimestamp = getValue(
             remoteConfig,
             "last_cache_invalidation_timestamp"
@@ -73,8 +74,7 @@ function ConfigContextProvider({ children }: { children: React.ReactNode }) {
               "last_cache_invalidation_timestamp",
               lastCacheInvalidationTimestamp
             );
-            removeCache();
-            loadTranslations("ee");
+            dispatch(clearDictionary());
 
             return;
           }
@@ -94,29 +94,15 @@ function ConfigContextProvider({ children }: { children: React.ReactNode }) {
 
           dispatch({ type: "dictionary/loadCachedWords" });
 
-          loadTranslations("ee");
         }).catch((error) => {
           console.error(
             "error fetching config",
             error
           );
-          loadTranslations("ee");
         });
-
     },
     []
   );
-
-  function removeCache() {
-    dispatch(clearDictionary());
-  }
-
-  function loadTranslations(locale: string) {
-    i18n.defaultLocale = locale;
-    i18n.locale = locale;
-
-    i18n.store(ee);
-  }
 
   const value = {
     remoteConfig,

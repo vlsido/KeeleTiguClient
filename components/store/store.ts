@@ -4,12 +4,14 @@ import createSagaMiddleware from "redux-saga";
 import { atomWithStore } from "jotai-redux";
 
 import dictionaryReducer from "./slices/dictionarySlice";
+import settingsReducer from "./slices/settingsSlice";
 import { watchDictionarySaga } from "./sagas/dictionarySaga";
 
 const sagaMiddleware = createSagaMiddleware();
 
 const rootReducer = combineReducers({
-  dictionary: dictionaryReducer
+  dictionary: dictionaryReducer,
+  settings: settingsReducer
 })
 
 export const setupStore = (preloadedState?: Partial<RootState>) => {
@@ -23,6 +25,7 @@ export const setupStore = (preloadedState?: Partial<RootState>) => {
 const store = configureStore({
   reducer: {
     dictionary: dictionaryReducer,
+    settings: settingsReducer
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware({ thunk: false }).concat(sagaMiddleware)
 });
