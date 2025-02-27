@@ -3,26 +3,20 @@ import ConfigContextProvider, {
 } from "../components/contexts/ConfigContext";
 import AuthContextProvider from "../components/contexts/AuthContext";
 import { Stack } from "expo-router";
-import { TabList, TabSlot, TabTrigger, Tabs } from "expo-router/ui";
 import { CommonColors } from "../constants/Colors";
 import { Provider } from "react-redux";
 import store from "../components/store/store";
-import { Suspense, useEffect } from "react";
+import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../hooks/storeHooks";
 import HintContextProvider from "../components/store/HintContext/HintContext";
 import { useAtomValue } from "jotai";
-import Footer from "../components/Footer";
 import LeftHeaderButton from "../components/buttons/LeftHeaderButton";
-import Header from "../components/Header";
-import Loading from "../components/Loading";
 import {
   setExamDictionary,
   setMyDictionary
 } from "../components/store/slices/dictionarySlice";
 import { WordAndExamData } from "./(tabs)/dictionary";
 import SettingsWrapper from "../components/wrappers/SettingsWrapper";
-import { Text } from "react-native";
-import RootLayoutTabs from "./(tabs)/_layout";
 
 export default function RootLayout() {
 
