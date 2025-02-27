@@ -1,5 +1,4 @@
 import {
-  ActivityIndicator,
   StyleSheet,
   View,
 } from "react-native";
@@ -23,7 +22,6 @@ import {
 } from "react-native-gesture-handler";
 import {
   areResultsVisibleAtom,
-  isSearchingInProcessAtom,
   searchStringAtom,
   wordsDataArrayAtom
 } from "../../components/screens/search/searchAtoms";
@@ -33,8 +31,6 @@ function Search() {
   const wordsDataArray = useAtomValue<Word[] | null>(wordsDataArrayAtom);
 
   const searchString = useAtomValue<string>(searchStringAtom);
-
-  const isSearchingInProcess = useAtomValue<boolean>(isSearchingInProcessAtom);
 
   const setAreResultsVisible = useSetAtom(areResultsVisibleAtom);
 
@@ -68,11 +64,7 @@ function Search() {
       >
         <SearchField />
         <View style={styles.wordsDataContainer}>
-          {isSearchingInProcess === true ? (
-            <View>
-              <ActivityIndicator size={36} color={CommonColors.white} />
-            </View>
-          ) : (<WordData wordDataArray={wordsDataArray} searchString={searchString} />)}
+          <WordData wordDataArray={wordsDataArray} searchString={searchString} />
         </View>
       </View>
     </GestureDetector>
