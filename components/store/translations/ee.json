@@ -1,18 +1,60 @@
 {
   "ee": {
+    "add_to_dictionary": "Lisa sõnastikku",
+    "tap_to_close": "Sulgemiseks puudutage.",
+    "app_description": "Selline app on avatud lähtekoodiga projekt tehtud Vladislav \"coslavko\" Sidorenko poolt.",
+    "start": "Alusta",
+    "added": "Lisatud!",
+    "already_in_dictionary": "Sõna on juba sõnastikus!",
+    "error": "Tekkis viga!",
+    "error_try_again": "Oii, miski viga! Proovi uuesti!",
+    "and": "ja",
+    "start_again": "Alusta uuesti",
+    "fix_mistakes": "Paranda vead",
+    "SettingsMenu_language": "Keel",
+    "SettingsMenu_turn_on_accent_letters": "Teha vene sõna rõhke nähtavaks",
+    "SettingsMenu_about_this_app": "Sellest appist",
+    "TranslateWordsGame_translate_words": "Sõnade tõlkimine",
+    "TranslateWordsGame_number_of_words": "Sõnade arv",
+    "TranslateWordsGame_unlimited_words": "Piiritu",
+    "TranslateWordsGame_random_words": "Suvalised sõnad",
+    "TranslateWordsGame_words_from_my_dictionary": "Sõnad mu sõnastikust",
+    "TranslateWordsGame_start": "ALUSTA",
+    "TranslateWordsGameResults_test_results": "Testi tulemus on",
+    "SearchField_search_placeholder": "Otsi...",
+    "SearchField_search_word": "Otsi sõna",
+    "Hint_dictionary_is_empty": "Sõnastik on tühi",
+    "TextAnswerField_write_answer_here": "Kirjuta vastust siia...",
+    "Type_noun": "substantiiv",
+    "Type_verb": "verb",
+    "Type_adjective": "adjektiiv",
+    "Type_adverb": "adverb",
+    "Type_subjunctive": "konjunktiiv",
+    "Translate_taking_words_from_dictionary": "Võtame sõnad sõnastikust...",
+    "Dictionary_empty": "Siin pole midagi. Lisa uued sõnad testi leheküljel või otsingus.",
+    "incorrect_answers_plural": {
+      "one": "vastust",
+      "other": "vastust",
+    },
     "count_words_in_dictionary": {
       "one": "Sõnastikus on %{count} sõna",
       "other": "Sõnastikus on %{count} sõnad"
     },
-    "add_to_dictionary": "Lisa sõnastikku",
     "count_words_in_search": {
       "one": "Leitud %{count} artikkel",
       "other": "Leitud %{count} artiklit"
     },
-    "SettingsMenu.turn_on_accent_letters": "Teha vene sõna rõhke nähtavaks",
-    "TranslateWordsGame.translate_words": "Sõnade tõlkimine",
-    "TranslateWordsGame.number_of_words": "Sõnade arv",
-    "TranslateWordsGame.unlimited_words": "Piiritu",
-    "TranslateWordsGame.start": "ALUSTA"
+    "Translate_words_remaining": {
+      "one": "%{count} sõna on jaanud",
+      "other": "%{count} sõnad on jaanud"
+    },
+    "TranslateWordsGameResults_correct_count": {
+      "one": "%{count} õige",
+      "other": "%{count} õige"
+    },
+    "TranslateWordsGameResults_incorrect_count": {
+      "one": "%{count} vale",
+      "other": "%{count} vale"
+    }
   }
 }

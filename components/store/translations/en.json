@@ -1,0 +1,22 @@
+{
+  "en": {
+    "count_words_in_dictionary": {
+      "one": "%{count} word in dictionary",
+      "other": "%{count} words in dictionary",
+    },
+    "count_words_in_search": {
+      "one": "Found %{count} word",
+      "other": "Found %{count} words",
+    },
+    "add_to_dictionary": "Add to dictionary",
+    "tap_to_close": "Tap to close.",
+    "app_description": "This open-source app is developed by Vladislav \"coslavko\" Sidorenko.",
+    "SettingsMenu_language": "Language",
+    "SettingsMenu_turn_on_accent_letters": "Highlight Russian accent letters",
+    "SettingsMenu_about_this_app": "About this app",
+    "TranslateWordsGame_translate_words": "Translate Words",
+    "TranslateWordsGame_number_of_words": "Number of words",
+    "TranslateWordsGame_unlimited_words": "Unlimited",
+    "TranslateWordsGame_start": "START",
+  }
+}
