@@ -6,13 +6,14 @@ import {
   TextStyle,
   ViewStyle
 } from "react-native";
-import { MaterialIcons } from "@expo/vector-icons";
 
 export interface TextButtonProps {
-  style?: StyleProp<ViewStyle>;
+  testID: string;
   text: string;
-  textStyle?: StyleProp<TextStyle>;
+  label: string;
   onPress: () => void;
+  style?: StyleProp<ViewStyle>;
+  textStyle?: StyleProp<TextStyle>;
   onHoverIn?: () => void;
   onHoverOut?: () => void;
   disabledBool?: boolean;
@@ -21,12 +22,8 @@ export interface TextButtonProps {
   activityIndicatorViewStyle?: ViewStyle;
   activityIndicatorColor?: string;
   activityIndicatorSize?: number | "small" | "large";
-  label: string;
-  leftSideIcon?: keyof typeof MaterialIcons.glyphMap;
-  leftSideIconSize?: number;
-  leftSideIconColor?: string;
   numberOfLines?: number;
-  testID: string;
+  children?: React.ReactNode;
 }
 
 function TextButton(props: TextButtonProps) {
@@ -65,13 +62,7 @@ function TextButton(props: TextButtonProps) {
       onHoverIn={props.onHoverIn}
       onHoverOut={props.onHoverOut}
     >
-      {props.leftSideIcon && (
-        <MaterialIcons
-          name={props.leftSideIcon}
-          size={props.leftSideIconSize}
-          color={props.leftSideIconColor}
-        />
-      )}
+      {props.children}
       <Text
         nativeID="buttonLabel"
         style={props.textStyle}

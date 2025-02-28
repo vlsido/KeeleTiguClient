@@ -48,6 +48,8 @@ export function RootLayoutStack() {
 
   const isUnderMaintenance = useAtomValue(isUnderMaintenanceAtom);
 
+
+
   const dispatch = useAppDispatch();
 
   const examDictionary = useAppSelector((state) => state.dictionary.examDictionary);

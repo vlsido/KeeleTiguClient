@@ -4,23 +4,23 @@ import {
 } from "react-native";
 import { router } from "expo-router";
 import { CommonColors } from "../constants/Colors";
-import MaterialIconButton from "./buttons/MaterialIconButton";
 import { i18n } from "./store/i18n";
 import SettingsButton from "./settings/SettingsButton";
+import CustomIconButton from "./buttons/CustomIconButton";
+import { ArrowBackIcon } from "./icons/ArrowBackIcon";
 
 function StackHeader() {
 
   return (
     <View style={styles.container}>
       <View style={styles.buttonsContainer}>
-        <MaterialIconButton
+        <CustomIconButton
           testID="STACK_HEADER.BACK_ICON:PRESSABLE"
-          name="arrow-back"
-          size={32}
-          color={CommonColors.white}
           onPress={() => router.replace("/")}
-          ariaLabel={i18n.t("StackHeader_go_back", { defaultValue: "Tagasi" })}
-        />
+          aria-label={i18n.t("StackHeader_go_back", { defaultValue: "Tagasi" })}
+        >
+          <ArrowBackIcon />
+        </CustomIconButton>
         <SettingsButton />
       </View>
     </View>

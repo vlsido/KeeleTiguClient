@@ -9,6 +9,7 @@ import TranslateWordsGameResultsHeader from "./TranslateWordsGameResultsHeader";
 import TextButton from "../../../buttons/TextButton";
 import { i18n } from "../../../store/i18n";
 import { WordAndExamData } from "../../../../app/(tabs)/dictionary";
+import { RestartIcon } from "../../../icons/RestartIcon";
 
 
 export interface ResultsData {
@@ -73,10 +74,9 @@ function TranslateWordsGameResults(props: TranslateWordsGameResultsProps) {
         label={i18n.t("start_again", { defaultValue: "Alusta uuesti" })}
         style={styles.buttonContainer}
         textStyle={styles.buttonText}
-        leftSideIcon="restart-alt"
-        leftSideIconSize={24}
-        leftSideIconColor="white"
-      />
+      >
+        <RestartIcon />
+      </TextButton>
       {props.incorrectCount > 0 && (
         <TextButton
           testID="TRANSLATE_WORDS_GAME_RESULTS.SCROLL_CONTAINER.FIX_MISTAKES:PRESSABLE"
@@ -85,10 +85,9 @@ function TranslateWordsGameResults(props: TranslateWordsGameResultsProps) {
           label={i18n.t("fix_mistakes", { defaultValue: "Paranda vead" })}
           style={styles.buttonContainer}
           textStyle={styles.buttonText}
-          leftSideIcon="restart-alt"
-          leftSideIconSize={24}
-          leftSideIconColor="white"
-        />
+        >
+          <RestartIcon />
+        </TextButton>
       )}
     </View>
   )

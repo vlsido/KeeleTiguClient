@@ -19,6 +19,8 @@ import {
   useAtom
 } from "jotai";
 import { MaterialIcons } from "@expo/vector-icons";
+import CustomIconButton from "../../buttons/CustomIconButton";
+import { CloseIcon } from "../../icons/CloseIcon";
 
 interface DictionaryItemProps extends Word {
   length: number;
@@ -46,14 +48,13 @@ function DictionaryItem(props: DictionaryItemProps) {
             <Text style={styles.wordText}>
               {props.word}{" "}
             </Text>
-
-            <MaterialIcons
+            <CustomIconButton
               testID="DICTIONARY_ITEM.CONTAINER.REMOVE_ICON:PRESSABLE"
-              name="remove-circle"
-              size={32}
-              color={CommonColors.white}
               onPress={onRemoveWord}
-            />
+              size={32}
+            >
+              <CloseIcon />
+            </CustomIconButton>
           </View>
           <Forms forms={props.forms} />
           <Type type={props.type} />
