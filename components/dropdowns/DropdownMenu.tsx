@@ -1,7 +1,21 @@
+import {
+  useCallback,
+  useMemo
+} from "react";
+import {
+  LayoutChangeEvent,
+  Pressable,
+  StyleProp,
+  StyleSheet,
+  Text,
+  View,
+  ViewStyle
+} from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
-import { atom, useAtom } from "jotai";
-import { useCallback, useMemo } from "react";
-import { LayoutChangeEvent, Pressable, StyleProp, StyleSheet, Text, View, ViewStyle } from "react-native";
+import {
+  atom,
+  useAtom
+} from "jotai";
 import { CommonColors } from "../../constants/Colors";
 
 interface DropdownMenuProps {

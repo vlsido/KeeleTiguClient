@@ -1,4 +1,8 @@
-import { StyleSheet, Text, View } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View
+} from "react-native";
 import { i18n } from "../../../store/i18n";
 import GradeBadge from "../../../miscellaneous/GradeBadge";
 import { CommonColors } from "../../../../constants/Colors";

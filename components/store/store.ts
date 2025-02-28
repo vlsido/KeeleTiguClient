@@ -1,8 +1,9 @@
-import { combineReducers, configureStore } from "@reduxjs/toolkit";
+import {
+  combineReducers,
+  configureStore
+} from "@reduxjs/toolkit";
 import createSagaMiddleware from "redux-saga";
-
 import { atomWithStore } from "jotai-redux";
-
 import dictionaryReducer from "./slices/dictionarySlice";
 import settingsReducer from "./slices/settingsSlice";
 import { watchDictionarySaga } from "./sagas/dictionarySaga";

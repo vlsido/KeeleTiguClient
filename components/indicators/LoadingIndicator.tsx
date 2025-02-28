@@ -1,7 +1,16 @@
-import Animated, { Easing, useAnimatedStyle, useSharedValue, withRepeat, withTiming } from "react-native-reanimated";
-import { LoadingIndicatorIcon } from "../icons/LoadingIndicatorIcon";
 import { useEffect } from "react";
-import { ViewProps, ViewStyle } from "react-native";
+import {
+  ViewProps,
+  ViewStyle
+} from "react-native";
+import Animated, {
+  Easing,
+  useAnimatedStyle,
+  useSharedValue,
+  withRepeat,
+  withTiming
+} from "react-native-reanimated";
+import { LoadingIndicatorIcon } from "../icons/LoadingIndicatorIcon";
 
 interface LoadingIndicatorProps extends ViewProps {
   testID: string;

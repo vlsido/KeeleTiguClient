@@ -1,12 +1,16 @@
 import {
-  useSetAtom
-} from "jotai";
+  useCallback,
+  useEffect
+} from "react";
 import {
   StyleSheet,
   TextInput,
   TextStyle,
   View
 } from "react-native";
+import {
+  useSetAtom
+} from "jotai";
 import {
   ReduceMotion,
   runOnJS,
@@ -17,7 +21,6 @@ import {
 import {
   answerAtom,
 } from "./translateAtoms";
-import { useCallback, useEffect } from "react";
 import { AnimatedTextInput } from "../../util/AnimatedComponentsUtil";
 import SendAnswerButton from "./SendAnswerButton";
 import { CommonColors } from "../../../constants/Colors";

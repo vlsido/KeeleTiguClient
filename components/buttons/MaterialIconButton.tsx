@@ -28,7 +28,6 @@ interface MaterialIconButtonProps {
 
 function MaterialIconButton(props: MaterialIconButtonProps) {
 
-
   if (props.isVisible === false) {
     return null;
   }

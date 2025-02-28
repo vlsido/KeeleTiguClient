@@ -1,8 +1,10 @@
-import Svg, { SvgProps, Path } from "react-native-svg"
+import Svg, {
+  SvgProps,
+  Path
+} from "react-native-svg"
 import { memo } from "react"
 const SvgComponent = (props: SvgProps) => (
   <Svg
-    xmlns="http://www.w3.org/2000/svg"
     width={25}
     height={25}
     fill="none"

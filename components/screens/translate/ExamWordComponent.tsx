@@ -4,14 +4,6 @@ import {
   View
 } from "react-native";
 import {
-  atom,
-  useAtomValue
-} from "jotai";
-import {
-  gameWordsAtom,
-} from "./translateAtoms";
-import {
-  Word,
   WordAndExamData
 } from "../../../app/(tabs)/dictionary";
 import { CommonColors } from "../../../constants/Colors";
