@@ -1,7 +1,5 @@
 import { atom } from "jotai";
-import { WordAndExamData } from "../../../app/(tabs)/dictionary";
 
-export const gameWordsAtom = atom<WordAndExamData[]>([]);
 export const answerAtom = atom<string>("");
 export const isA1LevelOnAtom = atom<boolean>(true);
 export const isA2LevelOnAtom = atom<boolean>(true);

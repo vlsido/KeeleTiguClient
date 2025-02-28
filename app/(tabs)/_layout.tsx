@@ -75,6 +75,8 @@ const styles = StyleSheet.create({
     borderWidth: 3
   },
   tabList: {
+    bottom: 0,
+    position: "absolute",
     width: "100%",
     justifyContent: "space-between",
     backgroundColor: CommonColors.saladGreen,
@@ -84,7 +86,7 @@ const styles = StyleSheet.create({
     borderRadius: 60,
     paddingHorizontal: 15,
     paddingVertical: 10,
-    marginBottom: "2.5%",
+    marginBottom: "1%",
     maxWidth: 250,
   },
   buttonContainer: {

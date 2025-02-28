@@ -36,7 +36,7 @@
       "one": "ответ",
       "few": "ответа",
       "many": "ответов",
-      "other": "ответов",
+      "other": "ответов"
     },
     "count_words_in_dictionary": {
       "one": "В словаре %{count} слово",
@@ -54,7 +54,7 @@
       "one": "Осталось %{count} слово",
       "few": "Осталось %{count} слова",
       "many": "Осталось %{count} слов",
-      "other": "Осталось %{count} слов",
+      "other": "Осталось %{count} слов"
     },
     "TranslateWordsGameResults_correct_count": {
       "one": "%{count} правильный",

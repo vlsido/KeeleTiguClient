@@ -7,19 +7,22 @@ describe(
     test(
       "Renders correctly",
       () => {
+
         renderWithProviders(<TranslateWordsGame />);
 
         expect(screen.getByTestId("TRANSLATE_WORDS_GAME.CONTAINER:VIEW")).toBeOnTheScreen();
 
-        expect(screen.getByTestId("TRANSLATE_WORDS_GAME.GAME:PRESSABLE")).toBeOnTheScreen();
+        const numberOfWordsInput = screen.getByTestId("TRANSLATE_WORDS_GAME.CONTAINER.NUMBER_OF_WORDS_CONTAINER.NUMBER:INPUT");
 
-        expect(screen.getByTestId("TRANSLATE_WORDS_GAME.GAME.TRANSLATION:ICON")).toBeOnTheScreen();
+        expect(numberOfWordsInput).toBeOnTheScreen();
 
-        const expandingView = screen.getByTestId("TRANSLATE_WORDS_GAME.EXPANDING:VIEW");
+        expect(numberOfWordsInput).toHaveProp("value", "20");
 
-        expect(expandingView).toBeOnTheScreen();
+        const checkbox = screen.getByTestId("TRANSLATE_WORDS_GAME.CONTAINER.NUMBER_OF_WORDS.UNLIMITED_WORDS.CHECKBOX:PRESSABLE");
 
-        expect(expandingView).toHaveStyle({ height: 0 });
+        expect(checkbox).toBeOnTheScreen();
+
+        expect(screen.getByTestId("TRANSLATE_WORDS_GAME.CONTAINER.START_CONTAINER:VIEW")).toBeOnTheScreen();
 
       }
     );

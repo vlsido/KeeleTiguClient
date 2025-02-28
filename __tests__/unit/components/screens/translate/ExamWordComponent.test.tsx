@@ -1,6 +1,5 @@
 import { renderWithProviders, screen } from "../../../../../utils/test-utils";
 import ExamWordComponent from "../../../../../components/screens/translate/ExamWordComponent";
-import { gameWordsAtom } from "../../../../../components/screens/translate/translateAtoms";
 import { twoWordsAndExamDataArray } from "../../../../../__mocks__/words";
 import { WordAndExamData } from "../../../../../app/(tabs)/dictionary";
 
@@ -12,15 +11,7 @@ describe(
       () => {
         const gameWords: WordAndExamData[] = [];
         renderWithProviders(
-          <ExamWordComponent mode="any" isAnswerVisible={false} />,
-          {
-            atomsState: [
-              [
-                gameWordsAtom,
-                gameWords
-              ]
-            ]
-          }
+          <ExamWordComponent mode="any" gameWords={gameWords} isAnswerVisible={false} />,
         );
 
         expect(screen.getByTestId("EXAM_WORD_COMPONENT.NO_GAME_WORDS_CONTAINER:VIEW")).toBeOnTheScreen();
@@ -33,15 +24,7 @@ describe(
       "renders correctly when answer IS visible",
       () => {
         renderWithProviders(
-          <ExamWordComponent mode="any" isAnswerVisible={true} />,
-          {
-            atomsState: [
-              [
-                gameWordsAtom,
-                twoWordsAndExamDataArray
-              ]
-            ]
-          }
+          <ExamWordComponent mode="any" gameWords={twoWordsAndExamDataArray} isAnswerVisible={true} />,
         );
 
         expect(screen.getByTestId("EXAM_WORD_COMPONENT.WORD_CONTAINER:VIEW")).toBeOnTheScreen();
@@ -54,15 +37,7 @@ describe(
       () => {
 
         renderWithProviders(
-          <ExamWordComponent mode="any" isAnswerVisible={false} />,
-          {
-            atomsState: [
-              [
-                gameWordsAtom,
-                twoWordsAndExamDataArray
-              ]
-            ]
-          }
+          <ExamWordComponent mode="any" gameWords={twoWordsAndExamDataArray} isAnswerVisible={false} />,
         );
 
         expect(screen.getByTestId("EXAM_WORD_COMPONENT.WORD_CONTAINER:VIEW")).toBeOnTheScreen();

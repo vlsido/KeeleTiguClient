@@ -1,6 +1,10 @@
 import Dictionary from "../../../app/(tabs)/dictionary";
 import { renderWithProviders, screen } from "../../../utils/test-utils";
 import { DictionaryState } from "../../../components/store/slices/dictionarySlice";
+import { renderRouter } from "expo-router/testing-library"
+import RootLayout from "../../../app/_layout";
+import RootLayoutTabs from "../../../app/(tabs)/_layout";
+
 
 describe(
   "Dictionary",
@@ -13,14 +17,20 @@ describe(
           examDictionary: [],
           words: []
         };
-        renderWithProviders(
-          <Dictionary />,
-          {
-            preloadedState: {
-              dictionary: initialDictionary
-            }
-          }
-        );
+        renderRouter({
+          _layout: () => <RootLayoutTabs />,
+          dictionary: () => <Dictionary />
+        }, {
+          initialUrl: "/dictionary"
+        });
+        // renderWithProviders(
+        //   <Dictionary />,
+        //   {
+        //     preloadedState: {
+        //       dictionary: initialDictionary
+        //     }
+        //   }
+        // );
 
         expect(screen.getByTestId("DICTIONARY.WORDS_EMPTY:VIEW")).toBeOnTheScreen();
         expect(screen.getByTestId("DICTIONARY.WORDS_EMPTY:TEXT")).toBeOnTheScreen();

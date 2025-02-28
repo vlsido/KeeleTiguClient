@@ -27,18 +27,22 @@ export interface ExamWord {
 
 interface ExamWordComponentProps {
   mode: TranslateGameMode;
+  gameWords: WordAndExamData[];
   isAnswerVisible: boolean;
 }
 
-const currentWordAtom = atom<React.JSX.Element[]>((get) => {
+interface CurrentWordProps {
+  gameWords: WordAndExamData[]
+}
+
+function CurrentWord(props: CurrentWordProps) {
+
   const wordElements: React.JSX.Element[] = [];
 
   const highlightRussianAccentLetters = store.getState().settings.highlightRussianAccentLetters;
 
-  const gameWords = get(gameWordsAtom);
-
-  if (gameWords.length > 0) {
-    const word = gameWords.at(0);
+  if (props.gameWords.length > 0) {
+    const word = props.gameWords.at(0);
 
     if (word != null) {
       word.examData.russianTranslations.forEach((
@@ -73,15 +77,14 @@ const currentWordAtom = atom<React.JSX.Element[]>((get) => {
     }
   }
   return wordElements;
-});
+}
 
-const currentAnswerAtom = atom<React.JSX.Element[]>((get) => {
+function CurrentAnswer(props: CurrentWordProps) {
+
   const wordElements: React.JSX.Element[] = [];
 
-  const gameWords = get(gameWordsAtom);
-
-  if (gameWords.length > 0) {
-    const word = gameWords.at(0);
+  if (props.gameWords.length > 0) {
+    const word = props.gameWords.at(0);
     if (word != null) {
       const wordParts = word.examData.word.split("+");
 
@@ -114,16 +117,11 @@ const currentAnswerAtom = atom<React.JSX.Element[]>((get) => {
   }
 
   return wordElements;
-});
+}
+
 
 function ExamWordComponent(props: ExamWordComponentProps) {
-  const gameWords = useAtomValue<Word[] | WordAndExamData[]>(gameWordsAtom);
-
-  const currentWord = useAtomValue<React.JSX.Element[]>(currentWordAtom);
-
-  const currentAnswer = useAtomValue<React.JSX.Element[]>(currentAnswerAtom);
-
-  if (gameWords.length === 0) {
+  if (props.gameWords.length === 0) {
     return (
       <View
         testID="EXAM_WORD_COMPONENT.NO_GAME_WORDS_CONTAINER:VIEW"
@@ -142,15 +140,15 @@ function ExamWordComponent(props: ExamWordComponentProps) {
         testID="EXAM_WORD_COMPONENT.WORD_CONTAINER:VIEW"
         style={styles.container}
       >
-        {currentWord}
+        <CurrentWord gameWords={props.gameWords} />
       </View>
       {props.isAnswerVisible === true && (
         <View testID="EXAM_WORD_COMPONENT.ANSWER_CONTAINER:VIEW" style={styles.answerContainer}>
           <Text style={{ textAlign: "center" }}>
-            {currentAnswer}
+            <CurrentAnswer gameWords={props.gameWords} />
           </Text>
           {props.mode === "any" || props.mode === "all" && <AddToDictionaryButton
-            word={gameWords.at(0)}
+            word={props.gameWords.at(0)}
             backgroundStyle="dark" />}
         </View>
       )}

@@ -6,13 +6,18 @@ import {
 } from "firebase/remote-config";
 import {
   createContext,
-  useEffect
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useState
 } from "react";
 import { app } from "../util/FirebaseConfig";
 import { useAppDispatch } from "../../hooks/storeHooks";
 import { clearDictionary } from "../store/slices/dictionarySlice";
 import {
   atom,
+  useAtom,
   useSetAtom
 } from "jotai";
 import { loadSettings } from "../store/slices/settingsSlice";
@@ -20,15 +25,19 @@ import { i18n } from "../store/i18n";
 
 interface ConfigContextProps {
   remoteConfig: RemoteConfig | null;
+  rerender: () => void;
 }
 
 export const ConfigContext = createContext<ConfigContextProps>({
   remoteConfig: null,
+  rerender: () => { },
 });
 
 export const isUnderMaintenanceAtom = atom<boolean>(false);
 
 function ConfigContextProvider({ children }: { children: React.ReactNode }) {
+  const [isRendered, setIsRendered] = useAtom<boolean>(useMemo(() => atom<boolean>(true), []));
+
   const remoteConfig = getRemoteConfig(app);
 
   const dispatch = useAppDispatch();
@@ -48,9 +57,13 @@ function ConfigContextProvider({ children }: { children: React.ReactNode }) {
     );
   }
 
+  useLayoutEffect(() => {
+    dispatch(loadSettings());
+
+  }, []);
+
   useEffect(
     () => {
-      dispatch(loadSettings());
 
       remoteConfig.settings.minimumFetchIntervalMillis = 600000; // 600000ms = 10 minutes
 
@@ -104,13 +117,22 @@ function ConfigContextProvider({ children }: { children: React.ReactNode }) {
     []
   );
 
+  function rerender() {
+    setIsRendered(false);
+
+    setTimeout(() => {
+      setIsRendered(true);
+    }, 1);
+  }
+
   const value = {
     remoteConfig,
+    rerender
   }
 
   return (
     <ConfigContext.Provider value={value}>
-      {children}
+      {isRendered ? children : null}
     </ConfigContext.Provider>
   );
 }

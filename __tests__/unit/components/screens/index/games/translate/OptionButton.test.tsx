@@ -75,7 +75,12 @@ describe(
       () => {
         renderWithProviders(<OptionButton text={expectedText} isSelected={true} onPress={mockFn} />);
 
-        expect(screen.getByTestId("OPTION_BUTTON.CONTAINER.SELECTED.CHECKMARK:ICON")).toBeOnTheScreen();
+        const switchButton = screen.getByTestId("OPTION_BUTTON.CONTAINER.SELECTED.SWITCH:PRESSABLE");
+
+        expect(switchButton).toBeOnTheScreen();
+
+        expect(switchButton).toHaveProp("value", true);
+
       }
     );
 
@@ -84,7 +89,11 @@ describe(
       () => {
         renderWithProviders(<OptionButton text={expectedText} isSelected={false} onPress={mockFn} />);
 
-        expect(screen.queryByTestId("OPTION_BUTTON.CONTAINER.SELECTED.CHECKMARK:ICON")).not.toBeOnTheScreen();
+        const switchButton = screen.getByTestId("OPTION_BUTTON.CONTAINER.SELECTED.SWITCH:PRESSABLE");
+
+        expect(switchButton).toBeOnTheScreen();
+
+        expect(switchButton).toHaveProp("value", false);
       }
     );
 
