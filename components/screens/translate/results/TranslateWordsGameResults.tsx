@@ -35,13 +35,19 @@ function TranslateWordsGameResults(props: TranslateWordsGameResultsProps) {
         incorrectCount={props.incorrectCount} />
       <View style={styles.listContainer}>
         <ScrollView contentContainerStyle={styles.listContentContainer}>
-          {props.results.map((item) => {
+          {props.results.map((item, index) => {
             return (
-              <View style={styles.listItemContainer}>
+              <View
+                key={index}
+                style={styles.listItemContainer}
+              >
                 <View style={styles.wordContainer}>
                   {item.word.examData.russianTranslations.map((word, index) => {
                     if (index > 2) return null;
-                    return <Text style={styles.wordText}>{word.replaceAll("\"", "")}</Text>
+                    return <Text
+                      key={index}
+                      style={styles.wordText}>{word.replaceAll("\"", "")}
+                    </Text>
                   })}
                 </View>
                 <View style={styles.wordContainer}>
