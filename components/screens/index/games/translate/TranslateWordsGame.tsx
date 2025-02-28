@@ -348,7 +348,7 @@ export default TranslateWordsGame;
 
 const styles = StyleSheet.create({
   container: {
-    width: "90%",
+    width: "100%",
     maxWidth: 400,
     backgroundColor: "#171814",
     borderWidth: 1,
@@ -386,6 +386,7 @@ const styles = StyleSheet.create({
     flexDirection: "row"
   },
   numberOfWordsTextInputContainer: {
+    flex: 1,
     backgroundColor: CommonColors.black,
     borderWidth: 2,
     borderColor: CommonColors.whiteAlternative,
@@ -399,6 +400,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10
   },
   unlimitedWordsContainer: {
+    flex: 1,
     paddingHorizontal: 10,
     gap: 10,
     flexDirection: "row",
@@ -424,7 +426,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   translateOptionsContainer: {
-    width: "90%",
     backgroundColor: "#2C332C",
     borderLeftWidth: 1,
     borderRightWidth: 1,
