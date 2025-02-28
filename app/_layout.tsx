@@ -13,15 +13,12 @@ import {
 } from "../hooks/storeHooks";
 import HintContextProvider from "../components/store/HintContext/HintContext";
 import { useAtomValue } from "jotai";
-import LeftHeaderButton from "../components/buttons/LeftHeaderButton";
 import {
   setExamDictionary,
   setMyDictionary
 } from "../components/store/slices/dictionarySlice";
 import { WordAndExamData } from "./(tabs)/dictionary";
 import SettingsMenu from "../components/settings/SettingsMenu";
-import { View } from "react-native";
-import Header from "../components/Header";
 import StackHeader from "../components/StackHeader";
 
 export default function RootLayout() {
