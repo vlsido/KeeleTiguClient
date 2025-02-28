@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "column",
-    backgroundColor: "#222322"
+    backgroundColor: CommonColors.black
   },
   noWordsContainer: {
     flex: 1,

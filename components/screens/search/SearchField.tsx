@@ -422,7 +422,7 @@ function SearchField() {
                 ? <LoadingIndicator
                   testID="SEARCH_FIELD.FIND_WORD.LOADING:ACTIVITY_INDICATOR"
                   color="black" />
-                : <SearchIcon />}
+                : <SearchIcon color={"#212221"} />}
             </Pressable>
           </View>
         </GestureDetector>

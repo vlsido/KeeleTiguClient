@@ -24,7 +24,6 @@ function RegisterButton(props: RegisterButtonProps) {
     )
   }
 
-
   return (
     <TextButton
       testID="REGISTER_BUTTON.REGISTER:PRESSABLE"
