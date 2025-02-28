@@ -1,4 +1,7 @@
-import { CommonColors } from "../constants/Colors";
+import {
+  useEffect,
+  useRef
+} from "react";
 import {
   FlatList,
   ScrollView,
@@ -6,6 +9,7 @@ import {
   Text,
   View
 } from "react-native";
+import { CommonColors } from "../constants/Colors";
 import Forms from "../components/text_components/Forms";
 import FoundArticlesCounter from "../components/screens/word_data/FoundArticlesCounter";
 import Type from "../components/screens/dictionary/Type";
@@ -21,6 +25,12 @@ interface WordDataProps {
 
 function WordData(props: WordDataProps) {
 
+  const scrollRef = useRef<ScrollView | null>(null);
+
+  useEffect(() => {
+    scrollRef?.current?.scrollTo({ y: 0 })
+  }, [props.wordDataArray]);
+
   if (props.wordDataArray == null) {
     return null;
   }
@@ -34,7 +44,10 @@ function WordData(props: WordDataProps) {
   return (
     <ScrollView
       testID="WORD_DATA.SCROLL_CONTAINER:VIEW"
+      ref={scrollRef}
       style={styles.container}
+
+      onLayout={() => console.log("layed out")}
     >
       <FoundArticlesCounter wordData={props.wordDataArray} />
       {props.wordDataArray.map((
@@ -55,6 +68,7 @@ function WordData(props: WordDataProps) {
             testID="WORD_DATA.SCROLL_CONTAINER.WORD:VIEW"
             key={`wordIndex-${wordData.index}`}
             style={styles.wordContainer}
+
           >
             <View style={styles.wordHeader}>
               <Text>
