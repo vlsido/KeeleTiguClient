@@ -20,14 +20,7 @@ import {
 } from "../components/store/slices/dictionarySlice";
 import { WordAndExamData } from "./(tabs)/dictionary";
 import SettingsMenu from "../components/settings/SettingsMenu";
-import { i18n } from "../components/store/i18n";
 
-// import ee from "../components/store/translations/ee.json";
-// import en from "../components/store/translations/en.json";
-// import ru from "../components/store/translations/ru.json";
-// i18n.store(ee);
-// i18n.store(en);
-// i18n.store(ru);
 export default function RootLayout() {
 
   return (
@@ -35,7 +28,6 @@ export default function RootLayout() {
       <AuthContextProvider>
         <ConfigContextProvider>
           <HintContextProvider>
-
             <>
               <SettingsMenu />
               <RootLayoutStack />
@@ -47,7 +39,7 @@ export default function RootLayout() {
   );
 }
 
-function RootLayoutStack() {
+export function RootLayoutStack() {
   const isUnderMaintenance = useAtomValue(isUnderMaintenanceAtom);
 
   const dispatch = useAppDispatch();
