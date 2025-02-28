@@ -12,6 +12,7 @@ import Type from "../components/screens/dictionary/Type";
 import { Word } from "../app/(tabs)/dictionary";
 import Usage from "./text_components/Usage";
 import AddToDictionaryIconButton from "./buttons/AddToDictionaryIconButton";
+import { i18n } from "./store/i18n";
 
 interface WordDataProps {
   wordDataArray: Word[] | null;
@@ -27,7 +28,7 @@ function WordData(props: WordDataProps) {
   if (props.wordDataArray.length === 0) {
     return <Text
       testID="WORD_DATA.NOTHING_FOUND:TEXT"
-      style={styles.notFoundText}>Ei leitud!</Text>;
+      style={styles.notFoundText}>{i18n.t("not_found", { defaultValue: "Ei leitud!" })}</Text>;
   }
 
   return (
