@@ -27,16 +27,16 @@ function TranslateWordsGameResultsHeader(props: TranslateWordsGameResultsHeaderP
     <View style={styles.container}>
       <View style={styles.textContainer}>
         <Text style={styles.text}>
-          {i18n.t("TranslateWordsGameResults_test_results", { defaultValue: "Testi tulemus on" })}
+          {i18n.t("TranslateWordsGameResultsHeader_test_results", { defaultValue: "Testi tulemus on" })}
           {" "}
           <Text style={styles.rightAnswerText}>
-            {i18n.t("TranslateWordsGameResults_correct_count", { defaultValue: "%{count} õige", count: props.correctCount })}
+            {i18n.t("TranslateWordsGameResultsHeader_correct_count", { defaultValue: "%{count} õige", count: props.correctCount })}
             {" "}
           </Text>
           {i18n.t("and", { defaultValue: "ja" })}
           {" "}
           <Text style={styles.wrongAnswerText}>
-            {i18n.t("TranslateWordsGameResults_incorrect_count", { defaultValue: "%{count} vale", count: props.incorrectCount })}
+            {i18n.t("TranslateWordsGameResultsHeader_incorrect_count", { defaultValue: "%{count} vale", count: props.incorrectCount })}
             {" "}
           </Text>
           {i18n.t("incorrect_answers_plural", { defaultValue: "vastust", count: props.incorrectCount })}
