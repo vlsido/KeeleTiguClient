@@ -136,7 +136,7 @@ export default function Translate() {
     return array;
   }
 
-  function getExamDictionaryFromMyDictionary() {
+  function getWordAndExamDataFromMyDictionary() {
     const newExamDictionary: (WordAndExamData | null)[] = myDictionary.map((wordsAndData) => {
       const russianTranslations = wordsAndData.usages.at(0)?.definitionData.at(0)?.russianTranslations;
 
@@ -159,86 +159,71 @@ export default function Translate() {
     return shuffleArray(filteredExamDictionary);
   }
 
+  function getWordAndExamDataFromExamDictionary() {
+    return examDictionary.filter((wordAndExamData) =>
+      (wordAndExamData.examData.level === "A1" && isA1LevelOn)
+      || (wordAndExamData.examData.level === "A2" && isA2LevelOn)
+      || (wordAndExamData.examData.level === "B1" && isB1LevelOn));
+  }
+
   const refreshGameWords = useCallback(
     () => {
+      const numberOfWordsInt = parseInt(quantity);
+
       switch (mode) {
         case "any":
-          const filteredDictionary = examDictionary.filter((wordAndExamData) =>
-            (wordAndExamData.examData.level === "A1" && isA1LevelOn)
-            || (wordAndExamData.examData.level === "A2" && isA2LevelOn)
-            || (wordAndExamData.examData.level === "B1" && isB1LevelOn));
+          const filteredDictionary: WordAndExamData[] = getWordAndExamDataFromExamDictionary();
 
           if (filteredDictionary.length === 0) {
             if (isA1LevelOn || isA2LevelOn || isB1LevelOn) {
               dispatch({ type: "dictionary/fetchRandomWords" });
               return;
             }
-            if (quantity !== "0") {
-              const numberOfWordsInt = parseInt(quantity);
 
-              if (!isNaN(numberOfWordsInt)) {
-
-                setGameWords(shuffleArray(examDictionary.slice(0, numberOfWordsInt)));
-              }
+            if (quantity != null && quantity !== "0" && !isNaN(numberOfWordsInt)) {
+              setGameWords(shuffleArray(examDictionary.slice(0, numberOfWordsInt)));
             } else {
               setGameWords(shuffleArray(examDictionary));
             }
+
+            return;
           }
 
-
-          if (quantity !== "0") {
-            const numberOfWordsInt = parseInt(quantity);
-
-            if (!isNaN(numberOfWordsInt)) {
-              setGameWords(shuffleArray(filteredDictionary.slice(0, numberOfWordsInt)));
-            }
+          if (quantity != null && quantity !== "0" && !isNaN(numberOfWordsInt)) {
+            setGameWords(shuffleArray(filteredDictionary.slice(0, numberOfWordsInt)));
           } else {
             setGameWords(shuffleArray(filteredDictionary));
           }
 
           break;
         case "my_dictionary":
-          const newExamDictionary: WordAndExamData[] = getExamDictionaryFromMyDictionary();
-
-
-          if (quantity !== "0") {
-            const numberOfWordsInt = parseInt(quantity);
-
-            if (!isNaN(numberOfWordsInt)) {
-              setGameWords(shuffleArray(newExamDictionary.slice(0, numberOfWordsInt)));
-            }
+          const newExamDictionary: WordAndExamData[] = getWordAndExamDataFromMyDictionary();
+          if (quantity != null && quantity !== "0" && !isNaN(numberOfWordsInt)) {
+            setGameWords(shuffleArray(newExamDictionary.slice(0, numberOfWordsInt)));
           } else {
             setGameWords(shuffleArray(newExamDictionary));
           }
 
           break;
-        case "all":
-          const dictionary: WordAndExamData[] = getExamDictionaryFromMyDictionary();
+        default:
+          const dictionary: WordAndExamData[] = getWordAndExamDataFromMyDictionary();
 
-          const filteredExamDictionary = examDictionary.filter((wordAndExamData) =>
-            (wordAndExamData.examData.level === "A1" && isA1LevelOn)
-            || (wordAndExamData.examData.level === "A2" && isA2LevelOn)
-            || (wordAndExamData.examData.level === "B1" && isB1LevelOn));
+          const filteredExamDictionary: WordAndExamData[] = getWordAndExamDataFromExamDictionary();
 
-          if (quantity !== "0") {
-            const numberOfWordsInt = parseInt(quantity);
+          if (quantity != null && quantity !== "0" && !isNaN(numberOfWordsInt)) {
 
-            if (!isNaN(numberOfWordsInt)) {
+            // Up to half of the size of the array is populated with words from user's dictionary
+            const wordsToPlay = dictionary.slice(0, Math.floor(numberOfWordsInt / 2));
 
-              // Up to half of the size of the array is populated with words from user's dictionary
-
-              const wordsToPlay = dictionary.slice(0, Math.floor(numberOfWordsInt / 2));
-
-              for (const item of filteredExamDictionary) {
-                if (wordsToPlay.length < numberOfWordsInt) {
-                  wordsToPlay.push(item);
-                } else {
-                  break;
-                }
+            for (const item of filteredExamDictionary) {
+              if (wordsToPlay.length < numberOfWordsInt) {
+                wordsToPlay.push(item);
+              } else {
+                break;
               }
-
-              setGameWords(shuffleArray(wordsToPlay));
             }
+
+            setGameWords(shuffleArray(wordsToPlay));
           } else {
             const wordsToPlay = dictionary.concat(filteredExamDictionary);
             setGameWords(shuffleArray(wordsToPlay));
@@ -247,6 +232,7 @@ export default function Translate() {
       }
     },
     [
+      quantity,
       examDictionary,
       myDictionary,
       isA1LevelOn,
@@ -259,9 +245,6 @@ export default function Translate() {
 
   useEffect(() => {
     if (quantity !== "0" && wasPopulated === true) return;
-
-    console.log("gameWords", gameWords);
-    console.log("examDic", examDictionary);
     if (examDictionary.length > 0 && gameWords.length === 0) {
       refreshGameWords();
       setWasPopulated(true);
@@ -473,7 +456,7 @@ export default function Translate() {
             </Text>
             :
             <>
-              {(mode === "my_dictionary" || mode === "all") && quantity !== "0" &&
+              {quantity !== "0" &&
                 <Text style={styles.wordsLeftText}>
                   {i18n.t("Translate_words_remaining", { defaultValue: "%{count} sõnad on jaanud", count: gameWords.length })}
                 </Text>
