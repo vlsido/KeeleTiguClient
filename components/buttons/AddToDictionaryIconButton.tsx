@@ -9,7 +9,10 @@ import {
   useSharedValue,
   withTiming
 } from "react-native-reanimated";
-import { Word, WordAndExamData } from "../../app/(tabs)/dictionary";
+import {
+  Word,
+  WordAndExamData
+} from "../../app/(tabs)/dictionary";
 import {
   useAppDispatch,
   useAppSelector
@@ -85,7 +88,6 @@ function AddToDictionaryIconButton(props: AddToDictionaryButtonProps) {
         2500
       );
     }
-
   }
 
   return (
