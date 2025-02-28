@@ -113,7 +113,8 @@ function Dictionary() {
       <FlatList
         testID="DICTIONARY.WORDS_LIST:FLATLIST"
         data={myDictionaryState}
-        contentContainerStyle={styles.listContainer}
+        style={styles.list}
+        contentContainerStyle={styles.listContentContainer}
         keyExtractor={(item) => item.index.toString()}
         renderItem={({ item, index }) => <DictionaryItem {...item} length={index + 1} />}
       />
@@ -127,7 +128,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: "100%",
-    paddingHorizontal: 15,
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "column",
@@ -160,8 +160,13 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 16
   },
-  listContainer: {
+  list: {
+    width: "100%"
+  },
+  listContentContainer: {
     gap: 10,
     marginVertical: 10,
+    maxWidth: 600,
+    alignSelf: "center"
   }
 });
