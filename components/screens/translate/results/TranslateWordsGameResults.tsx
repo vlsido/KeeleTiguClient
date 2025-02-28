@@ -8,10 +8,7 @@ import { CommonColors } from "../../../../constants/Colors";
 import TranslateWordsGameResultsHeader from "./TranslateWordsGameResultsHeader";
 import TextButton from "../../../buttons/TextButton";
 import { i18n } from "../../../store/i18n";
-import { useCallback } from "react";
-import { useSetAtom } from "jotai";
 import { WordAndExamData } from "../../../../app/(tabs)/dictionary";
-import { gameWordsAtom } from "../translateAtoms";
 
 
 export interface ResultsData {
@@ -36,7 +33,6 @@ function TranslateWordsGameResults(props: TranslateWordsGameResultsProps) {
       <TranslateWordsGameResultsHeader
         correctCount={props.correctCount}
         incorrectCount={props.incorrectCount} />
-
       <View style={styles.listContainer}>
         <ScrollView contentContainerStyle={styles.listContentContainer}>
           {props.results.map((item) => {
@@ -75,17 +71,19 @@ function TranslateWordsGameResults(props: TranslateWordsGameResultsProps) {
         leftSideIconSize={24}
         leftSideIconColor="white"
       />
-      <TextButton
-        testID="TRANSLATE_WORDS_GAME_RESULTS.SCROLL_CONTAINER.FIX_MISTAKES:PRESSABLE"
-        text={i18n.t("fix_mistakes", { defaultValue: "Paranda vead" })}
-        onPress={props.onRestartToFixMistakes}
-        label={i18n.t("fix_mistakes", { defaultValue: "Paranda vead" })}
-        style={styles.buttonContainer}
-        textStyle={styles.buttonText}
-        leftSideIcon="restart-alt"
-        leftSideIconSize={24}
-        leftSideIconColor="white"
-      />
+      {props.incorrectCount > 0 && (
+        <TextButton
+          testID="TRANSLATE_WORDS_GAME_RESULTS.SCROLL_CONTAINER.FIX_MISTAKES:PRESSABLE"
+          text={i18n.t("fix_mistakes", { defaultValue: "Paranda vead" })}
+          onPress={props.onRestartToFixMistakes}
+          label={i18n.t("fix_mistakes", { defaultValue: "Paranda vead" })}
+          style={styles.buttonContainer}
+          textStyle={styles.buttonText}
+          leftSideIcon="restart-alt"
+          leftSideIconSize={24}
+          leftSideIconColor="white"
+        />
+      )}
     </View>
   )
 }
@@ -122,7 +120,8 @@ const styles = StyleSheet.create({
   },
   wordText: {
     fontSize: 16,
-    color: "white"
+    color: "white",
+    textAlign: "center"
   },
   userAnswerText: {
     fontSize: 16
