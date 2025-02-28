@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "Examinyasha",
-    "slug": "Examinyasha",
-    "version": "1.0.2",
+    "name": "KeeleTigu",
+    "slug": "KeeleTigu",
+    "version": "1.0.7",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "examinyasha",

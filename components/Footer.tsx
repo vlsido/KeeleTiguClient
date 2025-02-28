@@ -10,7 +10,7 @@ function Footer() {
         by coslavko
       </Text>
       <Text testID="FOOTER.APP_NAME:TEXT" style={styles.text}>
-        Examinyasha
+        KeeleTigu
       </Text>
       <Text testID="FOOTER.APP_BUILD:TEXT" style={styles.text}>
         Build {packageJson.version}
