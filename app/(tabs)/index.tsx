@@ -6,6 +6,7 @@ import TranslateWordsGame from "../../components/screens/index/games/translate/T
 import { CommonColors } from "../../constants/Colors";
 
 export default function Index() {
+
   return (
     <View
       testID="INDEX.CONTAINER:VIEW"

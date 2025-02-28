@@ -34,6 +34,7 @@
     "Type_subjunctive": "konjunktiiv",
     "Translate_taking_words_from_dictionary": "Võtame sõnad sõnastikust...",
     "Dictionary_empty": "Siin pole midagi. Lisa uued sõnad testi leheküljel või otsingus.",
+    "MovedNotice_description": "Me asume uuel leheküljel",
     "incorrect_answers_plural": {
       "one": "vastust",
       "other": "vastust"

@@ -20,7 +20,6 @@ import {
 import { WordAndExamData } from "./(tabs)/dictionary";
 import SettingsMenu from "../components/settings/SettingsMenu";
 import StackHeader from "../components/StackHeader";
-import { Linking } from "react-native";
 
 export default function RootLayout() {
 
@@ -41,10 +40,6 @@ export default function RootLayout() {
 }
 
 export function RootLayoutStack() {
-
-  useEffect(() => {
-    Linking.openURL("keeletigu.web.app");
-  }, []);
 
   const isUnderMaintenance = useAtomValue(isUnderMaintenanceAtom);
 
@@ -109,18 +104,25 @@ export function RootLayoutStack() {
       }}
     >
       <Stack.Screen
-        redirect={isUnderMaintenance}
+        redirect={true}
         name="(tabs)"
         options={{ headerShown: false }} />
       <Stack.Screen
-        redirect={!isUnderMaintenance}
+        redirect={false}
+        name="moved"
+        options={{
+          title: "",
+          headerShown: false
+        }} />
+      <Stack.Screen
+        redirect={true}
         name="maintenance"
         options={{
           title: "",
           headerShown: false
         }} />
       <Stack.Screen
-        redirect={isUnderMaintenance}
+        redirect={true}
         name="translate"
         options={{
           title: "",

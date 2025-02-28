@@ -34,6 +34,7 @@
     "Type_subjunctive": "subjunctive",
     "Translate_taking_words_from_dictionary": "Pulling words from dictionary...",
     "Dictionary_empty": "Dictionary is empty. Add new words on testing page or by searching.",
+    "MovedNotice_description": "We've moved",
     "incorrect_answers_plural": {
       "one": "answer",
       "other": "answers"
