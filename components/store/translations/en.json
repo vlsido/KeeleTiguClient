@@ -2,11 +2,11 @@
   "en": {
     "count_words_in_dictionary": {
       "one": "%{count} word in dictionary",
-      "other": "%{count} words in dictionary",
+      "other": "%{count} words in dictionary"
     },
     "count_words_in_search": {
       "one": "Found %{count} word",
-      "other": "Found %{count} words",
+      "other": "Found %{count} words"
     },
     "add_to_dictionary": "Add to dictionary",
     "tap_to_close": "Tap to close.",
@@ -17,6 +17,6 @@
     "TranslateWordsGame_translate_words": "Translate Words",
     "TranslateWordsGame_number_of_words": "Number of words",
     "TranslateWordsGame_unlimited_words": "Unlimited",
-    "TranslateWordsGame_start": "START",
+    "TranslateWordsGame_start": "START"
   }
 }

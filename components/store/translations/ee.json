@@ -34,7 +34,7 @@
     "Dictionary_empty": "Siin pole midagi. Lisa uued sõnad testi leheküljel või otsingus.",
     "incorrect_answers_plural": {
       "one": "vastust",
-      "other": "vastust",
+      "other": "vastust"
     },
     "count_words_in_dictionary": {
       "one": "Sõnastikus on %{count} sõna",

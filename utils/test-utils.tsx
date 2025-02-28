@@ -43,6 +43,7 @@ export function renderWithProviders(
 ) {
 
   function Wrapper({ children }: { children: React.ReactNode }): JSX.Element {
+
     return (
       <Provider store={store}>
         <AtomsProvider initialValues={atomsState}>

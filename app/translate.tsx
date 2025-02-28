@@ -26,7 +26,6 @@ import ExamWordComponent from "../components/screens/translate/ExamWordComponent
 import TextAnswerField from "../components/screens/translate/TextAnswerField";
 import {
   answerAtom,
-  gameWordsAtom,
   isA1LevelOnAtom,
   isA2LevelOnAtom,
   isB1LevelOnAtom
@@ -64,7 +63,7 @@ export default function Translate() {
   const [
     gameWords,
     setGameWords
-  ] = useAtom<WordAndExamData[]>(gameWordsAtom);
+  ] = useAtom<WordAndExamData[]>(useMemo(() => atom<WordAndExamData[]>([]), []));
 
   const [resultsData, setResultsData] =
     useAtom<ResultsData[]>(useMemo(() => atom<ResultsData[]>([]), []));
@@ -157,7 +156,7 @@ export default function Translate() {
 
     const filteredExamDictionary = newExamDictionary.filter((wordData) => wordData !== null) as WordAndExamData[];
 
-    return filteredExamDictionary;
+    return shuffleArray(filteredExamDictionary);
   }
 
   const refreshGameWords = useCallback(
@@ -227,10 +226,11 @@ export default function Translate() {
             if (!isNaN(numberOfWordsInt)) {
 
               // Up to half of the size of the array is populated with words from user's dictionary
+
               const wordsToPlay = dictionary.slice(0, Math.floor(numberOfWordsInt / 2));
 
               for (const item of filteredExamDictionary) {
-                if (wordsToPlay.length < numberOfWordsInt + 1) {
+                if (wordsToPlay.length < numberOfWordsInt) {
                   wordsToPlay.push(item);
                 } else {
                   break;
@@ -470,7 +470,7 @@ export default function Translate() {
             </Text>
             :
             <>
-              {mode === "my_dictionary" &&
+              {(mode === "my_dictionary" || mode === "all") && quantity !== "0" &&
                 <Text style={styles.wordsLeftText}>
                   {i18n.t("Translate_words_remaining", { defaultValue: "%{count} sõnad on jaanud", count: gameWords.length })}
                 </Text>
@@ -484,6 +484,7 @@ export default function Translate() {
         }
         <ExamWordComponent
           mode={mode}
+          gameWords={gameWords}
           isAnswerVisible={isAnswerVisible}
         />
       </View>

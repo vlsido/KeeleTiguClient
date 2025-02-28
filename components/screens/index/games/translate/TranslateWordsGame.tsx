@@ -250,6 +250,7 @@ function TranslateWordsGame() {
             !isNumberOfWordsValid && { borderColor: "red" }
           ]}>
             <TextInput
+              testID="TRANSLATE_WORDS_GAME.CONTAINER.NUMBER_OF_WORDS_CONTAINER.NUMBER:INPUT"
               style={[styles.numberOfWordsTextInput, { pointerEvents: isUnlimitedGame === true ? "none" : "auto" }]}
               inputMode="numeric"
               placeholder="20"
@@ -318,9 +319,11 @@ function TranslateWordsGame() {
           toggleOption("my_dictionary");
         }}
         isSelected={gameOptions === "my_dictionary" || gameOptions === "all"} />
-      <View style={styles.startContainer}>
+      <View
+        testID="TRANSLATE_WORDS_GAME.CONTAINER.START_CONTAINER:VIEW"
+        style={styles.startContainer}>
         <Pressable
-          testID="TRANSLATE_WORDS_GAME.EXPANDING.START:PRESSABLE"
+          testID="TRANSLATE_WORDS_GAME.CONTAINER.START_CONTAINER.START:PRESSABLE"
           style={[
             styles.startButtonContainer,
             {

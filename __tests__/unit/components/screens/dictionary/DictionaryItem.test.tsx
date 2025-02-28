@@ -7,10 +7,11 @@ describe(
   "DictionaryItem",
   () => {
     test(
-      "renders",
+      "renders correctly",
       () => {
 
         const word: Word = {
+          index: 1111,
           word: "karu",
           type: "s",
           forms: "karu, karu, karu",
@@ -29,7 +30,7 @@ describe(
           ]
         };
 
-        renderWithProviders(<DictionaryItem {...word} index={0} />)
+        renderWithProviders(<DictionaryItem {...word} length={0} />)
 
         expect(screen.getByTestId("DICTIONARY_ITEM.CONTAINER:VIEW"))
       }

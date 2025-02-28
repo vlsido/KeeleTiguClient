@@ -7,7 +7,10 @@ import { CommonColors } from "../constants/Colors";
 import { Provider } from "react-redux";
 import store from "../components/store/store";
 import { useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "../hooks/storeHooks";
+import {
+  useAppDispatch,
+  useAppSelector
+} from "../hooks/storeHooks";
 import HintContextProvider from "../components/store/HintContext/HintContext";
 import { useAtomValue } from "jotai";
 import LeftHeaderButton from "../components/buttons/LeftHeaderButton";
@@ -16,27 +19,33 @@ import {
   setMyDictionary
 } from "../components/store/slices/dictionarySlice";
 import { WordAndExamData } from "./(tabs)/dictionary";
-import SettingsWrapper from "../components/wrappers/SettingsWrapper";
+import SettingsMenu from "../components/settings/SettingsMenu";
+import { i18n } from "../components/store/i18n";
 
+// import ee from "../components/store/translations/ee.json";
+// import en from "../components/store/translations/en.json";
+// import ru from "../components/store/translations/ru.json";
+// i18n.store(ee);
+// i18n.store(en);
+// i18n.store(ru);
 export default function RootLayout() {
 
   return (
     <Provider store={store}>
-      <ConfigContextProvider>
-        <HintContextProvider>
-          <AuthContextProvider>
-            <SettingsWrapper>
-              <>
-                <RootLayoutStack />
-              </>
-            </SettingsWrapper>
-          </AuthContextProvider>
-        </HintContextProvider >
-      </ConfigContextProvider>
+      <AuthContextProvider>
+        <ConfigContextProvider>
+          <HintContextProvider>
+
+            <>
+              <SettingsMenu />
+              <RootLayoutStack />
+            </>
+          </HintContextProvider >
+        </ConfigContextProvider>
+      </AuthContextProvider>
     </Provider>
   );
 }
-
 
 function RootLayoutStack() {
   const isUnderMaintenance = useAtomValue(isUnderMaintenanceAtom);
@@ -44,7 +53,6 @@ function RootLayoutStack() {
   const dispatch = useAppDispatch();
 
   const examDictionary = useAppSelector((state) => state.dictionary.examDictionary);
-
 
   useEffect(
     () => {

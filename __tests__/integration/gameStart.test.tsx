@@ -1,4 +1,4 @@
-import { screen, userEvent, waitFor } from "@testing-library/react-native";
+import { screen, userEvent } from "@testing-library/react-native";
 import { renderWithProviders } from "../../utils/test-utils";
 import Index from "../../app/(tabs)/index";
 
@@ -13,19 +13,8 @@ describe(
 
         renderWithProviders(<Index />);
 
-        // const expandingViewStyle = { height: 0 };
-
-        const translationGameButton = screen.getByTestId("TRANSLATE_WORDS_GAME.GAME:PRESSABLE");
-
-        const expandingView = screen.getByTestId("TRANSLATE_WORDS_GAME.EXPANDING:VIEW");
-
         expect(screen.getByTestId("INDEX.CONTAINER:VIEW")).toBeOnTheScreen();
 
-        expect(translationGameButton).toBeOnTheScreen();
-
-        expect(expandingView).toBeOnTheScreen();
-
-        await user.press(translationGameButton);
 
         const options = screen.getAllByTestId("OPTION_BUTTON.CONTAINER:PRESSABLE");
 
@@ -39,7 +28,9 @@ describe(
 
         await user.press(randomWordsModeButton);
 
-        const startGameButton = screen.getByTestId("TRANSLATE_WORDS_GAME.EXPANDING.START:PRESSABLE");
+        expect(screen.getByTestId("TRANSLATE_WORDS_GAME.CONTAINER.START_CONTAINER:VIEW")).toBeOnTheScreen();
+
+        const startGameButton = screen.getByTestId("TRANSLATE_WORDS_GAME.CONTAINER.START_CONTAINER.START:PRESSABLE");
 
         expect(startGameButton).toBeOnTheScreen();
 

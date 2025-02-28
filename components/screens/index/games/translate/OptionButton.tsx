@@ -39,6 +39,7 @@ function OptionButton(props: OptionButtonProps) {
       </View>
       <View testID="OPTION_BUTTON.CONTAINER.SELECTED:VIEW" style={styles.switchContainer}>
         <Switch
+          testID="OPTION_BUTTON.CONTAINER.SELECTED.SWITCH:PRESSABLE"
           value={props.isSelected}
           trackColor={{ false: CommonColors.white, true: CommonColors.white }}
           thumbColor={CommonColors.saladGreen}
