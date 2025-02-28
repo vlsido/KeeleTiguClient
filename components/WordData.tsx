@@ -36,9 +36,13 @@ function WordData(props: WordDataProps) {
   }
 
   if (props.wordDataArray.length === 0) {
-    return <Text
-      testID="WORD_DATA.NOTHING_FOUND:TEXT"
-      style={styles.notFoundText}>{i18n.t("not_found", { defaultValue: "Ei leitud!" })}</Text>;
+    return (
+      <Text
+        testID="WORD_DATA.NOTHING_FOUND:TEXT"
+        style={styles.notFoundText}>
+        {i18n.t("not_found", { defaultValue: "Ei leitud!" })}
+      </Text>
+    );
   }
 
   return (
