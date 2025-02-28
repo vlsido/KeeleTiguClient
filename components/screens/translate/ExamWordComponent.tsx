@@ -147,7 +147,7 @@ function ExamWordComponent(props: ExamWordComponentProps) {
           <Text style={{ textAlign: "center" }}>
             <CurrentAnswer gameWords={props.gameWords} />
           </Text>
-          {props.mode === "any" || props.mode === "all" && <AddToDictionaryButton
+          {(props.mode === "any" || props.mode === "all") && <AddToDictionaryButton
             word={props.gameWords.at(0)}
             backgroundStyle="dark" />}
         </View>
