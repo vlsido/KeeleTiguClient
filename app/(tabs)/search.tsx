@@ -64,7 +64,10 @@ function Search() {
       >
         <SearchField />
         <View style={styles.wordsDataContainer}>
-          <WordData wordDataArray={wordsDataArray} searchString={searchString} />
+          <WordData
+            wordDataArray={wordsDataArray}
+            searchString={searchString}
+          />
         </View>
       </View>
     </GestureDetector>
