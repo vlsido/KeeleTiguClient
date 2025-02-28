@@ -23,7 +23,7 @@ function OptionButton(props: OptionButtonProps) {
         { opacity: props.isSelected ? 1 : 0.75 }
       ]} onPress={props.onPress}>
       <View style={styles.verticalContainer}>
-        <View>
+        <View style={styles.optionTextContainer}>
           <Text
             testID="OPTION_BUTTON.CONTAINER.OPTION_NAME:TEXT"
             style={styles.optionText}>{props.text}</Text>
@@ -65,18 +65,22 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     paddingVertical: 10
   },
+  optionTextContainer: {
+    width: "100%"
+  },
   optionText: {
+    width: "100%",
     color: CommonColors.white,
     fontSize: 16
   },
   verticalContainer: {
+    flex: 1,
     flexDirection: "column",
     paddingVertical: 5,
     gap: 10
   },
   childrenContainer: {
-    minHeight: 36,
-    minWidth: 36,
+    flex: 1,
     flexDirection: "row",
     alignItems: "center",
     gap: 10
