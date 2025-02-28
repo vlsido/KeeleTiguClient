@@ -20,7 +20,8 @@
     "TranslateWordsGame_random_words": "Случайные слова",
     "TranslateWordsGame_words_from_my_dictionary": "Слова из моего словарика",
     "TranslateWordsGame_start": "НАЧАТЬ",
-    "TranslateWordsGameResults_test_results": "Результаты теста:",
+    "TranslateWordsGameResultsHeader_all_right": "Прекрасно! Все слова правильно переведены!", 
+    "TranslateWordsGameResultsHeader_test_results": "Результаты теста:",
     "SearchField_search_placeholder": "Поиск...",
     "SearchField_search_word": "Найти слово",
     "Hint_dictionary_is_empty": "Словарь пуст",
@@ -56,13 +57,13 @@
       "many": "Осталось %{count} слов",
       "other": "Осталось %{count} слов"
     },
-    "TranslateWordsGameResults_correct_count": {
+    "TranslateWordsGameResultsHeader_correct_count": {
       "one": "%{count} правильный",
       "few": "%{count} правильных",
       "many": "%{count} правильных",
       "other": "%{count} правильных"
     },
-    "TranslateWordsGameResults_incorrect_count": {
+    "TranslateWordsGameResultsHeader_incorrect_count": {
       "one": "%{count} неправильный",
       "few": "%{count} неправильных",
       "many": "%{count} неправильных",
