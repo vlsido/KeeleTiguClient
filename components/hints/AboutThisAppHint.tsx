@@ -1,9 +1,15 @@
-import { Image, Linking, Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  Image,
+  Linking,
+  Pressable,
+  StyleSheet,
+  Text,
+  View
+} from "react-native";
 import OverlayHint from "../overlays/OverlayHint";
 import { i18n } from "../store/i18n";
 import { CommonColors } from "../../constants/Colors";
 import { useCallback } from "react";
-import { MaterialIcons } from "@expo/vector-icons";
 import { GitHubIcon } from "../icons/GitHubIcon";
 
 interface AboutThisAppHint {
@@ -14,7 +20,7 @@ interface AboutThisAppHint {
 function AboutThisAppHint(props: AboutThisAppHint) {
 
   const openGithub = useCallback(() => {
-    Linking.openURL("https://github.com/vlsido/ExaminyashaClient");
+    Linking.openURL("https://github.com/vlsido/KeeleTiguClient");
   }, []);
 
   return (
@@ -31,7 +37,7 @@ function AboutThisAppHint(props: AboutThisAppHint) {
               resizeMode="contain"
             />
           </View>
-          <Text style={styles.headerText}>Examinyasha</Text>
+          <Text style={styles.headerText}>KeeleTigu</Text>
         </View>
         <View style={styles.centeringContainer}>
           <Text style={styles.bodyText}>
