@@ -1,4 +1,7 @@
-import Svg, { SvgProps, Path } from "react-native-svg"
+import Svg, { 
+  SvgProps, 
+  Path 
+} from "react-native-svg"
 import { memo } from "react"
 const SvgComponent = (props: SvgProps) => (
   <Svg

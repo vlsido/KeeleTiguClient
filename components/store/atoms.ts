@@ -1,5 +1,12 @@
-import { Getter, SetStateAction, Setter, WritableAtom, atom, useSetAtom } from "jotai"
 import { useEffect } from "react"
+import {
+  Getter,
+  SetStateAction,
+  Setter,
+  WritableAtom,
+  atom,
+  useSetAtom
+} from "jotai"
 
 export function atomWithToggle(initialValue?: boolean,): WritableAtom<boolean, [boolean?], void> {
   const anAtom = atom(

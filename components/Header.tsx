@@ -1,4 +1,7 @@
-import { StyleSheet, View } from "react-native";
+import {
+  StyleSheet,
+  View
+} from "react-native";
 import Settings from "./settings/SettingsButton";
 import { CommonColors } from "../constants/Colors";
 

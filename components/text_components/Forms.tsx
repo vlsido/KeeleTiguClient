@@ -1,5 +1,9 @@
+import {
+  StyleSheet,
+  Text,
+  View
+} from "react-native";
 import { CommonColors } from "../../constants/Colors";
-import { StyleSheet, Text, View } from "react-native";
 
 interface FormsProps {
   forms: string | undefined;

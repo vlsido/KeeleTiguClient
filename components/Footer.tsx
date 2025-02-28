@@ -1,4 +1,8 @@
-import { StyleSheet, Text, View } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View
+} from "react-native";
 
 import packageJson from "../package.json";
 import { CommonColors } from "../constants/Colors";

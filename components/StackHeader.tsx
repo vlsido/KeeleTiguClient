@@ -1,9 +1,12 @@
+import {
+  StyleSheet,
+  View
+} from "react-native";
 import { router } from "expo-router";
 import { CommonColors } from "../constants/Colors";
 import MaterialIconButton from "./buttons/MaterialIconButton";
 import { i18n } from "./store/i18n";
 import SettingsButton from "./settings/SettingsButton";
-import { StyleSheet, View } from "react-native";
 
 function StackHeader() {
 

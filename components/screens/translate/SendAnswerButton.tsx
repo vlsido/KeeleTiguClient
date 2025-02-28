@@ -1,8 +1,9 @@
-import { useAtomValue } from "jotai";
+import { useEffect } from "react";
 import {
   StyleSheet,
   ViewStyle
 } from "react-native";
+import { useAtomValue } from "jotai";
 import {
   SharedValue,
   useAnimatedStyle,
@@ -12,7 +13,6 @@ import {
 import {
   answerAtom,
 } from "./translateAtoms";
-import { useEffect } from "react";
 import { AnimatedPressable } from "../../util/AnimatedComponentsUtil";
 import { CommonColors } from "../../../constants/Colors";
 import { ArrowUpwardIcon } from "../../icons/ArrowUpwardIcon";
