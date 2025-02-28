@@ -20,6 +20,9 @@ import {
 } from "../components/store/slices/dictionarySlice";
 import { WordAndExamData } from "./(tabs)/dictionary";
 import SettingsMenu from "../components/settings/SettingsMenu";
+import { View } from "react-native";
+import Header from "../components/Header";
+import StackHeader from "../components/StackHeader";
 
 export default function RootLayout() {
 
@@ -98,6 +101,7 @@ export function RootLayoutStack() {
         headerTitleStyle: {
           fontWeight: "bold",
         },
+        header: () => <StackHeader />,
         contentStyle: { backgroundColor: CommonColors.black },
       }}
     >
@@ -110,6 +114,7 @@ export function RootLayoutStack() {
         name="maintenance"
         options={{
           title: "",
+          headerShown: false
         }} />
       <Stack.Screen
         redirect={isUnderMaintenance}
@@ -117,22 +122,21 @@ export function RootLayoutStack() {
         options={{
           title: "",
         }} />
-      <Stack.Screen
-        redirect={isUnderMaintenance}
-        name="login"
-        options={{
-          title: "", headerBackVisible: true,
-          headerLeft: () => (
-            <LeftHeaderButton />
-          )
-        }} />
-      <Stack.Screen
-        redirect={isUnderMaintenance}
-        name="register"
-        options={{ title: "" }} />
     </Stack >
   );
 }
-
-
+// TODO: this
+// <Stack.Screen
+//   redirect={isUnderMaintenance}
+//   name="login"
+//   options={{
+//     title: "", headerBackVisible: true,
+//     headerLeft: () => (
+//       <LeftHeaderButton />
+//     )
+//   }} />
+// <Stack.Screen
+//   redirect={isUnderMaintenance}
+//   name="register"
+//   options={{ title: "" }} />
 
