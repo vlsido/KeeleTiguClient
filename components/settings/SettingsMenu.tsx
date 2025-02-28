@@ -22,6 +22,8 @@ import packageJson from "../../package.json";
 import LanguageDropdown from "../dropdowns/LanguageDropdown";
 import { useAppDispatch, useAppSelector } from "../../hooks/storeHooks";
 import { toggleHighlightRussianAccentLetters } from "../store/slices/settingsSlice";
+import CustomIconButton from "../buttons/CustomIconButton";
+import { CloseIcon } from "../icons/CloseIcon";
 
 interface SettingsMenuProps {
 }
@@ -68,15 +70,15 @@ function SettingsMenu(props: SettingsMenuProps) {
           .duration(133)
         }
       >
-        <MaterialIcons
+        <CustomIconButton
           testID="SETTINGS_MENU_CONTAINER.MENU.CLOSE:PRESSABLE"
-          name="close"
-          size={32}
-          color={CommonColors.white}
           onPress={() => setIsSettingsOpen(false)}
+          aria-label="Close menu"
+          size={32}
           style={styles.closeButtonContainer}
-          ariaLabel="Close menu"
-        />
+        >
+          <CloseIcon />
+        </CustomIconButton>
         <View style={styles.options}>
           <View style={[styles.optionContainer, { zIndex: 1 }]}>
             <Text style={styles.optionText}>

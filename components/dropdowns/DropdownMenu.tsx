@@ -17,6 +17,9 @@ import {
   useAtom
 } from "jotai";
 import { CommonColors } from "../../constants/Colors";
+import CustomIconButton from "../buttons/CustomIconButton";
+import { KeyboardArrowUpIcon } from "../icons/KeyboardArrowUp";
+import { KeyboardArrowDownIcon } from "../icons/KeyboardArrowDown";
 
 interface DropdownMenuProps {
   testID: string;
@@ -60,10 +63,11 @@ function DropdownMenu(props: DropdownMenuProps) {
         style={props.style ?? styles.container}
       >
         <Text ellipsizeMode="tail">{selectedItem}</Text>
-        <MaterialIcons
-          name={isDropdownVisible === true ? "keyboard-arrow-up" : "keyboard-arrow-down"}
-          size={32}
-        />
+        {isDropdownVisible === true ? (
+          <KeyboardArrowUpIcon />
+        ) : (
+          <KeyboardArrowDownIcon />
+        )}
       </Pressable>
       {isDropdownVisible === true && (
         <View style={[

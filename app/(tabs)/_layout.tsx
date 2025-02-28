@@ -8,6 +8,7 @@ import Header from "../../components/Header";
 import { useNavigation } from "expo-router";
 import { useEffect, useMemo } from "react";
 import { atom, useAtom } from "jotai";
+import { SearchIcon } from "../../components/icons/SearchIcon";
 
 type Tab = "index" | "dictionary" | "search";
 
@@ -50,9 +51,7 @@ function RootLayoutTabs() {
           style={[styles.buttonContainer, focusedTab === "search" && styles.active]}
           name="search"
           href="/search">
-          <MaterialIcons
-            name="search"
-            size={32}
+          <SearchIcon
             color={CommonColors.white}
           />
         </TabTrigger>
