@@ -1,5 +1,5 @@
-import { StyleSheet, View } from "react-native";
-import Animated, {
+import { StyleSheet } from "react-native";
+import {
   FadeIn,
   FadeOut,
   ReduceMotion,

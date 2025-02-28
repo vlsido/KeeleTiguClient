@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import {
   Pressable,
   StyleSheet,
@@ -15,7 +16,6 @@ import { i18n } from "../store/i18n";
 import { atom, useAtom } from "jotai";
 import { isSettingsMenuOpenAtom } from "./settingsAtoms";
 import { MaterialIcons } from "@expo/vector-icons";
-import { useMemo } from "react";
 import AboutThisAppHint from "../hints/AboutThisAppHint";
 
 import packageJson from "../../package.json";
