@@ -74,7 +74,6 @@ function SearchField() {
 
   const setWordsDataArray = useSetAtom(wordsDataArrayAtom);
 
-
   const inputRef = useRef<TextInput | null>(null);
 
   const searchFieldHeight = useSharedValue<number>(0);
@@ -259,7 +258,6 @@ function SearchField() {
         return;
       }
 
-
       makeResultsUnvisible();
 
       setQuery(word);
@@ -377,7 +375,6 @@ function SearchField() {
     (event: LayoutChangeEvent) => {
       searchFieldHeight.value = event.nativeEvent.layout.height + 15;
       searchFieldWidth.value = event.nativeEvent.layout.width;
-
     },
     []
   );
@@ -405,7 +402,6 @@ function SearchField() {
           ]}
             onLayout={(event: LayoutChangeEvent) => onSearchFieldLayout(event)}
           >
-
             <TextInput
               testID="SEARCH_FIELD.QUERY:INPUT"
               ref={inputRef}
@@ -423,7 +419,9 @@ function SearchField() {
               aria-label={i18n.t("SearchField_search_word", { defaultValue: "Otsi sõna" })}
             >
               {isSearching === true
-                ? <LoadingIndicator color="black" />
+                ? <LoadingIndicator
+                  testID="SEARCH_FIELD.FIND_WORD.LOADING:ACTIVITY_INDICATOR"
+                  color="black" />
                 : <SearchIcon />}
             </Pressable>
           </View>
