@@ -1,4 +1,5 @@
 import {
+  LayoutChangeEvent,
   Pressable,
   StyleProp,
   TextStyle,
@@ -16,40 +17,28 @@ interface MaterialIconButtonProps {
   onLongPress?: () => void;
   onPressIn?: () => void;
   onPressOut?: () => void;
+  onLayout?: (layoutEvent: LayoutChangeEvent) => void;
   disabledBool?: boolean;
   ariaLabel: string;
   enableContrastLayer?: boolean;
   children?: React.ReactNode;
   isVisible?: boolean;
+  testID: string;
 }
 
 function MaterialIconButton(props: MaterialIconButtonProps) {
-  const {
-    containerStyle,
-    iconStyle,
-    name,
-    color,
-    size,
-    onPress,
-    onLongPress,
-    onPressIn,
-    onPressOut,
-    disabledBool,
-    ariaLabel,
-    enableContrastLayer,
-    children,
-    isVisible,
-  } = props;
 
-  if (isVisible === false) {
+
+  if (props.isVisible === false) {
     return null;
   }
 
   return (
     <Pressable
+      testID={props.testID}
       style={({ pressed }) => [
-        containerStyle,
-        enableContrastLayer
+        props.containerStyle,
+        props.enableContrastLayer
           ? { backgroundColor: "rgba(0, 0, 0, 0.2)", borderRadius: 60 }
           : {},
         {
@@ -60,23 +49,25 @@ function MaterialIconButton(props: MaterialIconButtonProps) {
           alignItems: "center",
         },
       ]}
-      onPress={onPress}
-      onLongPress={onLongPress}
-      onPressIn={onPressIn}
-      onPressOut={onPressOut}
-      disabled={disabledBool}
+      aria-label={props.ariaLabel}
+      role="button"
+      onPress={props.onPress}
+      onLongPress={props.onLongPress}
+      onPressIn={props.onPressIn}
+      onPressOut={props.onPressOut}
+      onLayout={props.onLayout}
+      disabled={props.disabledBool}
       hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-      aria-label={ariaLabel}
     >
       <MaterialIcons
-        name={name}
-        color={color}
-        size={size}
+        name={props.name}
+        color={props.color}
+        size={props.size}
         style={[
-          iconStyle
+          props.iconStyle
         ]}
       />
-      {children}
+      {props.children}
     </Pressable>
   );
 }

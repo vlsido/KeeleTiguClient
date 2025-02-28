@@ -9,7 +9,10 @@ import {
   useSharedValue,
   withTiming
 } from "react-native-reanimated";
-import { Word, WordAndExamData } from "../../app/dictionary";
+import {
+  Word,
+  WordAndExamData
+} from "../../app/(tabs)/dictionary";
 import {
   useAppDispatch,
   useAppSelector
@@ -19,12 +22,14 @@ import {
   pushToMyDictionary
 } from "../store/slices/dictionarySlice";
 import { useHint } from "../../hooks/useHint";
+import { i18n } from "../store/i18n";
 
 interface AddToDictionaryButtonProps {
   word: Word | WordAndExamData | undefined;
+  backgroundStyle: "light" | "dark"
 }
 
-function AddToDictionaryButton(props: AddToDictionaryButtonProps) {
+function AddToDictionaryIconButton(props: AddToDictionaryButtonProps) {
   const { showHint } = useHint();
 
   const myDictionary = useAppSelector((state) => state.dictionary.myDictionary);
@@ -38,7 +43,6 @@ function AddToDictionaryButton(props: AddToDictionaryButtonProps) {
       opacity: opacity.value,
     }
   });
-
 
   function onPress() {
     opacity.value = withTiming(
@@ -57,13 +61,14 @@ function AddToDictionaryButton(props: AddToDictionaryButtonProps) {
     if (currentWord !== undefined) {
       if (myDictionary.find((word) => word.word === currentWord.word)) {
         showHint(
-          "Sõna on juba sõnastikus!",
+          i18n.t("already_in_dictionary", { defaultValue: "Sõna on juba sõnastikus!" }),
           2500
         );
         return;
       }
 
       const wordToAdd: Word = {
+        index: currentWord.index,
         word: currentWord.word,
         type: currentWord.type,
         forms: currentWord.forms,
@@ -74,31 +79,31 @@ function AddToDictionaryButton(props: AddToDictionaryButtonProps) {
 
       // Add to dictionary
       showHint(
-        "Lisatud!",
+        i18n.t("added", { defaultValue: "Lisatud!" }),
         2500
       );
     } else {
       showHint(
-        "Error! No words loaded.",
+        i18n.t("error", { defaultValue: "Tekkis viga!" }),
         2500
       );
     }
-
   }
 
   return (
     <AnimatedPressable onPress={onPress}
       style={[
         animatedStyle,
-        styles.container
+        styles.container,
+        { backgroundColor: props.backgroundStyle === "light" ? "#fff" : "#000" }
       ]}
     >
-      <AddToDictionaryIcon />
+      <AddToDictionaryIcon color={props.backgroundStyle === "light" ? "#000" : "#fff"} />
     </AnimatedPressable>
   )
 }
 
-export default AddToDictionaryButton;
+export default AddToDictionaryIconButton;
 
 const styles = StyleSheet.create({
   container: {

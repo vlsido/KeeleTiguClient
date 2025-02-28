@@ -14,13 +14,13 @@ import {
   ViewStyle
 } from "react-native";
 import {
+  atom,
   useAtom,
   useSetAtom,
 } from "jotai";
 import { useAppSelector } from "../../../hooks/storeHooks";
 import { useHint } from "../../../hooks/useHint";
 import {
-  isSearchingInProcessAtom,
   queryAtom,
   resultsAtom,
   searchStringAtom,
@@ -33,7 +33,7 @@ import Animated, {
   useSharedValue
 } from "react-native-reanimated";
 import { callCloudFunction } from "../../util/CloudFunctions";
-import { Word } from "../../../app/dictionary";
+import { Word, WordAndExamData } from "../../../app/(tabs)/dictionary";
 import {
   Gesture,
   GestureDetector
@@ -42,9 +42,11 @@ import { SearchIcon } from "../../icons/SearchIcon";
 import { FlatList } from "react-native";
 import SearchItem from "./SearchItem";
 import { CommonColors } from "../../../constants/Colors";
+import { i18n } from "../../store/i18n";
+import LoadingIndicator from "../../indicators/LoadingIndicator";
 
 interface SearchDataResults {
-  queryResponse: Word[];
+  queryResponse: WordAndExamData[];
 }
 
 function SearchField() {
@@ -67,13 +69,15 @@ function SearchField() {
     setSearchString
   ] = useAtom<string>(searchStringAtom);
 
-  const setIsSearchingInProcess = useSetAtom(isSearchingInProcessAtom);
-  const setWordsDataArray = useSetAtom(wordsDataArrayAtom);
+  const [isSearching, setIsSearching] =
+    useAtom<boolean>(useMemo(() => atom<boolean>(false), []));
 
+  const setWordsDataArray = useSetAtom(wordsDataArrayAtom);
 
   const inputRef = useRef<TextInput | null>(null);
 
   const searchFieldHeight = useSharedValue<number>(0);
+  const searchFieldWidth = useSharedValue<number>(0);
   const searchListOpacity = useSharedValue<number>(0);
   const searchListPointerEvents = useSharedValue<"auto" | "none">("none");
 
@@ -156,24 +160,109 @@ function SearchField() {
     []
   );
 
+  function getEstonianWordPriority(wordObj: Word, query: string) {
+    const wordLowerCase = wordObj.word.replaceAll("+", "").toLowerCase();
+
+    if (wordLowerCase.startsWith(query)) return 0;
+
+    if (wordLowerCase.includes(query)) return 1;
+
+    if (wordObj.usages
+      .some((usage) => usage.definitionData
+        .some((definition) => definition
+          .definitionText?.toLowerCase()
+          .startsWith(query)))) return 2;
+
+    if (wordObj.usages
+      .some((usage) => usage.definitionData
+        .some((definition) => definition
+          .definitionText?.toLowerCase()
+          .includes(query)))) return 3;
+
+    if (wordObj.usages
+      .some((usage) => usage
+        .examples?.some((example) => example.estonianExample
+          .toLowerCase()
+          .includes(query)))) return 4;
+
+    return 5;
+  }
+
+  function getRussianWordPriority(wordObj: Word, query: string) {
+    if (wordObj.word.toLowerCase().startsWith(query)) return 0;
+
+    if (wordObj.usages
+      .some((usage) => usage.definitionData
+        .some((definition) => definition.russianTranslations
+          .some((russianTranslation) => russianTranslation
+            .toLowerCase()
+            .replaceAll("\"", "")
+            .startsWith(query))))
+    ) return 1;
+
+    if (wordObj.usages
+      .some((usage) => usage.definitionData
+        .some((definition) => definition.russianTranslations
+          .some((russianTranslation) => russianTranslation
+            .toLowerCase()
+            .replaceAll("\"", "")
+            .includes(query))))
+    ) return 2;
+
+    if (wordObj.usages
+      .some((usage) => usage
+        .examples?.some((example) => example.russianTranslations
+          .some((russianTranslation) => russianTranslation
+            .toLowerCase()
+            .replaceAll("\"", "")
+            .includes(query))))) return 3;
+
+    return 4;
+  }
+
+  function sortWords(
+    words: Word[],
+    query: string,
+    queryLanguage: "russian" | "estonian",
+  ) {
+    switch (queryLanguage) {
+      case "estonian":
+        return words.sort((a, b) => {
+          const priorityDiff = getEstonianWordPriority(a, query) - getEstonianWordPriority(b, query);
+
+          if (priorityDiff !== 0) return priorityDiff;
+
+          return a.word.localeCompare(b.word);
+        });
+      case "russian":
+        return words.sort((a, b) => {
+          const priorityDiff = getRussianWordPriority(a, query) - getRussianWordPriority(b, query);
+
+          if (priorityDiff !== 0) return priorityDiff;
+
+          return a.word.localeCompare(b.word);
+        });
+    }
+
+  }
+
   const getWordData = useCallback(
     async (word: string) => {
       if (word === "") {
         return;
       }
 
-      const wordLowerCase = word.toLowerCase();
+      const wordNormalized = word.replaceAll("+", "").toLowerCase().trim();
 
-      if (wordLowerCase === searchString) {
+      if (wordNormalized === searchString) {
         return;
       }
-
 
       makeResultsUnvisible();
 
       setQuery(word);
 
-      setSearchString(wordLowerCase);
+      setSearchString(wordNormalized);
 
       const language = detectLanguage(word);
 
@@ -183,7 +272,7 @@ function SearchField() {
       }
 
       try {
-        setIsSearchingInProcess(true);
+        setIsSearching(true);
         const response = await callCloudFunction(
           "GetWordData_Node",
           { word: word, language }
@@ -191,17 +280,12 @@ function SearchField() {
 
         if (response != null) {
           if (response.queryResponse.length > 1) {
-            const sortedWordsArray = response.queryResponse.sort((
-              a, b
-            ) => {
-              const aStartsWith = a.word.toLowerCase().startsWith(wordLowerCase);
-              const bStartsWith = b.word.toLowerCase().startsWith(wordLowerCase);
 
-              if (aStartsWith && !bStartsWith) return -1;
-              if (!aStartsWith && bStartsWith) return 1;
-
-              return a.word.localeCompare(b.word);
-            });
+            const sortedWordsArray: Word[] = sortWords(
+              response.queryResponse,
+              wordNormalized,
+              language
+            );
 
             setWordsDataArray(sortedWordsArray);
             return;
@@ -228,12 +312,13 @@ function SearchField() {
         }
 
       } finally {
-        setIsSearchingInProcess(false);
+        setIsSearching(false);
       }
     },
     [
       detectLanguage,
       showHint,
+      sortWords,
       searchString
     ]
   );
@@ -289,6 +374,7 @@ function SearchField() {
   const onSearchFieldLayout = useCallback(
     (event: LayoutChangeEvent) => {
       searchFieldHeight.value = event.nativeEvent.layout.height + 15;
+      searchFieldWidth.value = event.nativeEvent.layout.width;
     },
     []
   );
@@ -297,7 +383,8 @@ function SearchField() {
     return {
       opacity: searchListOpacity.value,
       pointerEvents: searchListPointerEvents.value,
-      top: searchFieldHeight.value
+      top: searchFieldHeight.value,
+      width: searchFieldWidth.value
     };
   });
 
@@ -315,11 +402,10 @@ function SearchField() {
           ]}
             onLayout={(event: LayoutChangeEvent) => onSearchFieldLayout(event)}
           >
-
             <TextInput
               testID="SEARCH_FIELD.QUERY:INPUT"
               ref={inputRef}
-              placeholder="Otsi..."
+              placeholder={i18n.t("SearchField_search_placeholder", { defaultValue: "Otsi..." })}
               style={styles.searchInput}
               value={query}
               onChangeText={(text) => onChangeText(text)}
@@ -330,9 +416,13 @@ function SearchField() {
               testID="SEARCH_FIELD.FIND_WORD:PRESSABLE"
               onPress={() => getWordData(query)}
               style={styles.searchIconContainer}
-              aria-label="Otsi sõna"
+              aria-label={i18n.t("SearchField_search_word", { defaultValue: "Otsi sõna" })}
             >
-              <SearchIcon />
+              {isSearching === true
+                ? <LoadingIndicator
+                  testID="SEARCH_FIELD.FIND_WORD.LOADING:ACTIVITY_INDICATOR"
+                  color="black" />
+                : <SearchIcon />}
             </Pressable>
           </View>
         </GestureDetector>
@@ -345,10 +435,10 @@ function SearchField() {
           <FlatList
             data={results}
             contentContainerStyle={{ backgroundColor: CommonColors.white }}
-            renderItem={({ item, index }) => <SearchItem word={item.word} index={index + 1} onPress={getWordData} />}
+            renderItem={({ item }) => <SearchItem word={item.word} onPress={getWordData} />}
             keyExtractor={(
-              item, index
-            ) => `item-${item}-${index}`}
+              item
+            ) => `item-${item.index}`}
           />
         </Animated.View>
       </GestureDetector>
@@ -380,7 +470,7 @@ const styles = StyleSheet.create({
   },
   searchInput: {
     padding: 10,
-    borderRadius: 10,
+    borderRadius: 60,
     backgroundColor: CommonColors.white,
     fontSize: 16,
     width: "100%",
@@ -391,7 +481,9 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     width: 36,
     height: 36,
-    marginLeft: 10
+    marginLeft: 10,
+    justifyContent: "center",
+    alignItems: "center"
   },
   searchResultsContainer: {
     paddingTop: 10,

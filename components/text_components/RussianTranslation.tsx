@@ -9,27 +9,29 @@ import { CommonColors } from "../../constants/Colors";
 interface RussianTranslationProps {
   translation: string;
   searchString: string | undefined;
-  russianText?: StyleProp<TextStyle>;
-  russianAccentText?: StyleProp<TextStyle>;
-  highlightedText?: StyleProp<TextStyle>;
+  textStyle?: StyleProp<TextStyle>;
+  accentTextStyle?: StyleProp<TextStyle>;
+  highlightedTextStyle?: StyleProp<TextStyle>;
+  highlightedAccentTextStyle?: StyleProp<TextStyle>;
 }
 
 function RussianTranslation(props: RussianTranslationProps) {
-  const russianTextStyle = props.russianText ? props.russianText : styles.russianText;
-  const russianAccentTextStyle = props.russianAccentText ? props.russianAccentText : styles.russianAccentText;
-  const highlightedTextStyle = props.highlightedText ? props.highlightedText : styles.highlightedText;
+  const russianTextStyle = props.textStyle ? props.textStyle : styles.russianText;
+  const russianAccentTextStyle = props.accentTextStyle ? props.accentTextStyle : styles.russianAccentText;
+  const highlightedTextStyle = props.highlightedTextStyle ? props.highlightedTextStyle : styles.highlightedText;
+  const highlightedAccentTextStyle = props.highlightedAccentTextStyle ? props.highlightedAccentTextStyle : styles.highlightedAccentText;
 
   const russianTranslationWordsArray = props.translation.split(" ");
 
-  const searchStringIndex = props.translation.replace(
+  const searchStringIndex = props.translation.replaceAll(
     "\"",
     ""
   ).split(" ").
-    findIndex((word) => word === props.searchString);
+    findIndex((word) => props.searchString !== undefined && word.includes(props.searchString));
 
   const textElements: React.JSX.Element[] = [];
 
-  // Iterate over the word parts and style the accented letter
+  // Iterate over the word parts
   russianTranslationWordsArray.forEach((
     word, wordIndex
   ) => {
@@ -61,7 +63,7 @@ function RussianTranslation(props: RussianTranslationProps) {
         elements.push(
           <Text key={`wordIndex-${wordIndex}-part-${wordPartIndex}-accent`} style={[
             russianAccentTextStyle,
-            wordIndex === searchStringIndex && highlightedTextStyle
+            wordIndex === searchStringIndex && highlightedAccentTextStyle
           ]}>{wordPart[0]}
           </Text>,
           <Text key={`wordIndex-${wordIndex}-part-${wordPartIndex}-rest`} style={[
@@ -101,4 +103,10 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(255, 255, 255, 0.15)",
     marginRight: "auto",
   },
+  highlightedAccentText: {
+    flexDirection: "row",
+    backgroundColor: "rgba(255, 255, 255, 0.15)",
+    color: "red",
+    marginRight: "auto",
+  }
 })

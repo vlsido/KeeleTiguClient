@@ -5,6 +5,7 @@ import {
 } from "react-native";
 import RussianTranslation from "./RussianTranslation";
 import { CommonColors } from "../../constants/Colors";
+import { useAppSelector } from "../../hooks/storeHooks";
 
 interface DefinitionProps {
   definitionData: {
@@ -17,6 +18,8 @@ interface DefinitionProps {
 }
 
 function Definitions(props: DefinitionProps) {
+  const highlightRussianAccentLetters = useAppSelector((state) => state.settings.highlightRussianAccentLetters);
+
   return (
     <>
       {props.definitionData.map((
@@ -42,7 +45,7 @@ function Definitions(props: DefinitionProps) {
                       wordIndex === searchStringIndex && styles.highlightedWord
 
                     ]}>{word}</Text>,
-                    <Text>{separator}</Text>,
+                    <Text key={`${wordIndex}-separator`}>{separator}</Text>,
                   ]
                 }
                 return (
@@ -60,7 +63,20 @@ function Definitions(props: DefinitionProps) {
                 <RussianTranslation
                   key={index}
                   translation={translation}
-                  searchString={props.searchString} />
+                  searchString={props.searchString}
+                  textStyle={styles.russianExample}
+                  accentTextStyle={
+                    highlightRussianAccentLetters === true
+                      ? styles.russianAccentText
+                      : styles.russianExample
+                  }
+                  highlightedTextStyle={styles.highlightedRussianText}
+                  highlightedAccentTextStyle={
+                    highlightRussianAccentLetters === true
+                      ? styles.highlightedRussianAccentText
+                      : styles.highlightedRussianText
+                  }
+                />
               );
             })}
           </View>
@@ -79,8 +95,28 @@ const styles = StyleSheet.create({
     fontSize: 16
   },
   highlightedWord: {
-    backgroundColor: CommonColors.yellow,
-    color: CommonColors.black,
+    backgroundColor: "white",
+    color: "black",
     fontWeight: "bold"
-  }
+  },
+  russianExample: {
+    color: CommonColors.yellow,
+    fontSize: 16,
+    fontWeight: "bold"
+  },
+  russianAccentText: {
+    color: "red",
+    fontSize: 16,
+    fontWeight: "bold"
+  },
+  highlightedRussianText: {
+    flexDirection: "row",
+    backgroundColor: "white",
+    color: "black",
+  },
+  highlightedRussianAccentText: {
+    flexDirection: "row",
+    backgroundColor: "white",
+    color: "red",
+  },
 })

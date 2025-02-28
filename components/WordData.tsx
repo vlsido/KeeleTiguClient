@@ -1,4 +1,7 @@
-import { CommonColors } from "../constants/Colors";
+import {
+  useEffect,
+  useRef
+} from "react";
 import {
   FlatList,
   ScrollView,
@@ -6,22 +9,14 @@ import {
   Text,
   View
 } from "react-native";
+import { CommonColors } from "../constants/Colors";
 import Forms from "../components/text_components/Forms";
-import { i18n } from "../components/store/i18n";
-import { useHint } from "../hooks/useHint";
-import {
-  useAppDispatch,
-  useAppSelector
-} from "../hooks/storeHooks";
-import {
-  pushToMyDictionary
-} from "../components/store/slices/dictionarySlice";
 import FoundArticlesCounter from "../components/screens/word_data/FoundArticlesCounter";
 import Type from "../components/screens/dictionary/Type";
-import { Word } from "../app/dictionary";
+import { Word } from "../app/(tabs)/dictionary";
 import Usage from "./text_components/Usage";
-import { memo } from "react";
-import TextButton from "./buttons/TextButton";
+import AddToDictionaryIconButton from "./buttons/AddToDictionaryIconButton";
+import { i18n } from "./store/i18n";
 
 interface WordDataProps {
   wordDataArray: Word[] | null;
@@ -29,101 +24,94 @@ interface WordDataProps {
 }
 
 function WordData(props: WordDataProps) {
-  const { showHint } = useHint();
-  const myDictionary = useAppSelector((state) => state.dictionary.myDictionary);
-  const dispatch = useAppDispatch();
 
-  function addToDictionary(wordToAdd: Word) {
-    if (myDictionary.find((word) => word.word === wordToAdd.word)) {
-      showHint(
-        "Sõna on juba sõnastikus!",
-        2500
-      );
-      return;
-    }
+  const scrollRef = useRef<ScrollView | null>(null);
 
-    dispatch(pushToMyDictionary(wordToAdd));
-
-    // Add to dictionary
-    showHint(
-      "Lisatud!",
-      2500
-    );
-  }
+  useEffect(() => {
+    scrollRef?.current?.scrollTo({ y: 0 })
+  }, [props.wordDataArray]);
 
   if (props.wordDataArray == null) {
     return null;
   }
 
   if (props.wordDataArray.length === 0) {
-    return <Text
-      testID="WORD_DATA.NOTHING_FOUND:TEXT"
-      style={styles.notFoundText}>Ei leitud!</Text>;
+    return (
+      <Text
+        testID="WORD_DATA.NOTHING_FOUND:TEXT"
+        style={styles.notFoundText}>
+        {i18n.t("not_found", { defaultValue: "Ei leitud!" })}
+      </Text>
+    );
   }
 
   return (
     <ScrollView
       testID="WORD_DATA.SCROLL_CONTAINER:VIEW"
+      ref={scrollRef}
       style={styles.container}
+
+      onLayout={() => console.log("layed out")}
     >
       <FoundArticlesCounter wordData={props.wordDataArray} />
       {props.wordDataArray.map((
-        wordData, index
+        wordData
       ) => {
 
         const composedWord = wordData.word.split("+");
 
-        const searchStringIndex = composedWord.findIndex((wordPart) => wordPart.toLowerCase() === props.searchString);
+        let searchStringIndex = composedWord.findIndex((wordPart) => wordPart.toLowerCase() === props.searchString);
+
+        if (searchStringIndex === -1) {
+          const joinedWord = composedWord.join("").toLowerCase();
+          searchStringIndex = joinedWord === props.searchString ? -2 : -1;
+        }
 
         return (
           <View
             testID="WORD_DATA.SCROLL_CONTAINER.WORD:VIEW"
-            key={`wordIndex-${index}`}
+            key={`wordIndex-${wordData.index}`}
+            style={styles.wordContainer}
+
           >
-            <Text>
-              {composedWord.map((
-                wordPart, index
-              ) => {
-                const separator = index === 0 ? "" : "+"
-                return (
-                  <Text key={`wordIndex-${index}-text`} style={[
-                    styles.wordText,
-                    index === searchStringIndex && styles.highlightedText
-                  ]}>
-                    {separator}{wordPart}
-                  </Text>)
-              })}
-            </Text>
-            <Forms key={`wordIndex-${index}-forms`} forms={wordData.forms} />
-            <Type key={`wordIndex-${index}-type`} type={wordData.type} />
+            <View style={styles.wordHeader}>
+              <Text>
+                {composedWord.map((
+                  wordPart, index
+                ) => {
+                  const separator = index === 0 ? "" : "+"
+                  return (
+                    <Text key={`wordIndex-${index}-text`} style={[
+                      styles.wordText,
+                      (index === searchStringIndex || searchStringIndex === -2) && styles.highlightedText
+                    ]}>
+                      {separator}{wordPart}
+                    </Text>)
+                })}
+              </Text>
+              <AddToDictionaryIconButton
+                key={`wordIndex-${wordData.index}-add`}
+                word={wordData}
+                backgroundStyle="light"
+              />
+            </View>
+            <Forms key={`wordIndex-${wordData.index}-forms`} forms={wordData.forms} />
+            <Type key={`wordIndex-${wordData.index}-type`} type={wordData.type} />
             <FlatList
               testID="WORD_DATA.SCROLL_CONTAINER.WORD.USAGES:FLATLIST"
               data={wordData.usages}
+              keyExtractor={(_, index) => index.toString()}
               renderItem={({ item, index }) => {
                 return (
                   <Usage
-                    key={index}
-                    index={index}
+                    usageIndex={index}
                     definitionData={item.definitionData}
                     examples={item.examples}
                     searchString={props.searchString}
                   />
                 )
-
               }
               } />
-            <TextButton
-              testID="WORD_DATA.SCROLL_CONTAINER.ADD_WORD:PRESSABLE"
-              key={`wordIndex-${index}-add`}
-              style={styles.addToDictionaryContainer}
-              textStyle={styles.addToDictionaryText}
-              text={i18n.t(
-                "add_to_dictionary",
-                { defaultValue: "Lisa sõnastikku" }
-              )}
-              onPress={() => addToDictionary(wordData)}
-              label="Add to dictionary"
-            />
           </View>
         );
       })}
@@ -131,7 +119,7 @@ function WordData(props: WordDataProps) {
   );
 }
 
-export default memo(WordData);
+export default WordData;
 
 const styles = StyleSheet.create({
   notFoundText: {
@@ -140,11 +128,26 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center"
   },
-
   container: {
     flex: 1,
     backgroundColor: CommonColors.black,
     paddingHorizontal: 15
+  },
+  wordContainer: {
+    backgroundColor: "black",
+    borderRadius: 45,
+    borderWidth: 1,
+    borderColor: "white",
+    maxWidth: 600,
+    width: "100%",
+    alignSelf: "center",
+    padding: 20,
+    marginVertical: 5
+  },
+  wordHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center"
   },
   wordText: {
     color: "white",
@@ -154,23 +157,8 @@ const styles = StyleSheet.create({
   highlightedText: {
     flexDirection: "row",
     color: CommonColors.black,
-    backgroundColor: CommonColors.yellow,
+    backgroundColor: "white",
     marginRight: "auto",
   },
-  addToDictionaryContainer: {
-    marginTop: 5,
-    marginBottom: 15,
-    marginRight: "auto",
-    justifyContent: "center",
-    alignItems: "center",
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 5,
-    borderColor: CommonColors.white,
-    borderWidth: 1,
-  },
-  addToDictionaryText: {
-    fontSize: 16,
-    color: CommonColors.white,
-  },
+
 });

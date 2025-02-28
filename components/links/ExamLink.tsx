@@ -1,16 +1,16 @@
-import { Link } from "expo-router";
 import {
+  Pressable,
   StyleSheet,
   Text
 } from "react-native";
 import { CommonColors } from "../../constants/Colors";
 
-function ExamLink() {
+function ExamLink({ onPress }) {
 
   return (
-    <Link href="/" style={styles.examLink}>
+    <Pressable onPress={() => onPress("exam")} style={styles.examLink}>
       <Text style={styles.examText}>Eksam</Text>
-    </Link>
+    </Pressable>
   )
 }
 

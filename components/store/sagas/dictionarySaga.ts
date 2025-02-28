@@ -4,7 +4,7 @@ import { callCloudFunction } from "../../util/CloudFunctions";
 import {
   OnlyWordsResponse,
   RandomWordsResponse
-} from "../../../app/dictionary";
+} from "../../../app/(tabs)/dictionary";
 
 function* fetchAllWordsSaga() {
   try {

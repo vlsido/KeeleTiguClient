@@ -1,4 +1,4 @@
-import Search from "../../../app/search";
+import Search from "../../../app/(tabs)/search";
 import { renderWithProviders, screen } from "../../../utils/test-utils";
 
 describe(

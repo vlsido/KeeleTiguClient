@@ -1,0 +1,62 @@
+{
+  "en": { 
+    "add_to_dictionary": "Add to dictionary",
+    "tap_to_close": "Tap to close.",
+    "app_description": "This open-source app is developed by Vladislav \"coslavko\" Sidorenko.",
+    "start": "Start",
+    "added": "Added!",
+    "already_in_dictionary": "The word is already in the dictionary!",
+    "error": "Whoops, error!",
+    "error_try_again": "Error! Try again!",
+    "and": "and",
+    "start_again": "Start again",
+    "fix_mistakes": "Fix mistakes",
+    "not_found": "Nothing found!",
+    "SettingsMenu_language": "Language",
+    "SettingsMenu_turn_on_accent_letters": "Highlight Russian accent letters",
+    "SettingsMenu_about_this_app": "About this app",
+    "TranslateWordsGame_translate_words": "Translate Words",
+    "TranslateWordsGame_number_of_words": "Number of words",
+    "TranslateWordsGame_unlimited_words": "Unlimited",
+    "TranslateWordsGame_random_words": "Random words",
+    "TranslateWordsGame_words_from_my_dictionary": "Words from my dictionary",
+    "TranslateWordsGame_start": "START",
+    "TranslateWordsGameResultsHeader_all_right": "Wonderful! All words are translated!", 
+    "TranslateWordsGameResultsHeader_test_results": "Test results are",
+    "SearchField_search_placeholder": "Search...",
+    "SearchField_search_word": "Find word",
+    "Hint_dictionary_is_empty": "Dictionary is empty",
+    "TextAnswerField_write_answer_here": "Write answer here...",
+    "Type_noun": "noun",
+    "Type_verb": "verb",
+    "Type_adjective": "adjective",
+    "Type_adverb": "adverb",
+    "Type_subjunctive": "subjunctive",
+    "Translate_taking_words_from_dictionary": "Pulling words from dictionary...",
+    "Dictionary_empty": "Dictionary is empty. Add new words on testing page or by searching.",
+    "incorrect_answers_plural": {
+      "one": "answer",
+      "other": "answers"
+    },
+    "count_words_in_dictionary": {
+      "one": "%{count} word in dictionary",
+      "other": "%{count} words in dictionary"
+    },
+    "count_words_in_search": {
+      "one": "Found %{count} word",
+      "other": "Found %{count} words"
+    },
+    "Translate_words_remaining": {
+      "one": "%{count} word is left",
+      "other": "%{count} words are left"
+    },
+    "TranslateWordsGameResultsHeader_correct_count": {
+      "one": "%{count} correct",
+      "other": "%{count} correct"
+    },
+    "TranslateWordsGameResultsHeader_incorrect_count": {
+      "one": "%{count} incorrect",
+      "other": "%{count} incorrect"
+    }
+  }
+}

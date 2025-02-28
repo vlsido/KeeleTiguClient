@@ -1,10 +1,10 @@
 import {
   Pressable,
   StyleSheet,
+  Switch,
   Text,
   View
 } from "react-native"
-import { CheckmarkIcon } from "../../../../icons/CheckmarkIcon";
 import { CommonColors } from "../../../../../constants/Colors";
 
 interface OptionButtonProps {
@@ -18,13 +18,12 @@ function OptionButton(props: OptionButtonProps) {
   return (
     <Pressable
       testID="OPTION_BUTTON.CONTAINER:PRESSABLE"
-      disabled={props.isSelected}
       style={[
         styles.optionContainer,
         { opacity: props.isSelected ? 1 : 0.75 }
       ]} onPress={props.onPress}>
       <View style={styles.verticalContainer}>
-        <View>
+        <View style={styles.optionTextContainer}>
           <Text
             testID="OPTION_BUTTON.CONTAINER.OPTION_NAME:TEXT"
             style={styles.optionText}>{props.text}</Text>
@@ -38,11 +37,13 @@ function OptionButton(props: OptionButtonProps) {
           </View>
         ) : null}
       </View>
-      <View testID="OPTION_BUTTON.CONTAINER.SELECTED:VIEW" style={styles.checkmarkContainer}>
-        {props.isSelected === true && (
-          <CheckmarkIcon
-            testID="OPTION_BUTTON.CONTAINER.SELECTED.CHECKMARK:ICON" />
-        )}
+      <View testID="OPTION_BUTTON.CONTAINER.SELECTED:VIEW" style={styles.switchContainer}>
+        <Switch
+          testID="OPTION_BUTTON.CONTAINER.SELECTED.SWITCH:PRESSABLE"
+          value={props.isSelected}
+          trackColor={{ false: CommonColors.white, true: CommonColors.white }}
+          thumbColor={CommonColors.saladGreen}
+        />
       </View>
     </Pressable>
   )
@@ -57,27 +58,34 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 10,
     minHeight: 64,
-    borderBottomWidth: 1,
     width: "100%",
+    backgroundColor: CommonColors.black,
+    borderWidth: 1,
+    borderColor: CommonColors.whiteAlternative,
+    borderRadius: 15,
     paddingVertical: 10
   },
+  optionTextContainer: {
+    width: "100%"
+  },
   optionText: {
+    width: "100%",
     color: CommonColors.white,
     fontSize: 16
   },
   verticalContainer: {
+    flex: 1,
     flexDirection: "column",
     paddingVertical: 5,
     gap: 10
   },
   childrenContainer: {
-    minHeight: 36,
-    minWidth: 36,
+    flex: 1,
     flexDirection: "row",
     alignItems: "center",
     gap: 10
   },
-  checkmarkContainer: {
+  switchContainer: {
     minHeight: 36,
     minWidth: 36,
     alignItems: "center",

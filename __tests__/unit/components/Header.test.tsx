@@ -10,6 +10,8 @@ describe(
         renderWithProviders(<Header />);
 
         expect(screen.getByTestId("HEADER.CONTAINER:VIEW")).toBeOnTheScreen();
+
+        expect(screen.getByTestId("SETTINGS_BUTTON.ICON:PRESSABLE")).toBeOnTheScreen();
       }
     );
   }

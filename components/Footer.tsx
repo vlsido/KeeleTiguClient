@@ -29,10 +29,12 @@ const styles = StyleSheet.create({
     right: 0,
     marginHorizontal: "2.5%",
     flexDirection: "row",
+    alignItems: "center",
     justifyContent: "space-between"
   },
   text: {
     color: CommonColors.white,
+    textAlign: "center",
     fontSize: 12,
     padding: 2.5
 

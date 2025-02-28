@@ -51,12 +51,17 @@ function TextButton(props: TextButtonProps) {
       testID={props.testID}
       style={({ pressed }) => [
         props.style,
-        { opacity: pressed ? 0.75 : 1 },
+        {
+          transitionDuration: "150ms",
+          opacity: pressed ? 0.75 : 1
+        },
       ]}
       onPress={props.onPress}
       disabled={props.disabledBool}
       hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
       aria-label={props.label}
+      role="button"
+      accessibilityLabelledBy="buttonLabel"
       onHoverIn={props.onHoverIn}
       onHoverOut={props.onHoverOut}
     >
@@ -67,7 +72,12 @@ function TextButton(props: TextButtonProps) {
           color={props.leftSideIconColor}
         />
       )}
-      <Text numberOfLines={props.numberOfLines} ellipsizeMode="tail" style={props.textStyle}>
+      <Text
+        nativeID="buttonLabel"
+        style={props.textStyle}
+        numberOfLines={props.numberOfLines}
+        ellipsizeMode="tail"
+      >
         {props.text}
       </Text>
     </Pressable>

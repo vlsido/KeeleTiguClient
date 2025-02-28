@@ -1,15 +1,23 @@
 import {
+  useCallback,
+  useMemo
+} from "react";
+import {
   FlatList,
   StyleSheet,
   Text,
   View
 } from "react-native";
-import { WordWithoutData } from "../components/util/WordsUtil";
-import { i18n } from "../components/store/i18n";
-import { CommonColors } from "../constants/Colors";
-import { useAppSelector } from "../hooks/storeHooks";
-import DictionaryItem from "../components/screens/dictionary/DictionaryItem";
-import { memo } from "react";
+import { WordWithoutData } from "../../components/util/WordsUtil";
+import { i18n } from "../../components/store/i18n";
+import { CommonColors } from "../../constants/Colors";
+import { useAppSelector } from "../../hooks/storeHooks";
+import DictionaryItem from "../../components/screens/dictionary/DictionaryItem";
+import {
+  atom,
+  useAtom
+} from "jotai";
+import { useFocusEffect } from "expo-router";
 
 export interface DictionaryRequest {
   page: number;
@@ -28,6 +36,7 @@ export interface OnlyWordsResponse {
 }
 
 export interface Word {
+  index: number;
   word: string;
   type: "s" | "adj" | "adv" | "v" | "konj" | undefined;
   forms: string | undefined;
@@ -57,9 +66,19 @@ export interface DictionaryResponse {
 }
 
 function Dictionary() {
+  const [myDictionaryState, setMyDictionaryState] =
+    useAtom<Word[]>(useMemo(() => atom<Word[]>([]), []));
   const myDictionary = useAppSelector((state) => state.dictionary.myDictionary);
 
-  if (myDictionary.length === 0) {
+  useFocusEffect(
+    useCallback(() => {
+      if (myDictionary.length === 0) return;
+
+      setMyDictionaryState(myDictionary);
+    }, [myDictionary])
+  );
+
+  if (myDictionary.length === 0 || myDictionaryState.length === 0) {
     return (
       <View
         testID="DICTIONARY.WORDS_EMPTY:VIEW"
@@ -68,7 +87,7 @@ function Dictionary() {
         <Text
           testID="DICTIONARY.WORDS_EMPTY:TEXT"
           style={styles.loadingText}>
-          Siin pole midagi. Lisa uued sõnad eksami leheküljel.
+          {i18n.t("Dictionary_empty", { defaultValue: "Siin pole midagi. Lisa uued sõnad testi leheküljel või otsingus." })}
         </Text>
       </View>
     );
@@ -93,18 +112,27 @@ function Dictionary() {
       </Text>
       <FlatList
         testID="DICTIONARY.WORDS_LIST:FLATLIST"
-        data={myDictionary}
-        keyExtractor={(item) => `word-${myDictionary.indexOf(item)}`}
-        contentContainerStyle={{ gap: 10 }}
-        renderItem={({ item, index }) => <DictionaryItem {...item} index={index + 1} />}
+        data={myDictionaryState}
+        style={styles.list}
+        contentContainerStyle={styles.listContentContainer}
+        keyExtractor={(item) => item.index.toString()}
+        renderItem={({ item, index }) => <DictionaryItem {...item} length={index + 1} />}
       />
     </View>
   );
 }
 
-export default memo(Dictionary);
+export default Dictionary;
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "column",
+    backgroundColor: "#222322"
+  },
   noWordsContainer: {
     flex: 1,
     width: "100%",
@@ -115,14 +143,8 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     backgroundColor: "#222322"
   },
-  container: {
-    flex: 1,
-    width: "100%",
-    paddingLeft: 10,
-    paddingVertical: 15,
-    justifyContent: "center",
-    flexDirection: "column",
-    backgroundColor: "#222322"
+  separator: {
+    height: 10
   },
   loadingText: {
     fontSize: 20,
@@ -138,4 +160,13 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 16
   },
+  list: {
+    width: "100%"
+  },
+  listContentContainer: {
+    gap: 10,
+    marginVertical: 10,
+    maxWidth: 600,
+    alignSelf: "center"
+  }
 });

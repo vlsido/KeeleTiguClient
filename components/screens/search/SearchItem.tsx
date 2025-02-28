@@ -11,7 +11,6 @@ import { useMemo } from "react";
 import TextButton from "../../buttons/TextButton";
 
 interface SearchItemProps {
-  index: number;
   word: string;
   onPress: (word: string) => Promise<void>
 }

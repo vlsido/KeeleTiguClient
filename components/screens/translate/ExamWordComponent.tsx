@@ -1,5 +1,4 @@
 import {
-  ActivityIndicator,
   StyleSheet,
   Text,
   View
@@ -14,9 +13,12 @@ import {
 import {
   Word,
   WordAndExamData
-} from "../../../app/dictionary";
+} from "../../../app/(tabs)/dictionary";
 import { CommonColors } from "../../../constants/Colors";
-import AddToDictionaryButton from "../../buttons/AddToDictionaryButton";
+import AddToDictionaryButton from "../../buttons/AddToDictionaryIconButton";
+import store from "../../store/store";
+import LoadingIndicator from "../../indicators/LoadingIndicator";
+import { TranslateGameMode } from "../../../constants/types";
 
 export interface ExamWord {
   word: string;
@@ -24,17 +26,23 @@ export interface ExamWord {
 }
 
 interface ExamWordComponentProps {
-  mode: "any" | "my_dictionary";
+  mode: TranslateGameMode;
+  gameWords: WordAndExamData[];
   isAnswerVisible: boolean;
 }
 
-const currentWordAtom = atom<React.JSX.Element[]>((get) => {
+interface CurrentWordProps {
+  gameWords: WordAndExamData[]
+}
+
+function CurrentWord(props: CurrentWordProps) {
+
   const wordElements: React.JSX.Element[] = [];
 
-  const gameWords = get(gameWordsAtom);
+  const highlightRussianAccentLetters = store.getState().settings.highlightRussianAccentLetters;
 
-  if (gameWords.length > 0) {
-    const word = gameWords.at(0);
+  if (props.gameWords.length > 0) {
+    const word = props.gameWords.at(0);
 
     if (word != null) {
       word.examData.russianTranslations.forEach((
@@ -55,7 +63,7 @@ const currentWordAtom = atom<React.JSX.Element[]>((get) => {
           } else {
             // The part after the quote, where the first letter is the accent
             textElements.push(
-              <Text key={`russian-${translationIndex}-current-word-part-${index}`} style={styles.accentedText}>{wordPart[0]}</Text>,
+              <Text key={`russian-${translationIndex}-current-word-part-${index}`} style={highlightRussianAccentLetters === true ? styles.accentedText : styles.normalText}>{wordPart[0]}</Text>,
               <Text key={`russina-${translationIndex}-current-word-part-${index}-rest`} style={styles.normalText}>{wordPart.slice(1)}</Text>
             );
           }
@@ -69,15 +77,14 @@ const currentWordAtom = atom<React.JSX.Element[]>((get) => {
     }
   }
   return wordElements;
-});
+}
 
-const currentAnswerAtom = atom<React.JSX.Element[]>((get) => {
+function CurrentAnswer(props: CurrentWordProps) {
+
   const wordElements: React.JSX.Element[] = [];
 
-  const gameWords = get(gameWordsAtom);
-
-  if (gameWords.length > 0) {
-    const word = gameWords.at(0);
+  if (props.gameWords.length > 0) {
+    const word = props.gameWords.at(0);
     if (word != null) {
       const wordParts = word.examData.word.split("+");
 
@@ -110,22 +117,19 @@ const currentAnswerAtom = atom<React.JSX.Element[]>((get) => {
   }
 
   return wordElements;
-});
+}
+
 
 function ExamWordComponent(props: ExamWordComponentProps) {
-  const gameWords = useAtomValue<Word[] | WordAndExamData[]>(gameWordsAtom);
-
-  const currentWord = useAtomValue<React.JSX.Element[]>(currentWordAtom);
-
-  const currentAnswer = useAtomValue<React.JSX.Element[]>(currentAnswerAtom);
-
-  if (gameWords.length === 0) {
+  if (props.gameWords.length === 0) {
     return (
       <View
         testID="EXAM_WORD_COMPONENT.NO_GAME_WORDS_CONTAINER:VIEW"
         style={styles.loadingContainer}
       >
-        <ActivityIndicator testID="EXAM_WORD_COMPONENT.NO_GAME_WORDS_CONTAINER.LOADING:ACTIVITY_INDICATOR" size={32} color={CommonColors.white} />
+        <LoadingIndicator
+          testID="EXAM_WORD_COMPONENT.NO_GAME_WORDS_CONTAINER.LOADING:ACTIVITY_INDICATOR"
+          color={CommonColors.white} />
       </View>
     );
   }
@@ -136,12 +140,16 @@ function ExamWordComponent(props: ExamWordComponentProps) {
         testID="EXAM_WORD_COMPONENT.WORD_CONTAINER:VIEW"
         style={styles.container}
       >
-        {currentWord}
+        <CurrentWord gameWords={props.gameWords} />
       </View>
       {props.isAnswerVisible === true && (
         <View testID="EXAM_WORD_COMPONENT.ANSWER_CONTAINER:VIEW" style={styles.answerContainer}>
-          {currentAnswer}
-          {props.mode === "any" && <AddToDictionaryButton word={gameWords.at(0)} />}
+          <Text style={{ textAlign: "center" }}>
+            <CurrentAnswer gameWords={props.gameWords} />
+          </Text>
+          {(props.mode === "any" || props.mode === "all") && <AddToDictionaryButton
+            word={props.gameWords.at(0)}
+            backgroundStyle="dark" />}
         </View>
       )}
     </>

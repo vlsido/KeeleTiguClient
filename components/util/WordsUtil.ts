@@ -1,4 +1,5 @@
 export interface WordWithoutData {
+  index: number;
   word: string;
 }
 

@@ -1,18 +1,74 @@
 {
   "ru": {
+    "add_to_dictionary": "Добавить в словарь",
+    "tap_to_close": "Нажмите, чтобы закрыть.",
+    "app_description": "Это приложение с открытым кодом разработано Владиславом \"coslavko\" Сидоренко.",
+    "start": "Начать",
+    "added": "Добавлено!",
+    "already_in_dictionary": "Слово уже есть в словаре!",
+    "error": "Произошла ошибка!",
+    "error_try_again": "Произошла ошибка! Попробуйте снова!",
+    "and": "и",
+    "start_again": "Начать заново",
+    "fix_mistakes": "Исправить ошибки",
+    "not_found": "Не найдено!",
+    "SettingsMenu_language": "Язык",
+    "SettingsMenu_turn_on_accent_letters": "Подсвечивать ударения у русских слов",
+    "SettingsMenu_about_this_app": "О приложении",
+    "TranslateWordsGame_translate_words": "Перевод слов",
+    "TranslateWordsGame_number_of_words": "Количество слов",
+    "TranslateWordsGame_unlimited_words": "Безгранично",
+    "TranslateWordsGame_random_words": "Случайные слова",
+    "TranslateWordsGame_words_from_my_dictionary": "Слова из моего словарика",
+    "TranslateWordsGame_start": "НАЧАТЬ",
+    "TranslateWordsGameResultsHeader_all_right": "Прекрасно! Все слова правильно переведены!", 
+    "TranslateWordsGameResultsHeader_test_results": "Результаты теста:",
+    "SearchField_search_placeholder": "Поиск...",
+    "SearchField_search_word": "Найти слово",
+    "Hint_dictionary_is_empty": "Словарь пуст",
+    "TextAnswerField_write_answer_here": "Введите ответ...",
+    "Type_noun": "существительное",
+    "Type_verb": "глагол",
+    "Type_adjective": "прилагательное",
+    "Type_adverb": "наречие",
+    "Type_subjunctive": "сослагательное наклонение",
+    "Translate_taking_words_from_dictionary": "Берём слова из словаря...",
+    "Dictionary_empty": "Ваш словарь пуст. Добавьте новые слова на странице тестов или найдите их в поиске.",
+    "incorrect_answers_plural": {
+      "one": "ответ",
+      "few": "ответа",
+      "many": "ответов",
+      "other": "ответов"
+    },
     "count_words_in_dictionary": {
       "one": "В словаре %{count} слово",
       "few": "В словаре %{count} слова",
       "many": "В словаре %{count} слов",
       "other": "В словаре %{count} слов"
     },
-    "add_to_dictionary": "Добавить в словарь",
     "count_words_in_search": {
       "one": "Найдено %{count} слово",
       "few": "Найдено %{count} слова",
       "many": "Найдено %{count} слов",
       "other": "Найдено %{count} слов"
     },
+    "Translate_words_remaining": {
+      "one": "Осталось %{count} слово",
+      "few": "Осталось %{count} слова",
+      "many": "Осталось %{count} слов",
+      "other": "Осталось %{count} слов"
+    },
+    "TranslateWordsGameResultsHeader_correct_count": {
+      "one": "%{count} правильный",
+      "few": "%{count} правильных",
+      "many": "%{count} правильных",
+      "other": "%{count} правильных"
+    },
+    "TranslateWordsGameResultsHeader_incorrect_count": {
+      "one": "%{count} неправильный",
+      "few": "%{count} неправильных",
+      "many": "%{count} неправильных",
+      "other": "%{count} неправильных"
     }
   }
 }

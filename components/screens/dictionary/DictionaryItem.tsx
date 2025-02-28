@@ -4,54 +4,57 @@ import {
   View
 } from "react-native";
 import Type from "./Type";
-import { router } from "expo-router";
-import { useCallback, useContext } from "react";
-import { WordsContext } from "../../store/WordsContext";
-import { Word } from "../../../app/dictionary";
+import {
+  memo,
+  useMemo
+} from "react";
+import { Word } from "../../../app/(tabs)/dictionary";
 import Forms from "../../text_components/Forms";
 import { CommonColors } from "../../../constants/Colors";
 import Usage from "../../text_components/Usage";
-import CustomIconButton from "../../buttons/CustomIconButton";
-import { TrashIcon } from "../../icons/TrashIcon";
-import { useAppDispatch, useAppSelector } from "../../../hooks/storeHooks";
-import { setMyDictionary } from "../../store/slices/dictionarySlice";
+import { useAppDispatch } from "../../../hooks/storeHooks";
+import { removeIndexFromMyDictionary } from "../../store/slices/dictionarySlice";
+import {
+  atom,
+  useAtom
+} from "jotai";
+import { MaterialIcons } from "@expo/vector-icons";
 
 interface DictionaryItemProps extends Word {
-  index: number;
+  length: number;
 }
 
 function DictionaryItem(props: DictionaryItemProps) {
-  const { clearAllCache } = useContext(WordsContext);
+  const [isDisplayed, setIsDisplayed] = useAtom<boolean>(useMemo(() => atom<boolean>(true), []));
 
-  const myDictionary = useAppSelector((state) => state.dictionary.myDictionary);
   const dispatch = useAppDispatch();
 
-  if (props.word == "" || props.usages == null) {
-    clearAllCache();
-    router.replace("/");
-  };
-
-  const onRemoveWord = useCallback(() => {
-    const myUpdatedDictionary = myDictionary.filter((word) => word.word !== props.word);
-
-    dispatch(setMyDictionary(myUpdatedDictionary));
-
-    if (myDictionary.length === 0) {
-      localStorage.removeItem("myDictionary");
-    }
-  }, []);
+  function onRemoveWord() {
+    setIsDisplayed(false);
+    dispatch(removeIndexFromMyDictionary(props.index));
+  }
 
   return (
     <View
       testID="DICTIONARY_ITEM.CONTAINER:VIEW"
-      style={styles.itemContainer}
+      style={[styles.itemContainer, { display: isDisplayed ? "flex" : "none" }]}
     >
-      <Text style={styles.indexText}>{props.index}.</Text>
+      <Text style={styles.indexText}>{props.length}.</Text>
       <View style={styles.wordContainer}>
         <View>
-          <Text style={styles.wordText}>
-            {props.word}{" "}
-          </Text>
+          <View style={styles.header}>
+            <Text style={styles.wordText}>
+              {props.word}{" "}
+            </Text>
+
+            <MaterialIcons
+              testID="DICTIONARY_ITEM.CONTAINER.REMOVE_ICON:PRESSABLE"
+              name="remove-circle"
+              size={32}
+              color={CommonColors.white}
+              onPress={onRemoveWord}
+            />
+          </View>
           <Forms forms={props.forms} />
           <Type type={props.type} />
           {props.usages.map((
@@ -60,7 +63,7 @@ function DictionaryItem(props: DictionaryItemProps) {
             return (
               <Usage
                 key={index}
-                index={index}
+                usageIndex={index}
                 definitionData={usage.definitionData}
                 examples={usage.examples}
                 searchString={undefined}
@@ -70,24 +73,31 @@ function DictionaryItem(props: DictionaryItemProps) {
 
         </View>
       </View>
-      <CustomIconButton onPress={onRemoveWord}>
-        <TrashIcon />
-      </CustomIconButton>
     </View>
   );
 }
 
-export default DictionaryItem;
+export default memo(DictionaryItem);
 
 const styles = StyleSheet.create({
   itemContainer: {
     flexDirection: "row",
     justifyContent: "flex-start",
     alignItems: "flex-start",
-    width: "80%",
+    padding: 20,
+    backgroundColor: "black",
+    width: "100%",
+    borderRadius: 45,
+    borderWidth: 1,
+    borderColor: "white",
+  },
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between"
   },
   wordContainer: {
-    width: "95%",
+    width: "100%",
+    paddingHorizontal: 10,
   },
   wordText: {
     color: "white",

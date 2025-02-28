@@ -6,72 +6,88 @@ import {
 } from "firebase/remote-config";
 import {
   createContext,
-  useEffect
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useState
 } from "react";
 import { app } from "../util/FirebaseConfig";
-import { i18n } from "./i18n";
-import ee from "../../components/store/translations/ee.json"
 import { useAppDispatch } from "../../hooks/storeHooks";
-import { clearDictionary } from "./slices/dictionarySlice";
+import { clearDictionary } from "../store/slices/dictionarySlice";
 import {
   atom,
+  useAtom,
   useSetAtom
 } from "jotai";
+import { loadSettings } from "../store/slices/settingsSlice";
+import { i18n } from "../store/i18n";
 
 interface ConfigContextProps {
   remoteConfig: RemoteConfig | null;
+  rerender: () => void;
 }
 
 export const ConfigContext = createContext<ConfigContextProps>({
   remoteConfig: null,
+  rerender: () => { },
 });
 
 export const isUnderMaintenanceAtom = atom<boolean>(false);
 
 function ConfigContextProvider({ children }: { children: React.ReactNode }) {
+  const [isRendered, setIsRendered] = useAtom<boolean>(useMemo(() => atom<boolean>(true), []));
+
   const remoteConfig = getRemoteConfig(app);
 
   const dispatch = useAppDispatch();
 
   const setIsUnderMaintenance = useSetAtom(isUnderMaintenanceAtom);
 
-  // if (__DEV__) {
-  //   useEffect(
-  //     () => {
-  //       const unsubscribe = i18n.onChange(() => {
-  //         console.log("I18n has changed!");
-  //       });
-  //
-  //       return unsubscribe;
-  //     },
-  //     []
-  //   );
-  // }
+  if (__DEV__) {
+    useEffect(
+      () => {
+        const unsubscribe = i18n.onChange((event) => {
+          console.log("I18n has changed!", event);
+        });
+
+        return unsubscribe;
+      },
+      []
+    );
+  }
+
+  useLayoutEffect(() => {
+    dispatch(loadSettings());
+
+  }, []);
 
   useEffect(
     () => {
+
       remoteConfig.settings.minimumFetchIntervalMillis = 600000; // 600000ms = 10 minutes
 
-      remoteConfig.defaultConfig = { current_build_version: "1.0.0", is_under_maintenance: false, maintenance_text: "Uuendame appi, proovige uuesti hiljem!" };
+      remoteConfig.defaultConfig = {
+        last_cache_invalidation_timestamp: 1739391134,
+        is_under_maintenance: false,
+        maintenance_text: "Uuendame appi, proovige uuesti hiljem!"
+      };
 
       fetchAndActivate(remoteConfig).
         then(() => {
-
-          const currentBuildVersion = getValue(
+          const lastCacheInvalidationTimestamp = getValue(
             remoteConfig,
-            "current_build_version"
+            "last_cache_invalidation_timestamp"
           ).asString();
 
-          const cachedBuildVersion = localStorage.getItem("current_build_version");
+          const cachedLastCacheInvalidationTimestamp = localStorage.getItem("last_cache_invalidation_timestamp");
 
-          if (cachedBuildVersion == null || currentBuildVersion !== cachedBuildVersion) {
+          if (cachedLastCacheInvalidationTimestamp == null || lastCacheInvalidationTimestamp !== cachedLastCacheInvalidationTimestamp) {
             localStorage.setItem(
-              "current_build_version",
-              currentBuildVersion
+              "last_cache_invalidation_timestamp",
+              lastCacheInvalidationTimestamp
             );
-            removeCache().then(() => {
-              loadTranslations("ee");
-            });
+            dispatch(clearDictionary());
 
             return;
           }
@@ -91,41 +107,32 @@ function ConfigContextProvider({ children }: { children: React.ReactNode }) {
 
           dispatch({ type: "dictionary/loadCachedWords" });
 
-          loadTranslations("ee");
         }).catch((error) => {
           console.error(
             "error fetching config",
             error
           );
-          removeCache().then(() => {
-            loadTranslations("ee");
-          });
         });
-
     },
     []
   );
 
-  async function removeCache() {
-    localStorage.removeItem("allWords");
-    localStorage.removeItem("wordsAndExamData");
-    dispatch(clearDictionary());
-  }
+  function rerender() {
+    setIsRendered(false);
 
-  async function loadTranslations(locale: string) {
-    i18n.defaultLocale = locale;
-    i18n.locale = locale;
-
-    i18n.store(ee);
+    setTimeout(() => {
+      setIsRendered(true);
+    }, 1);
   }
 
   const value = {
     remoteConfig,
+    rerender
   }
 
   return (
     <ConfigContext.Provider value={value}>
-      {children}
+      {isRendered ? children : null}
     </ConfigContext.Provider>
   );
 }
