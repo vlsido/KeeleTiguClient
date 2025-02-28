@@ -20,7 +20,8 @@
     "TranslateWordsGame_random_words": "Suvalised sõnad",
     "TranslateWordsGame_words_from_my_dictionary": "Sõnad mu sõnastikust",
     "TranslateWordsGame_start": "ALUSTA",
-    "TranslateWordsGameResults_test_results": "Testi tulemus on",
+    "TranslateWordsGameResultsHeader_all_right": "Suurepärane! Kõik sõnad on õigesti tõlginud!", 
+    "TranslateWordsGameResultsHeader_test_results": "Testi tulemus on",
     "SearchField_search_placeholder": "Otsi...",
     "SearchField_search_word": "Otsi sõna",
     "Hint_dictionary_is_empty": "Sõnastik on tühi",
@@ -48,11 +49,11 @@
       "one": "%{count} sõna on jaanud",
       "other": "%{count} sõnad on jaanud"
     },
-    "TranslateWordsGameResults_correct_count": {
+    "TranslateWordsGameResultsHeader_correct_count": {
       "one": "%{count} õige",
       "other": "%{count} õige"
     },
-    "TranslateWordsGameResults_incorrect_count": {
+    "TranslateWordsGameResultsHeader_incorrect_count": {
       "one": "%{count} vale",
       "other": "%{count} vale"
     }
