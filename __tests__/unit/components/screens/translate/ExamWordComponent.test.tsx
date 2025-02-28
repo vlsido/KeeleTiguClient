@@ -10,9 +10,7 @@ describe(
       "renders correctly when no game words are available",
       () => {
         const gameWords: WordAndExamData[] = [];
-        renderWithProviders(
-          <ExamWordComponent mode="any" gameWords={gameWords} isAnswerVisible={false} />,
-        );
+        renderWithProviders(<ExamWordComponent mode="any" gameWords={gameWords} isAnswerVisible={false} />,);
 
         expect(screen.getByTestId("EXAM_WORD_COMPONENT.NO_GAME_WORDS_CONTAINER:VIEW")).toBeOnTheScreen();
 
@@ -23,9 +21,7 @@ describe(
     test(
       "renders correctly when answer IS visible",
       () => {
-        renderWithProviders(
-          <ExamWordComponent mode="any" gameWords={twoWordsAndExamDataArray} isAnswerVisible={true} />,
-        );
+        renderWithProviders(<ExamWordComponent mode="any" gameWords={twoWordsAndExamDataArray} isAnswerVisible={true} />,);
 
         expect(screen.getByTestId("EXAM_WORD_COMPONENT.WORD_CONTAINER:VIEW")).toBeOnTheScreen();
         expect(screen.getByTestId("EXAM_WORD_COMPONENT.ANSWER_CONTAINER:VIEW")).toBeOnTheScreen();
@@ -36,9 +32,7 @@ describe(
       "renders correctly when answer IS NOT visible",
       () => {
 
-        renderWithProviders(
-          <ExamWordComponent mode="any" gameWords={twoWordsAndExamDataArray} isAnswerVisible={false} />,
-        );
+        renderWithProviders(<ExamWordComponent mode="any" gameWords={twoWordsAndExamDataArray} isAnswerVisible={false} />,);
 
         expect(screen.getByTestId("EXAM_WORD_COMPONENT.WORD_CONTAINER:VIEW")).toBeOnTheScreen();
 
