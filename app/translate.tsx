@@ -417,6 +417,17 @@ export default function Translate() {
     }
   }
 
+  function resetEverything() {
+
+    setAnswer("");
+    setIsAnswerValid(false);
+    setIsAnswerVisible(false);
+    setCorrectCount(0);
+    setIncorrectCount(0);
+    setLastIncorrectWord("");
+    setResultsData([]);
+  }
+
   const restartGame = useCallback(() => {
     const newGameWords: WordAndExamData[] = resultsData.map((result) => {
       return result.word;
@@ -424,12 +435,8 @@ export default function Translate() {
 
     setGameWords(newGameWords);
 
-    setCorrectCount(0);
-    setIncorrectCount(0);
-
-    setResultsData([]);
-
-  }, [resultsData]);
+    resetEverything();
+  }, [resultsData, resetEverything]);
 
   const restartToFixMistakes = useCallback(() => {
     const newGameWords: WordAndExamData[] = resultsData.map((result) => {
@@ -440,11 +447,7 @@ export default function Translate() {
 
     setGameWords(newGameWords);
 
-    setCorrectCount(0);
-    setIncorrectCount(0);
-
-    setResultsData([]);
-
+    resetEverything();
   }, [resultsData]);
 
   if (gameWords.length === 0 && resultsData.length > 0) {
