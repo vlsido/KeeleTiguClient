@@ -91,7 +91,6 @@ const styles = StyleSheet.create({
   },
   active: {
     borderColor: "white",
-    borderWidth: 3
   },
   tabList: {
     width: "100%",
@@ -102,7 +101,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderRadius: 60,
     paddingHorizontal: 15,
-    paddingVertical: 10,
+    paddingVertical: 5,
     marginBottom: "0.5%",
     maxWidth: 250,
   },
@@ -112,6 +111,8 @@ const styles = StyleSheet.create({
     width: 48,
     justifyContent: "center",
     alignItems: "center",
+    borderColor: "rgba(21,22,21,0.8)",
+    borderWidth: 3,
     borderRadius: 60,
   }
 })
