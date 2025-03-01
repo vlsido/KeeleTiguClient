@@ -26,16 +26,18 @@ function OptionButton(props: OptionButtonProps) {
         <View style={styles.optionTextContainer}>
           <Text
             testID="OPTION_BUTTON.CONTAINER.OPTION_NAME:TEXT"
-            style={styles.optionText}>{props.text}</Text>
+            style={styles.optionText}
+            ellipsizeMode="tail"
+            numberOfLines={2}
+          >{props.text}</Text>
         </View>
-        {props.children ? (
+        {props.children && (
           <View
             testID="OPTION_BUTTON.CONTAINER.CHILDREN:VIEW"
-            style={styles.childrenContainer}
           >
             {props.children}
           </View>
-        ) : null}
+        )}
       </View>
       <View testID="OPTION_BUTTON.CONTAINER.SELECTED:VIEW" style={styles.switchContainer}>
         <Switch
@@ -77,12 +79,6 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "column",
     paddingVertical: 5,
-    gap: 10
-  },
-  childrenContainer: {
-    flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
     gap: 10
   },
   switchContainer: {

@@ -18,7 +18,6 @@ import {
   atom,
   useAtom
 } from "jotai";
-import { MaterialIcons } from "@expo/vector-icons";
 import CustomIconButton from "../../buttons/CustomIconButton";
 import { CloseIcon } from "../../icons/CloseIcon";
 

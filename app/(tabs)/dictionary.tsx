@@ -128,6 +128,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: "100%",
+    paddingHorizontal: 10,
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "column",
@@ -141,7 +142,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "column",
-    backgroundColor: "#222322"
+    backgroundColor: CommonColors.black
   },
   separator: {
     height: 10
