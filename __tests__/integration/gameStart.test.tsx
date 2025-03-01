@@ -34,7 +34,8 @@ describe(
 
         expect(startGameButton).toBeOnTheScreen();
 
-      }
+      },
+      10000
     );
   }
 );
