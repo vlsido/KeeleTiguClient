@@ -1,10 +1,17 @@
-import { call, put, takeLatest } from "redux-saga/effects";
-import { setExamDictionary, setWords } from "../slices/dictionarySlice";
+import {
+  call,
+  put,
+  takeLatest
+} from "redux-saga/effects";
+import {
+  setExamDictionary,
+  setWords
+} from "../slices/dictionarySlice";
 import { callCloudFunction } from "../../util/CloudFunctions";
 import {
   OnlyWordsResponse,
   RandomWordsResponse
-} from "../../../app/dictionary";
+} from "../../../app/(tabs)/dictionary";
 
 function* fetchAllWordsSaga() {
   try {

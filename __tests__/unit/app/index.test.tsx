@@ -1,5 +1,5 @@
 import { StyleProp, ViewStyle } from "react-native";
-import Index from "../../../app/index";
+import Index from "../../../app/(tabs)/index";
 import { renderWithProviders, screen, userEvent } from "../../../utils/test-utils";
 import { withReanimatedTimer } from "react-native-reanimated";
 

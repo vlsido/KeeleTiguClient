@@ -1,4 +1,7 @@
 import {
+  useCallback
+} from "react";
+import {
   StyleSheet,
   Text,
 } from "react-native";
@@ -11,9 +14,6 @@ import {
   useAtom,
   useAtomValue,
 } from "jotai";
-import {
-  useCallback
-} from "react";
 import {
   durationAtom,
   hintTextAtom,

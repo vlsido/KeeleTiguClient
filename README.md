@@ -1,6 +1,6 @@
-# Welcome to Examinyasha 👋
+# Welcome to KeeleTigu 👋
 
-[Examinyasha](https://examinyasha.web.app) is your pocket Estonian-Russian dictionary, that lets you learn Estonian in a fun way.
+[KeeleTigu](https://keeletigu.web.app) is your pocket Estonian-Russian dictionary, that lets you learn Estonian in a fun way.
 
 ## Capabilities
 

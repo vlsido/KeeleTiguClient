@@ -24,9 +24,9 @@ function RegisterButton(props: RegisterButtonProps) {
     )
   }
 
-
   return (
     <TextButton
+      testID="REGISTER_BUTTON.REGISTER:PRESSABLE"
       text="Register"
       style={styles.registerContainer}
       textStyle={styles.registerText}

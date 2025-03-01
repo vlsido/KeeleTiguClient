@@ -26,6 +26,7 @@ function LoginButton(props: LoginButtonProps) {
 
   return (
     <TextButton
+      testID="LOGIN_BUTTON.LOGIN:PRESSABLE"
       text="Logi sisse"
       style={styles.loginContainer}
       textStyle={styles.loginText}

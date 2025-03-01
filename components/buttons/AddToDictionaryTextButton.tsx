@@ -3,7 +3,7 @@ import { useHint } from "../../hooks/useHint";
 import { useAppDispatch, useAppSelector } from "../../hooks/storeHooks";
 import { pushToMyDictionary } from "../store/slices/dictionarySlice";
 import { useCallback } from "react";
-import { Word } from "../../app/dictionary";
+import { Word } from "../../app/(tabs)/dictionary";
 import TextButton from "./TextButton";
 import { i18n } from "../store/i18n";
 import { CommonColors } from "../../constants/Colors";
@@ -20,7 +20,7 @@ function AddToDictionaryTextButton(props: AddToDictionaryTextButtonProps) {
   const addToDictionary = useCallback(() => {
     if (myDictionary.find((word) => word.word === props.wordData.word)) {
       showHint(
-        "Sõna on juba sõnastikus!",
+        i18n.t("already_in_dictionary", { defaultValue: "Sõna on juba sõnastikus!" }),
         2500
       );
       return;
@@ -30,7 +30,7 @@ function AddToDictionaryTextButton(props: AddToDictionaryTextButtonProps) {
 
     // Add to dictionary
     showHint(
-      "Lisatud!",
+      i18n.t("added", { defaultValue: "Lisatud!" }),
       2500
     );
   }, [props.wordData, myDictionary]);

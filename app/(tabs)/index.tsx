@@ -2,8 +2,8 @@ import {
   StyleSheet,
   View
 } from "react-native";
-import { CommonColors } from "../constants/Colors";
-import TranslateWordsGame from "../components/screens/index/games/translate/TranslateWordsGame";
+import TranslateWordsGame from "../../components/screens/index/games/translate/TranslateWordsGame";
+import { CommonColors } from "../../constants/Colors";
 
 export default function Index() {
   return (
@@ -24,6 +24,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     backgroundColor: CommonColors.black,
-    paddingVertical: 10,
+    padding: 10,
   },
 })

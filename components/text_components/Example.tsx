@@ -6,6 +6,7 @@ import {
 } from "react-native";
 import { CommonColors } from "../../constants/Colors";
 import RussianTranslation from "./RussianTranslation";
+import { useAppSelector } from "../../hooks/storeHooks";
 
 interface ExampleProps {
   estonianExample: string;
@@ -14,6 +15,8 @@ interface ExampleProps {
 }
 
 function Example(props: ExampleProps) {
+  const highlightRussianAccentLetters = useAppSelector((state) => state.settings.highlightRussianAccentLetters);
+
   const estonianExampleWords = props.estonianExample.split(" ");
 
   const searchStringIndex = estonianExampleWords.findIndex((word) => word.toLowerCase() === props.searchString);
@@ -56,9 +59,17 @@ function Example(props: ExampleProps) {
             translation={item}
             searchString={props.searchString}
             textStyle={styles.russianExample}
-            accentTextStyle={styles.russianAccentText}
+            accentTextStyle={
+              highlightRussianAccentLetters === true
+                ? styles.russianAccentText
+                : styles.russianExample
+            }
             highlightedTextStyle={styles.highlightedRussianText}
-            highlightedAccentTextStyle={styles.highlightedRussianAccentText}
+            highlightedAccentTextStyle={
+              highlightRussianAccentLetters === true
+                ? styles.highlightedRussianAccentText
+                : styles.highlightedRussianText
+            }
           />
         }}
       />
@@ -85,22 +96,22 @@ const styles = StyleSheet.create({
     fontWeight: "thin",
   },
   russianAccentText: {
-    color: CommonColors.red,
+    color: "red",
     fontSize: 16,
     fontWeight: "thin",
   },
   highlightedRussianText: {
     flexDirection: "row",
-    backgroundColor: CommonColors.olive,
+    backgroundColor: "white",
     color: "black",
   },
   highlightedRussianAccentText: {
     flexDirection: "row",
-    backgroundColor: CommonColors.olive,
-    color: CommonColors.darkRed,
+    backgroundColor: "white",
+    color: "red",
   },
   highlightedEstonianText: {
-    color: CommonColors.black,
-    backgroundColor: CommonColors.yellow,
+    color: "black",
+    backgroundColor: "white",
   },
 })

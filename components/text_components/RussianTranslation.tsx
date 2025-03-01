@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
   highlightedAccentText: {
     flexDirection: "row",
     backgroundColor: "rgba(255, 255, 255, 0.15)",
-    color: CommonColors.red,
+    color: "red",
     marginRight: "auto",
   }
 })

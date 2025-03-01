@@ -1,4 +1,7 @@
-import { CommonColors } from "../constants/Colors";
+import {
+  useEffect,
+  useRef
+} from "react";
 import {
   FlatList,
   ScrollView,
@@ -6,12 +9,14 @@ import {
   Text,
   View
 } from "react-native";
+import { CommonColors } from "../constants/Colors";
 import Forms from "../components/text_components/Forms";
 import FoundArticlesCounter from "../components/screens/word_data/FoundArticlesCounter";
 import Type from "../components/screens/dictionary/Type";
-import { Word } from "../app/dictionary";
+import { Word } from "../app/(tabs)/dictionary";
 import Usage from "./text_components/Usage";
-import AddToDictionaryTextButton from "./buttons/AddToDictionaryTextButton";
+import AddToDictionaryIconButton from "./buttons/AddToDictionaryIconButton";
+import { i18n } from "./store/i18n";
 
 interface WordDataProps {
   wordDataArray: Word[] | null;
@@ -20,20 +25,33 @@ interface WordDataProps {
 
 function WordData(props: WordDataProps) {
 
+  const scrollRef = useRef<ScrollView | null>(null);
+
+  useEffect(() => {
+    scrollRef?.current?.scrollTo({ y: 0 })
+  }, [props.wordDataArray]);
+
   if (props.wordDataArray == null) {
     return null;
   }
 
   if (props.wordDataArray.length === 0) {
-    return <Text
-      testID="WORD_DATA.NOTHING_FOUND:TEXT"
-      style={styles.notFoundText}>Ei leitud!</Text>;
+    return (
+      <Text
+        testID="WORD_DATA.NOTHING_FOUND:TEXT"
+        style={styles.notFoundText}>
+        {i18n.t("not_found", { defaultValue: "Ei leitud!" })}
+      </Text>
+    );
   }
 
   return (
     <ScrollView
       testID="WORD_DATA.SCROLL_CONTAINER:VIEW"
+      ref={scrollRef}
       style={styles.container}
+
+      onLayout={() => console.log("layed out")}
     >
       <FoundArticlesCounter wordData={props.wordDataArray} />
       {props.wordDataArray.map((
@@ -53,21 +71,30 @@ function WordData(props: WordDataProps) {
           <View
             testID="WORD_DATA.SCROLL_CONTAINER.WORD:VIEW"
             key={`wordIndex-${wordData.index}`}
+            style={styles.wordContainer}
+
           >
-            <Text>
-              {composedWord.map((
-                wordPart, index
-              ) => {
-                const separator = index === 0 ? "" : "+"
-                return (
-                  <Text key={`wordIndex-${index}-text`} style={[
-                    styles.wordText,
-                    (index === searchStringIndex || searchStringIndex === -2) && styles.highlightedText
-                  ]}>
-                    {separator}{wordPart}
-                  </Text>)
-              })}
-            </Text>
+            <View style={styles.wordHeader}>
+              <Text>
+                {composedWord.map((
+                  wordPart, index
+                ) => {
+                  const separator = index === 0 ? "" : "+"
+                  return (
+                    <Text key={`wordIndex-${index}-text`} style={[
+                      styles.wordText,
+                      (index === searchStringIndex || searchStringIndex === -2) && styles.highlightedText
+                    ]}>
+                      {separator}{wordPart}
+                    </Text>)
+                })}
+              </Text>
+              <AddToDictionaryIconButton
+                key={`wordIndex-${wordData.index}-add`}
+                word={wordData}
+                backgroundStyle="light"
+              />
+            </View>
             <Forms key={`wordIndex-${wordData.index}-forms`} forms={wordData.forms} />
             <Type key={`wordIndex-${wordData.index}-type`} type={wordData.type} />
             <FlatList
@@ -83,12 +110,8 @@ function WordData(props: WordDataProps) {
                     searchString={props.searchString}
                   />
                 )
-
               }
               } />
-            <AddToDictionaryTextButton
-              key={`wordIndex-${wordData.index}-add`}
-              wordData={wordData} />
           </View>
         );
       })}
@@ -105,11 +128,26 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center"
   },
-
   container: {
     flex: 1,
     backgroundColor: CommonColors.black,
     paddingHorizontal: 15
+  },
+  wordContainer: {
+    backgroundColor: "black",
+    borderRadius: 45,
+    borderWidth: 1,
+    borderColor: "white",
+    maxWidth: 600,
+    width: "100%",
+    alignSelf: "center",
+    padding: 20,
+    marginVertical: 5
+  },
+  wordHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center"
   },
   wordText: {
     color: "white",
@@ -119,7 +157,7 @@ const styles = StyleSheet.create({
   highlightedText: {
     flexDirection: "row",
     color: CommonColors.black,
-    backgroundColor: CommonColors.yellow,
+    backgroundColor: "white",
     marginRight: "auto",
   },
 

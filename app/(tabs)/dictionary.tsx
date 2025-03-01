@@ -8,11 +8,11 @@ import {
   Text,
   View
 } from "react-native";
-import { WordWithoutData } from "../components/util/WordsUtil";
-import { i18n } from "../components/store/i18n";
-import { CommonColors } from "../constants/Colors";
-import { useAppSelector } from "../hooks/storeHooks";
-import DictionaryItem from "../components/screens/dictionary/DictionaryItem";
+import { WordWithoutData } from "../../components/util/WordsUtil";
+import { i18n } from "../../components/store/i18n";
+import { CommonColors } from "../../constants/Colors";
+import { useAppSelector } from "../../hooks/storeHooks";
+import DictionaryItem from "../../components/screens/dictionary/DictionaryItem";
 import {
   atom,
   useAtom
@@ -78,7 +78,7 @@ function Dictionary() {
     }, [myDictionary])
   );
 
-  if (myDictionary.length === 0) {
+  if (myDictionary.length === 0 || myDictionaryState.length === 0) {
     return (
       <View
         testID="DICTIONARY.WORDS_EMPTY:VIEW"
@@ -87,7 +87,7 @@ function Dictionary() {
         <Text
           testID="DICTIONARY.WORDS_EMPTY:TEXT"
           style={styles.loadingText}>
-          Siin pole midagi. Lisa uued sõnad eksami leheküljel või otsingus.
+          {i18n.t("Dictionary_empty", { defaultValue: "Siin pole midagi. Lisa uued sõnad testi leheküljel või otsingus." })}
         </Text>
       </View>
     );
@@ -113,6 +113,8 @@ function Dictionary() {
       <FlatList
         testID="DICTIONARY.WORDS_LIST:FLATLIST"
         data={myDictionaryState}
+        style={styles.list}
+        contentContainerStyle={styles.listContentContainer}
         keyExtractor={(item) => item.index.toString()}
         renderItem={({ item, index }) => <DictionaryItem {...item} length={index + 1} />}
       />
@@ -123,6 +125,14 @@ function Dictionary() {
 export default Dictionary;
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "column",
+    backgroundColor: CommonColors.black
+  },
   noWordsContainer: {
     flex: 1,
     width: "100%",
@@ -130,15 +140,6 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     justifyContent: "center",
     alignItems: "center",
-    flexDirection: "column",
-    backgroundColor: "#222322"
-  },
-  container: {
-    flex: 1,
-    width: "100%",
-    paddingLeft: 10,
-    paddingVertical: 15,
-    justifyContent: "center",
     flexDirection: "column",
     backgroundColor: "#222322"
   },
@@ -159,4 +160,13 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 16
   },
+  list: {
+    width: "100%"
+  },
+  listContentContainer: {
+    gap: 10,
+    marginVertical: 10,
+    maxWidth: 600,
+    alignSelf: "center"
+  }
 });

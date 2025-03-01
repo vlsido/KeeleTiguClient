@@ -1,9 +1,14 @@
-import { Pressable } from "react-native";
+import {
+  Pressable,
+  PressableProps,
+  StyleProp,
+  ViewStyle
+} from "react-native";
 
-interface CustomIconButtonProps {
+interface CustomIconButtonProps extends PressableProps {
   testID: string;
-  onPress: () => void;
-  children: React.ReactNode;
+  style?: StyleProp<ViewStyle>;
+  size?: number;
 }
 
 function CustomIconButton(props: CustomIconButtonProps) {
@@ -13,13 +18,15 @@ function CustomIconButton(props: CustomIconButtonProps) {
       style={({ pressed }) => [
         {
           opacity: pressed ? 0.5 : 1,
-          height: 48,
-          width: 48,
+          height: props.size ?? 48,
+          width: props.size ?? 48,
           justifyContent: "center",
           alignItems: "center",
         },
+        props.style
       ]}
       onPress={props.onPress}
+      aria-label={props["aria-label"]}
       hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
     >
       {props.children}

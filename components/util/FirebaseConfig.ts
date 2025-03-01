@@ -4,20 +4,14 @@ import { getFunctions } from "firebase/functions";
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAtAMXf-JMlMDi4h_ZYtHRs09aSCuR1s-A",
-
-  authDomain: "examinyasha.firebaseapp.com",
-
-  projectId: "examinyasha",
-
-  storageBucket: "examinyasha.appspot.com",
-
-  messagingSenderId: "820034671842",
-
-  appId: "1:820034671842:web:e8b701c0a857e5fc9cfabb",
-
-  measurementId: "G-JS0XYL4RY7"
-}
+  apiKey: "AIzaSyBt6T9N5UZTAOH0_zmM8qro1A8dxxEM5uc",
+  authDomain: "keeletigu.firebaseapp.com",
+  projectId: "keeletigu",
+  storageBucket: "keeletigu.firebasestorage.app",
+  messagingSenderId: "55886585114",
+  appId: "1:55886585114:web:d67ba6d8738ebefc2ae0a3",
+  measurementId: "G-4QF1Y3TD6C"
+};
 
 export const app = initializeApp(firebaseConfig);
 

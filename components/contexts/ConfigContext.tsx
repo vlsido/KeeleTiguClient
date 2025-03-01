@@ -6,50 +6,63 @@ import {
 } from "firebase/remote-config";
 import {
   createContext,
-  useEffect
+  useEffect,
+  useLayoutEffect,
+  useMemo,
 } from "react";
 import { app } from "../util/FirebaseConfig";
-import { i18n } from "../store/i18n";
-import ee from "../store/translations/ee.json"
 import { useAppDispatch } from "../../hooks/storeHooks";
 import { clearDictionary } from "../store/slices/dictionarySlice";
 import {
   atom,
+  useAtom,
   useSetAtom
 } from "jotai";
+import { loadSettings } from "../store/slices/settingsSlice";
+import { i18n } from "../store/i18n";
 
 interface ConfigContextProps {
   remoteConfig: RemoteConfig | null;
+  rerender: () => void;
 }
 
 export const ConfigContext = createContext<ConfigContextProps>({
   remoteConfig: null,
+  rerender: () => { },
 });
 
 export const isUnderMaintenanceAtom = atom<boolean>(false);
 
 function ConfigContextProvider({ children }: { children: React.ReactNode }) {
+  const [isRendered, setIsRendered] = useAtom<boolean>(useMemo(() => atom<boolean>(true), []));
+
   const remoteConfig = getRemoteConfig(app);
 
   const dispatch = useAppDispatch();
 
   const setIsUnderMaintenance = useSetAtom(isUnderMaintenanceAtom);
 
-  // if (__DEV__) {
-  //   useEffect(
-  //     () => {
-  //       const unsubscribe = i18n.onChange(() => {
-  //         console.log("I18n has changed!");
-  //       });
-  //
-  //       return unsubscribe;
-  //     },
-  //     []
-  //   );
-  // }
+  if (__DEV__) {
+    useEffect(
+      () => {
+        const unsubscribe = i18n.onChange((event) => {
+          console.log("I18n has changed!", event);
+        });
+
+        return unsubscribe;
+      },
+      []
+    );
+  }
+
+  useLayoutEffect(() => {
+    dispatch(loadSettings());
+
+  }, []);
 
   useEffect(
     () => {
+
       remoteConfig.settings.minimumFetchIntervalMillis = 600000; // 600000ms = 10 minutes
 
       remoteConfig.defaultConfig = {
@@ -60,7 +73,6 @@ function ConfigContextProvider({ children }: { children: React.ReactNode }) {
 
       fetchAndActivate(remoteConfig).
         then(() => {
-
           const lastCacheInvalidationTimestamp = getValue(
             remoteConfig,
             "last_cache_invalidation_timestamp"
@@ -73,8 +85,7 @@ function ConfigContextProvider({ children }: { children: React.ReactNode }) {
               "last_cache_invalidation_timestamp",
               lastCacheInvalidationTimestamp
             );
-            removeCache();
-            loadTranslations("ee");
+            dispatch(clearDictionary());
 
             return;
           }
@@ -94,40 +105,32 @@ function ConfigContextProvider({ children }: { children: React.ReactNode }) {
 
           dispatch({ type: "dictionary/loadCachedWords" });
 
-          loadTranslations("ee");
         }).catch((error) => {
           console.error(
             "error fetching config",
             error
           );
-          loadTranslations("ee");
         });
-
     },
     []
   );
 
-  function removeCache() {
-    localStorage.removeItem("myDictionary");
-    localStorage.removeItem("allWords");
-    localStorage.removeItem("wordsAndExamData");
-    dispatch(clearDictionary());
-  }
+  function rerender() {
+    setIsRendered(false);
 
-  function loadTranslations(locale: string) {
-    i18n.defaultLocale = locale;
-    i18n.locale = locale;
-
-    i18n.store(ee);
+    setTimeout(() => {
+      setIsRendered(true);
+    }, 1);
   }
 
   const value = {
     remoteConfig,
+    rerender
   }
 
   return (
     <ConfigContext.Provider value={value}>
-      {children}
+      {isRendered ? children : null}
     </ConfigContext.Provider>
   );
 }
