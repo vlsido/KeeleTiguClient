@@ -1,13 +1,23 @@
-import { MaterialIcons } from "@expo/vector-icons";
-import { TabList, TabSlot, TabTrigger, Tabs } from "expo-router/ui";
+import {
+  TabList,
+  TabSlot,
+  TabTrigger,
+  Tabs
+} from "expo-router/ui";
 import { StyleSheet } from "react-native";
 import { CommonColors } from "../../constants/Colors";
 import { ExamIcon } from "../../components/icons/ExamIcon";
 import { DictionaryIcon } from "../../components/icons/DictionaryIcon";
 import Header from "../../components/Header";
 import { useNavigation } from "expo-router";
-import { useEffect, useMemo } from "react";
-import { atom, useAtom } from "jotai";
+import {
+  useCallback,
+  useMemo
+} from "react";
+import {
+  atom,
+  useAtomValue
+} from "jotai";
 import { SearchIcon } from "../../components/icons/SearchIcon";
 
 type Tab = "index" | "dictionary" | "search";
@@ -15,20 +25,30 @@ type Tab = "index" | "dictionary" | "search";
 function RootLayoutTabs() {
   const navigationState = useNavigation().getState();
 
-  const [focusedTab, setFocusedTab] = useAtom<Tab>(
-    useMemo(() => atom<Tab>("index"), []));
-
-  useEffect(() => {
+  const getFocusedTab = useCallback(() => {
     const currentIndex = navigationState?.routes.at(0)?.state?.index;
 
-    if (currentIndex == null) return;
+    if (currentIndex == null) {
+      const routes = navigationState?.routes.at(0)?.state?.routes;
+      if (routes !== undefined && routes.length === 1) {
+        const tab = routes[0].name;
+
+        return tab as Tab;
+      }
+      return "index";
+    }
 
     const tab = navigationState?.routes.at(0)?.state?.routeNames?.at(currentIndex);
 
     if (tab != null) {
-      setFocusedTab(tab as Tab);
+      return tab as Tab;
     }
+
+    return "index"
   }, [navigationState]);
+
+  const focusedTab = useAtomValue<Tab>(
+    useMemo(() => atom<Tab>(getFocusedTab()), [navigationState]));
 
   return (
     <Tabs style={styles.container}>
