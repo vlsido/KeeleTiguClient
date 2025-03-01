@@ -1,4 +1,3 @@
-import { CommonColors } from "../constants/Colors";
 import {
   useCallback,
   useEffect,
@@ -11,6 +10,7 @@ import {
   TextInput,
   View
 } from "react-native";
+import { CommonColors } from "../constants/Colors";
 import { WordAndExamData } from "./(tabs)/dictionary";
 import { router, useLocalSearchParams } from "expo-router";
 import {
@@ -37,7 +37,9 @@ import { VisibilityIcon } from "../components/icons/VisibilityIcon";
 import CustomIconButton from "../components/buttons/CustomIconButton";
 import { i18n } from "../components/store/i18n";
 import AnswerStatusOverlay from "../components/overlays/AnswerStatusOverlay";
-import TranslateWordsGameResults, { ResultsData } from "../components/screens/translate/results/TranslateWordsGameResults";
+import TranslateWordsGameResults, {
+  ResultsData
+} from "../components/screens/translate/results/TranslateWordsGameResults";
 import { TranslateGameMode } from "../constants/types";
 
 
@@ -325,7 +327,30 @@ export default function Translate() {
     ]
   );
 
-  function skipWord() {
+  function addMistake() {
+    const currentWordLowercase = gameWords.at(0)?.word.split("+").join("").toLowerCase();
+
+    if (currentWordLowercase === undefined) {
+      showHint(
+        i18n.t("error_try_again", { defaultValue: "Oii, miski viga! Proovi uuesti!" }),
+        2500
+      );
+    }
+
+    if (currentWordLowercase !== undefined && lastIncorrectWord !== currentWordLowercase) {
+      setLastIncorrectWord(currentWordLowercase);
+      setIncorrectCount(incorrectCount + 1);
+      setResultsData([...resultsData, {
+        word: gameWords[0],
+        answer: currentWordLowercase,
+        userAnswer: " "
+      }]);
+    }
+  }
+
+  const skipWord = useCallback(() => {
+    addMistake();
+
     setIsAnswerVisible(false);
     removeWordFromExamDictionary();
     const newGameWords = gameWords.filter((
@@ -339,41 +364,23 @@ export default function Translate() {
     if (newGameWords.length === 0 && resultsData.length === 0) {
       router.replace("/");
     }
-  }
+  }, [
+    addMistake,
+    removeWordFromExamDictionary,
+    gameWords,
+    resultsData,
+    router
+  ]);
 
   const showWord = useCallback(
     () => {
-      const currentWordLowercase = gameWords.at(0)?.word.split("+").join("").toLowerCase();
-
-      if (currentWordLowercase === undefined) {
-        showHint(
-          i18n.t("error_try_again", { defaultValue: "Oii, miski viga! Proovi uuesti!" }),
-          2500
-        );
-      }
-
-      if (currentWordLowercase !== undefined && lastIncorrectWord !== currentWordLowercase) {
-        setLastIncorrectWord(currentWordLowercase);
-        setIncorrectCount(incorrectCount + 1);
-        setResultsData([...resultsData, {
-          word: gameWords[0],
-          answer: currentWordLowercase,
-          userAnswer: " "
-        }]);
-      }
+      addMistake();
 
       setIsAnswerValid(false);
       setIsAnswerVisible(true);
-
     },
     [
-      gameWords,
-      lastIncorrectWord,
-      incorrectCount,
-      setLastIncorrectWord,
-      setIncorrectCount,
-      setIsAnswerValid,
-      setIsAnswerVisible,
+      addMistake,
     ]
   );
 
@@ -509,13 +516,18 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "column",
     alignItems: "center",
-    justifyContent: "space-between",
+    justifyContent: "flex-start",
     backgroundColor: CommonColors.black,
     paddingVertical: 10
   },
   topContainer: {
     alignItems: "center",
-    minHeight: "35%",
+    minHeight: "45%",
+  },
+  interactiveContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 10
   },
   loadingWordsText: {
     color: CommonColors.white,
@@ -531,16 +543,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold"
   },
-  interactiveContainer: {
-    position: "absolute",
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    justifyContent: "center",
-    alignItems: "center",
-    gap: 10
-  },
+
   bold: {
     fontWeight: "bold"
   },
