@@ -537,7 +537,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    alignSelf: "center",
+    justifyContent: "center",
     alignItems: "center",
     gap: 10
   },
