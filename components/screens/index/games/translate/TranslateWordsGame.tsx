@@ -10,6 +10,7 @@ import {
   TextInput,
   View,
   ViewStyle,
+  useWindowDimensions,
 } from "react-native";
 import { router } from "expo-router";
 import {
@@ -40,9 +41,11 @@ import { TranslateGameMode } from "../../../../../constants/types";
 const gameOptionsAtom = atom<TranslateGameMode>("any");
 
 function TranslateWordsGame() {
+  const { showHint } = useHint();
+
   const myDictionary = useAppSelector((state) => state.dictionary.myDictionary);
 
-  const { showHint } = useHint();
+  const { width: screenWidth } = useWindowDimensions();
 
   const [
     gameOptions,
@@ -260,7 +263,11 @@ function TranslateWordsGame() {
           </View>
           <View style={styles.unlimitedWordsContainer}>
             <View style={styles.unlimitedWordsTextContainer}>
-              <Text style={styles.unlimitedWordsText}>
+              <Text
+                style={styles.unlimitedWordsText}
+                ellipsizeMode="tail"
+                numberOfLines={2}
+              >
                 {i18n.t("TranslateWordsGame_unlimited_words", { defaultValue: "Piiritu" })}
               </Text>
             </View>
@@ -272,39 +279,41 @@ function TranslateWordsGame() {
         </View>
       </View>
       <OptionButton
-        text={i18n.t("TranslateWordsGame_random_words", { defaultValue: "Suvalised sõnad" })}
+        text={i18n.t("TranslateWordsGame_random_words", { defaultValue: "Juhuslikud sõnad" })}
         onPress={() => toggleOption("any")}
         isSelected={gameOptions === "any" || gameOptions === "all"}>
-        <AnimatedPressable
-          style={[
-            styles.languageLevelContainer,
-            a1LevelAnimatedStyle
-          ]}
-          onPress={() => toggleWordsLevel(EWordsLevel.A1)}
-          disabled={gameOptions === "my_dictionary" || gameOptions === ""}
-        >
-          <Text style={styles.languageLevelText}>A1</Text>
-        </AnimatedPressable>
-        <AnimatedPressable
-          style={[
-            styles.languageLevelContainer,
-            a2LevelAnimatedStyle
-          ]}
-          onPress={() => toggleWordsLevel(EWordsLevel.A2)}
-          disabled={gameOptions === "my_dictionary" || gameOptions === ""}
-        >
-          <Text style={styles.languageLevelText}>A2</Text>
-        </AnimatedPressable>
-        <AnimatedPressable
-          style={[
-            styles.languageLevelContainer,
-            b1LevelAnimatedStyle
-          ]}
-          onPress={() => toggleWordsLevel(EWordsLevel.B1)}
-          disabled={gameOptions === "my_dictionary" || gameOptions === ""}
-        >
-          <Text style={styles.languageLevelText}>B1</Text>
-        </AnimatedPressable>
+        <View style={[styles.optionChildren, screenWidth > 250 ? { flexDirection: "row" } : { flexDirection: "column", alignItems: "flex-start" }]}>
+          <AnimatedPressable
+            style={[
+              styles.languageLevelContainer,
+              a1LevelAnimatedStyle
+            ]}
+            onPress={() => toggleWordsLevel(EWordsLevel.A1)}
+            disabled={gameOptions === "my_dictionary" || gameOptions === ""}
+          >
+            <Text style={styles.languageLevelText}>A1</Text>
+          </AnimatedPressable>
+          <AnimatedPressable
+            style={[
+              styles.languageLevelContainer,
+              a2LevelAnimatedStyle
+            ]}
+            onPress={() => toggleWordsLevel(EWordsLevel.A2)}
+            disabled={gameOptions === "my_dictionary" || gameOptions === ""}
+          >
+            <Text style={styles.languageLevelText}>A2</Text>
+          </AnimatedPressable>
+          <AnimatedPressable
+            style={[
+              styles.languageLevelContainer,
+              b1LevelAnimatedStyle
+            ]}
+            onPress={() => toggleWordsLevel(EWordsLevel.B1)}
+            disabled={gameOptions === "my_dictionary" || gameOptions === ""}
+          >
+            <Text style={styles.languageLevelText}>B1</Text>
+          </AnimatedPressable>
+        </View>
       </OptionButton>
       <OptionButton
         text={i18n.t("TranslateWordsGame_words_from_my_dictionary", { defaultValue: "Sõnad mu sõnastikust" })}
@@ -327,15 +336,24 @@ function TranslateWordsGame() {
           style={[
             styles.startButtonContainer,
             {
-              opacity: (gameOptions === "any" && !isA1LevelOn && !isA2LevelOn && !isB1LevelOn) ? 0.5 : 1
+              opacity:
+                ((gameOptions === "any" || gameOptions === "all")
+                  && !isA1LevelOn && !isA2LevelOn && !isB1LevelOn)
+                  || gameOptions === "" ? 0.5 : 1
             }
           ]}
           onPress={startGame}
           disabled={
-            gameOptions === "any" && !isA1LevelOn && !isA2LevelOn && !isB1LevelOn
+            ((gameOptions === "any" || gameOptions === "all")
+              && !isA1LevelOn && !isA2LevelOn && !isB1LevelOn)
+            || gameOptions === ""
           }
           aria-label={i18n.t("start", { defaultValue: "Alusta" })} >
-          <Text style={styles.startButtonText}>
+          <Text
+            style={styles.startButtonText}
+            ellipsizeMode="tail"
+            numberOfLines={2}
+          >
             {i18n.t("TranslateWordsGame_start", { defaultValue: "ALUSTA" })}
           </Text>
         </Pressable>
@@ -348,13 +366,15 @@ export default TranslateWordsGame;
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     width: "100%",
+    justifyContent: "space-between",
+    maxHeight: 500,
     maxWidth: 400,
     backgroundColor: "#171814",
     borderWidth: 1,
     borderColor: CommonColors.whiteAlternative,
     borderRadius: 60,
-    gap: 20,
     paddingHorizontal: 20,
     paddingVertical: 15
   },
@@ -383,7 +403,8 @@ const styles = StyleSheet.create({
     color: "white"
   },
   row: {
-    flexDirection: "row"
+    flexDirection: "row",
+    flex: 1
   },
   numberOfWordsTextInputContainer: {
     flex: 1,
@@ -401,18 +422,25 @@ const styles = StyleSheet.create({
   },
   unlimitedWordsContainer: {
     flex: 1,
-    paddingHorizontal: 10,
     gap: 10,
+    paddingHorizontal: 10,
     flexDirection: "row",
     alignItems: "center"
   },
   unlimitedWordsTextContainer: {
+    flex: 1,
     flexDirection: "row",
     alignItems: "center"
   },
   unlimitedWordsText: {
+    width: "100%",
     fontSize: 14,
-    color: "white"
+    color: "white",
+  },
+  optionChildren: {
+    flex: 1,
+    alignItems: "center",
+    gap: 5
   },
   checkboxContainer: {
     backgroundColor: "white",
