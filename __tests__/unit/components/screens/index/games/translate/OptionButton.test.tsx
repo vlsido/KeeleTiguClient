@@ -20,7 +20,7 @@ describe(
     );
 
     test(
-      "renders with correct style when selected",
+      "Renders with correct style when selected",
       () => {
 
         renderWithProviders(<OptionButton text={expectedText} isSelected={true} onPress={mockFn} />);
@@ -30,7 +30,7 @@ describe(
     );
 
     test(
-      "renders with correct style when not selected",
+      "Renders with correct style when not selected",
       () => {
 
         renderWithProviders(<OptionButton text={expectedText} isSelected={false} onPress={mockFn} />);
@@ -40,7 +40,7 @@ describe(
     )
 
     test(
-      "renders correct option text",
+      "Renders correct option text",
       () => {
 
         renderWithProviders(<OptionButton text={expectedText} isSelected={false} onPress={mockFn} />);
@@ -50,10 +50,14 @@ describe(
     );
 
     test(
-      "renders children if any",
+      "Renders children if they are present",
       () => {
 
-        renderWithProviders(<OptionButton text={expectedText} isSelected={false} onPress={mockFn}><Text>Just a child</Text></OptionButton>);
+        renderWithProviders(<OptionButton text={expectedText} isSelected={false} onPress={mockFn}>
+          <Text>
+            Just a child
+          </Text>
+        </OptionButton>);
 
         expect(screen.getByTestId("OPTION_BUTTON.CONTAINER.CHILDREN:VIEW")).toBeOnTheScreen();
       }
@@ -79,7 +83,10 @@ describe(
 
         expect(switchButton).toBeOnTheScreen();
 
-        expect(switchButton).toHaveProp("value", true);
+        expect(switchButton).toHaveProp(
+          "value",
+          true
+        );
 
       }
     );
@@ -93,7 +100,10 @@ describe(
 
         expect(switchButton).toBeOnTheScreen();
 
-        expect(switchButton).toHaveProp("value", false);
+        expect(switchButton).toHaveProp(
+          "value",
+          false
+        );
       }
     );
 

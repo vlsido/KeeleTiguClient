@@ -31,7 +31,13 @@ function OptionButton(props: OptionButtonProps) {
             numberOfLines={2}
           >{props.text}</Text>
         </View>
-        {props.children}
+        {props.children && (
+          <View
+            testID="OPTION_BUTTON.CONTAINER.CHILDREN:VIEW"
+          >
+            {props.children}
+          </View>
+        )}
       </View>
       <View testID="OPTION_BUTTON.CONTAINER.SELECTED:VIEW" style={styles.switchContainer}>
         <Switch
