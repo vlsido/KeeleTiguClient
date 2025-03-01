@@ -106,24 +106,25 @@ export function RootLayoutStack() {
       }}
     >
       <Stack.Screen
-        redirect={isUnderMaintenance}
+        redirect={true}
         name="(tabs)"
         options={{ headerShown: false }} />
       <Stack.Screen
-        redirect={true}
+        redirect={false}
         name="moved"
         options={{
+          headerShown: false,
           title: "",
         }} />
       <Stack.Screen
-        redirect={!isUnderMaintenance}
+        redirect={true}
         name="maintenance"
         options={{
           title: "",
           headerShown: false
         }} />
       <Stack.Screen
-        redirect={isUnderMaintenance}
+        redirect={true}
         name="translate"
         options={{
           title: "",
