@@ -13,9 +13,11 @@ import Animated, {
 } from "react-native-reanimated";
 import { CommonColors } from "../../constants/Colors";
 import { i18n } from "../store/i18n";
-import { atom, useAtom } from "jotai";
+import {
+  atom,
+  useAtom
+} from "jotai";
 import { isSettingsMenuOpenAtom } from "./settingsAtoms";
-import { MaterialIcons } from "@expo/vector-icons";
 import AboutThisAppHint from "../hints/AboutThisAppHint";
 
 import packageJson from "../../package.json";
@@ -112,7 +114,7 @@ function SettingsMenu(props: SettingsMenuProps) {
           </Pressable>
           <View style={styles.footerItemContainer}>
             <Text style={styles.buildText}>
-              Build {packageJson.version}
+              {i18n.t("build", { defaultValue: "Versioon" })} {packageJson.version}
             </Text>
           </View>
         </View>
@@ -184,6 +186,8 @@ const styles = StyleSheet.create({
   buildText: {
     color: CommonColors.white,
     fontSize: 14
-  }
+  },
+  switchContainer: {
 
+  }
 });
