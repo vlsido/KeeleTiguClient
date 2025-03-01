@@ -42,13 +42,7 @@ export default function RootLayout() {
 
 export function RootLayoutStack() {
 
-  useEffect(() => {
-    Linking.openURL("keeletigu.web.app");
-  }, []);
-
   const isUnderMaintenance = useAtomValue(isUnderMaintenanceAtom);
-
-
 
   const dispatch = useAppDispatch();
 
