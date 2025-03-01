@@ -1,5 +1,4 @@
 import ConfigContextProvider, {
-  isUnderMaintenanceAtom
 } from "../components/contexts/ConfigContext";
 import AuthContextProvider from "../components/contexts/AuthContext";
 import { Stack } from "expo-router";
@@ -12,7 +11,6 @@ import {
   useAppSelector
 } from "../hooks/storeHooks";
 import HintContextProvider from "../components/store/HintContext/HintContext";
-import { useAtomValue } from "jotai";
 import {
   setExamDictionary,
   setMyDictionary
@@ -40,10 +38,8 @@ export default function RootLayout() {
 }
 
 export function RootLayoutStack() {
-
-  const isUnderMaintenance = useAtomValue(isUnderMaintenanceAtom);
-
-
+  //
+  // const isUnderMaintenance = useAtomValue(isUnderMaintenanceAtom);
 
   const dispatch = useAppDispatch();
 
@@ -51,7 +47,7 @@ export function RootLayoutStack() {
 
   useEffect(
     () => {
-      dispatch({ type: "dictionary/fetchWordsRequest" })
+      // dispatch({ type: "dictionary/fetchWordsRequest" })
       getExamDictionary();
     },
     []
@@ -73,7 +69,7 @@ export function RootLayoutStack() {
       }
 
       if (examDictionary.length < 3) {
-        dispatch({ type: "dictionary/fetchRandomWords" });
+        // dispatch({ type: "dictionary/fetchRandomWords" });
         return;
       }
 

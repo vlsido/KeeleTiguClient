@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
   },
   text: {
     color: CommonColors.white,
-    fontSize: 32,
+    fontSize: 20,
     textAlign: "center"
   },
   textLink: {
