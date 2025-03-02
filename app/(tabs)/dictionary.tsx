@@ -66,19 +66,24 @@ export interface DictionaryResponse {
 }
 
 function Dictionary() {
-  const [myDictionaryState, setMyDictionaryState] =
-    useAtom<Word[]>(useMemo(() => atom<Word[]>([]), []));
   const myDictionary = useAppSelector((state) => state.dictionary.myDictionary);
+
+  const getDictionary = useCallback(() => {
+    if (myDictionary.length === 0) return [];
+
+    return myDictionary;
+  }, [myDictionary]);
+
+  const [myDictionaryState, setMyDictionaryState] =
+    useAtom<Word[]>(useMemo(() => atom<Word[]>(getDictionary()), []));
 
   useFocusEffect(
     useCallback(() => {
-      if (myDictionary.length === 0) return;
-
-      setMyDictionaryState(myDictionary);
-    }, [myDictionary])
+      setMyDictionaryState(getDictionary());
+    }, [getDictionary])
   );
 
-  if (myDictionary.length === 0 || myDictionaryState.length === 0) {
+  if (myDictionaryState.length === 0) {
     return (
       <View
         testID="DICTIONARY.WORDS_EMPTY:VIEW"
