@@ -50,8 +50,6 @@ function WordData(props: WordDataProps) {
       testID="WORD_DATA.SCROLL_CONTAINER:VIEW"
       ref={scrollRef}
       style={styles.container}
-
-      onLayout={() => console.log("layed out")}
     >
       <FoundArticlesCounter wordData={props.wordDataArray} />
       {props.wordDataArray.map((
