@@ -15,7 +15,6 @@ describe(
 
         expect(screen.getByTestId("INDEX.CONTAINER:VIEW")).toBeOnTheScreen();
 
-
         const options = screen.getAllByTestId("OPTION_BUTTON.CONTAINER:PRESSABLE");
 
         const randomWordsModeButton = options[0];

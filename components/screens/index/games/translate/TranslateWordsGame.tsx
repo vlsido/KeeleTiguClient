@@ -271,10 +271,12 @@ function TranslateWordsGame() {
                 {i18n.t("TranslateWordsGame_unlimited_words", { defaultValue: "Piiritu" })}
               </Text>
             </View>
-            <Checkbox
-              testID="TRANSLATE_WORDS_GAME.CONTAINER.NUMBER_OF_WORDS.UNLIMITED_WORDS.CHECKBOX:PRESSABLE"
-              onPress={onCheckboxPress}
-            />
+            <View style={styles.checkboxContainer}>
+              <Checkbox
+                testID="TRANSLATE_WORDS_GAME.CONTAINER.NUMBER_OF_WORDS.UNLIMITED_WORDS.CHECKBOX:PRESSABLE"
+                onPress={onCheckboxPress}
+              />
+            </View>
           </View>
         </View>
       </View>
@@ -422,45 +424,38 @@ const styles = StyleSheet.create({
   },
   unlimitedWordsContainer: {
     flex: 1,
-    gap: 10,
     paddingHorizontal: 10,
     flexDirection: "row",
     alignItems: "center"
   },
   unlimitedWordsTextContainer: {
     flex: 1,
+    justifyContent: "center",
     flexDirection: "row",
-    alignItems: "center"
+    alignItems: "center",
   },
   unlimitedWordsText: {
     width: "100%",
+    textAlign: "center",
     fontSize: 14,
     color: "white",
+  },
+  checkboxContainer: {
+    flex: 1,
   },
   optionChildren: {
     flex: 1,
     alignItems: "center",
     gap: 5
   },
-  checkboxContainer: {
-    backgroundColor: "white",
+  languageLevelContainer: {
+    backgroundColor: CommonColors.white,
+    opacity: 0.5,
     borderRadius: 5,
-    width: 16,
-    height: 16,
-    justifyContent: "center",
-    alignItems: "center"
+    padding: 10
   },
-  checkboxText: {
-    fontSize: 12,
-  },
-  translateOptionsContainer: {
-    backgroundColor: "#2C332C",
-    borderLeftWidth: 1,
-    borderRightWidth: 1,
-    borderBottomWidth: 1,
-    borderColor: CommonColors.white,
-    borderBottomLeftRadius: 5,
-    borderBottomRightRadius: 5,
+  languageLevelText: {
+    fontSize: 16
   },
   startContainer: {
     width: "100%",
@@ -482,14 +477,5 @@ const styles = StyleSheet.create({
   startButtonText: {
     color: CommonColors.white,
     fontSize: 18
-  },
-  languageLevelContainer: {
-    backgroundColor: CommonColors.white,
-    opacity: 0.5,
-    borderRadius: 5,
-    padding: 10
-  },
-  languageLevelText: {
-    fontSize: 16
   },
 });
