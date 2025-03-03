@@ -11,15 +11,18 @@ import {
   View,
   ViewStyle
 } from "react-native";
-import { MaterialIcons } from "@expo/vector-icons";
 import {
   atom,
   useAtom
 } from "jotai";
 import { CommonColors } from "../../constants/Colors";
-import CustomIconButton from "../buttons/CustomIconButton";
-import { KeyboardArrowUpIcon } from "../icons/KeyboardArrowUp";
 import { KeyboardArrowDownIcon } from "../icons/KeyboardArrowDown";
+import Animated, {
+  ReduceMotion,
+  useAnimatedStyle,
+  useDerivedValue,
+  withTiming
+} from "react-native-reanimated";
 
 interface DropdownMenuProps {
   testID: string;
@@ -40,18 +43,31 @@ function DropdownMenu(props: DropdownMenuProps) {
   const [isDropdownVisible, setIsDropdownVisible] =
     useAtom<boolean>(useMemo(() => atom<boolean>(false), []));
 
+  const rotation = useDerivedValue<number>(() => {
+    return withTiming(isDropdownVisible
+      ? 180
+      : 0, { duration: 133, reduceMotion: ReduceMotion.System });
+  });
+
   const onSelect = useCallback((item: string) => {
     setSelectedItem(item);
     setIsDropdownVisible(false);
 
     props.onSelect(item);
-
   }, [props.onSelect]);
 
   const onLayout = useCallback((event: LayoutChangeEvent) => {
     setContainerWidth(event.nativeEvent.layout.width);
     setContainerHeight(event.nativeEvent.layout.height);
   }, []);
+
+  const caretAnimatedStyle = useAnimatedStyle<ViewStyle>(() => {
+    return {
+      transform: [
+        { rotate: `${rotation.value}deg` }
+      ]
+    }
+  });
 
   return (
     <View
@@ -63,11 +79,10 @@ function DropdownMenu(props: DropdownMenuProps) {
         style={props.style ?? styles.container}
       >
         <Text ellipsizeMode="tail">{selectedItem}</Text>
-        {isDropdownVisible === true ? (
-          <KeyboardArrowUpIcon />
-        ) : (
+        <Animated.View
+          style={caretAnimatedStyle}>
           <KeyboardArrowDownIcon />
-        )}
+        </Animated.View>
       </Pressable>
       {isDropdownVisible === true && (
         <View style={[
