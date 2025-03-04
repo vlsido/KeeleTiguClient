@@ -114,7 +114,6 @@ function SearchField() {
     ],
   ))
 
-
   const detectLanguage = useCallback(
     (word: string) => {
       let estonianCount = 0;
@@ -161,33 +160,48 @@ function SearchField() {
   function getEstonianWordPriority(wordObj: Word, query: string) {
     const wordLowerCase = wordObj.word.replaceAll("+", "").toLowerCase();
 
-    if (wordLowerCase.startsWith(query)) return 0;
+    if (wordLowerCase === query) return 0;
 
-    if (wordLowerCase.includes(query)) return 1;
+    if (wordLowerCase.startsWith(query)) return 1;
 
-    if (wordObj.usages
-      .some((usage) => usage.definitionData
-        .some((definition) => definition
-          .definitionText?.toLowerCase()
-          .startsWith(query)))) return 2;
+    if (wordLowerCase.includes(query)) return 2;
 
     if (wordObj.usages
       .some((usage) => usage.definitionData
         .some((definition) => definition
           .definitionText?.toLowerCase()
-          .includes(query)))) return 3;
+          === query))) return 3;
+
+    if (wordObj.usages
+      .some((usage) => usage.definitionData
+        .some((definition) => definition
+          .definitionText?.toLowerCase()
+          .startsWith(query)))) return 4;
+
+    if (wordObj.usages
+      .some((usage) => usage.definitionData
+        .some((definition) => definition
+          .definitionText?.toLowerCase()
+          .includes(query)))) return 5;
 
     if (wordObj.usages
       .some((usage) => usage
         .examples?.some((example) => example.estonianExample
           .toLowerCase()
-          .includes(query)))) return 4;
+          .includes(query)))) return 6;
 
-    return 5;
+    return 7;
   }
 
   function getRussianWordPriority(wordObj: Word, query: string) {
-    if (wordObj.word.toLowerCase().startsWith(query)) return 0;
+    if (wordObj.usages
+      .some((usage) => usage.definitionData
+        .some((definition) => definition.russianTranslations
+          .some((russianTranslation) => russianTranslation
+            .toLowerCase()
+            .replaceAll("\"", "")
+            === query)))
+    ) return 0;
 
     if (wordObj.usages
       .some((usage) => usage.definitionData
