@@ -1,10 +1,15 @@
+import { useMemo } from "react";
 import { StyleSheet } from "react-native";
-import {
+import Animated, {
   FadeIn,
   FadeOut,
   ReduceMotion,
+  runOnJS,
 } from "react-native-reanimated";
-import { AnimatedPressable } from "../util/AnimatedComponentsUtil";
+import {
+  Gesture,
+  GestureDetector
+} from "react-native-gesture-handler";
 
 interface OverlayHintProps {
   isVisible: boolean;
@@ -13,25 +18,33 @@ interface OverlayHintProps {
 }
 
 function OverlayHint(props: OverlayHintProps) {
+  const tapGesture = useMemo(() =>
+    Gesture.Tap().onEnd(() => {
+      runOnJS(props.onClose)();
+    }), [props.onClose]);
+
   if (props.isVisible === false) {
     return null;
   }
 
   return (
-    <AnimatedPressable
-      style={[styles.backgroundContainer]}
-      onPress={props.onClose}
-      entering={FadeIn
-        .reduceMotion(ReduceMotion.System)
-        .duration(133)
-      }
-      exiting={FadeOut
-        .reduceMotion(ReduceMotion.System)
-        .duration(133)
-      }
+    <GestureDetector
+      gesture={tapGesture}
     >
-      {props.children}
-    </AnimatedPressable>
+      <Animated.View
+        style={[styles.backgroundContainer]}
+        entering={FadeIn
+          .reduceMotion(ReduceMotion.System)
+          .duration(133)
+        }
+        exiting={FadeOut
+          .reduceMotion(ReduceMotion.System)
+          .duration(133)
+        }
+      >
+        {props.children}
+      </Animated.View>
+    </GestureDetector>
   );
 }
 
