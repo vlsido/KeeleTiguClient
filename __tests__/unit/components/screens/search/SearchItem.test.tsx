@@ -9,7 +9,7 @@ describe(
       () => {
         const mockFn = jest.fn();
 
-        renderWithProviders(<SearchItem index={0} word="karu" onPress={mockFn} />);
+        renderWithProviders(<SearchItem word="karu" onPress={mockFn} />);
 
 
         expect(screen.getByTestId("SEARCH_ITEM.CONTAINER:VIEW")).toBeOnTheScreen();
