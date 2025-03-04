@@ -73,7 +73,6 @@ function TranslateWordsGame() {
     setIsB1LevelOn
   ] = useAtom<boolean>(isB1LevelOnAtom);
 
-
   const a1LevelOpacity = useSharedValue<number>(0.5);
   const a2LevelOpacity = useSharedValue<number>(0.5);
   const b1LevelOpacity = useSharedValue<number>(0.5);
@@ -266,17 +265,15 @@ function TranslateWordsGame() {
               <Text
                 style={styles.unlimitedWordsText}
                 ellipsizeMode="tail"
-                numberOfLines={2}
+                numberOfLines={1}
               >
                 {i18n.t("TranslateWordsGame_unlimited_words", { defaultValue: "Piiritu" })}
               </Text>
             </View>
-            <View style={styles.checkboxContainer}>
-              <Checkbox
-                testID="TRANSLATE_WORDS_GAME.CONTAINER.NUMBER_OF_WORDS.UNLIMITED_WORDS.CHECKBOX:PRESSABLE"
-                onPress={onCheckboxPress}
-              />
-            </View>
+            <Checkbox
+              testID="TRANSLATE_WORDS_GAME.CONTAINER.NUMBER_OF_WORDS.UNLIMITED_WORDS.CHECKBOX:PRESSABLE"
+              onPress={onCheckboxPress}
+            />
           </View>
         </View>
       </View>
@@ -424,7 +421,9 @@ const styles = StyleSheet.create({
   },
   unlimitedWordsContainer: {
     flex: 1,
+    width: "100%",
     paddingHorizontal: 10,
+    gap: 10,
     flexDirection: "row",
     alignItems: "center"
   },
@@ -435,13 +434,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   unlimitedWordsText: {
-    width: "100%",
     textAlign: "center",
     fontSize: 14,
     color: "white",
-  },
-  checkboxContainer: {
-    flex: 1,
   },
   optionChildren: {
     flex: 1,
