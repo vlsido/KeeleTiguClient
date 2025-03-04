@@ -1,7 +1,7 @@
+import { useCallback } from "react";
 import {
   Image,
   Linking,
-  Pressable,
   StyleSheet,
   Text,
   View
@@ -9,8 +9,9 @@ import {
 import OverlayHint from "../overlays/OverlayHint";
 import { i18n } from "../store/i18n";
 import { CommonColors } from "../../constants/Colors";
-import { useCallback } from "react";
 import { GitHubIcon } from "../icons/GitHubIcon";
+import { Pressable } from "react-native-gesture-handler";
+import AttributionText from "../miscellaneous/AttributionText";
 
 interface AboutThisAppHint {
   isVisible: boolean;
@@ -49,12 +50,17 @@ function AboutThisAppHint(props: AboutThisAppHint) {
             testID="AboutThisAppHint.Github:PRESSABLE"
             onPress={openGithub}
             style={styles.githubContainer}
+            role="link"
+            aria-label={i18n.t("open_source_code", { defaultValue: "Ava lähtekoodi lehekülg" })}
           >
             <GitHubIcon />
             <View style={styles.githubTextContainer}>
               <Text style={styles.githubText}>GitHub</Text>
             </View>
           </Pressable>
+        </View>
+        <View style={styles.centeringContainer}>
+          <AttributionText />
         </View>
         <View style={styles.centeringContainer}>
           <Text style={styles.closeHintText}>
