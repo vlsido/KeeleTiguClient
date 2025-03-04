@@ -19,6 +19,7 @@ import {
   useAtomValue
 } from "jotai";
 import { SearchIcon } from "../../components/icons/SearchIcon";
+import { i18n } from "../../components/store/i18n";
 
 type Tab = "index" | "dictionary" | "search";
 
@@ -54,24 +55,41 @@ function RootLayoutTabs() {
     <Tabs style={styles.container}>
       <Header />
       <TabSlot style={styles.slot} />
-      <TabList style={styles.tabList}>
+      <TabList
+        style={styles.tabList}
+        accessible={true}
+        role="tablist"
+      >
         <TabTrigger
           style={[styles.buttonContainer, focusedTab === "index" && styles.active]}
           name="index"
+          role="button"
+          accessibilityLabel={i18n.t("TabsLayout_open_test_tab", { defaultValue: "Ava testi kaart" })}
           href="/">
-          <ExamIcon color={CommonColors.white} />
+          <ExamIcon
+            role="none"
+            color={CommonColors.white}
+          />
         </TabTrigger>
         <TabTrigger
           style={[styles.buttonContainer, focusedTab === "dictionary" && styles.active]}
           name="dictionary"
+          role="button"
+          accessibilityLabel={i18n.t("TabsLayout_open_dictionary_tab", { defaultValue: "Ava sõnastiku kaart" })}
           href="/dictionary">
-          <DictionaryIcon color={CommonColors.white} />
+          <DictionaryIcon
+            role="none"
+            color={CommonColors.white}
+          />
         </TabTrigger>
         <TabTrigger
           style={[styles.buttonContainer, focusedTab === "search" && styles.active]}
           name="search"
+          role="button"
+          accessibilityLabel={i18n.t("TabsLayout_open_search_tab", { defaultValue: "Ava otsingu kaart" })}
           href="/search">
           <SearchIcon
+            role="none"
             color={CommonColors.white}
           />
         </TabTrigger>

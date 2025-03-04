@@ -10,7 +10,7 @@ import {
 export interface TextButtonProps {
   testID: string;
   text: string;
-  label: string;
+  ariaLabel: string;
   onPress: () => void;
   style?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
@@ -53,18 +53,17 @@ function TextButton(props: TextButtonProps) {
           opacity: pressed ? 0.75 : 1
         },
       ]}
+      onTouchCancel={() => console.log("cancel")}
       onPress={props.onPress}
       disabled={props.disabledBool}
       hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
-      aria-label={props.label}
+      aria-label={props.ariaLabel}
       role="button"
-      accessibilityLabelledBy="buttonLabel"
       onHoverIn={props.onHoverIn}
       onHoverOut={props.onHoverOut}
     >
       {props.children}
       <Text
-        nativeID="buttonLabel"
         style={props.textStyle}
         numberOfLines={props.numberOfLines}
         ellipsizeMode="tail"

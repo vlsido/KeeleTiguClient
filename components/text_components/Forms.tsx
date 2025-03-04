@@ -4,6 +4,7 @@ import {
   View
 } from "react-native";
 import { CommonColors } from "../../constants/Colors";
+import { i18n } from "../store/i18n";
 
 interface FormsProps {
   forms: string | undefined;
@@ -22,7 +23,10 @@ function Forms(props: FormsProps) {
   return (
     <View
       testID="FORMS.CONTAINER:VIEW"
-      style={styles.container}>
+      style={styles.container}
+      accessible={true}
+      aria-label={i18n.t("forms", { defaultValue: "Vormid" })}
+    >
       <Text
         testID="FORMS.CONTAINER.FORMS:TEXT"
         style={styles.formsText} >{fixedForms}</Text>

@@ -1,5 +1,6 @@
 import { View } from "react-native";
 import Example from "../../text_components/Example";
+import { i18n } from "../../store/i18n";
 
 interface ExamplesProps {
   examples: {
@@ -15,7 +16,12 @@ function Examples(props: ExamplesProps) {
   }
 
   return (
-    <View testID="EXAMPLES.CONTAINER:VIEW">
+    <View
+      testID="EXAMPLES.CONTAINER:VIEW"
+      accessible={true}
+      role="list"
+      aria-label={i18n.t("examples", { defaultValue: "Näited" })}
+    >
       {props.examples.map((
         example, index
       ) => {

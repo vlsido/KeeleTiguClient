@@ -7,6 +7,7 @@ import {
 import { CommonColors } from "../../constants/Colors";
 import RussianTranslation from "./RussianTranslation";
 import { useAppSelector } from "../../hooks/storeHooks";
+import { i18n } from "../store/i18n";
 
 interface ExampleProps {
   estonianExample: string;
@@ -24,35 +25,46 @@ function Example(props: ExampleProps) {
   return (
     <View
       testID="EXAMPLE.CONTAINER:VIEW"
-      style={styles.container} >
-      <Text>
-        {estonianExampleWords.map((
-          word, index
-        ) => {
+      style={styles.container}
+      accessible={true}
+      role="listitem"
+      accessibilityLabel={i18n.t("example", { defaultValue: "Näide" })}
+    >
+      <View
+        accessible={true}
+        accessibilityLabel={i18n.t("estonian_example", { defaultValue: "Eesti näide" })}
+      >
+        <Text>
+          {estonianExampleWords.map((
+            word, index
+          ) => {
 
-          const endSeparator = estonianExampleWords.length === index + 1 ? "" : " ";
-          if (props.searchString !== undefined && word.includes(props.searchString)) {
-            return [
+            const endSeparator = estonianExampleWords.length === index + 1 ? "" : " ";
+            if (props.searchString !== undefined && word.includes(props.searchString)) {
+              return [
+                <Text key={index} style={[
+                  styles.estonianExample,
+                  index === searchStringIndex && styles.highlightedEstonianText
+                ]}>{word}</Text>,
+                <Text key={`${index}-separator`}>{endSeparator}</Text>
+              ];
+            }
+
+            return (
               <Text key={index} style={[
                 styles.estonianExample,
                 index === searchStringIndex && styles.highlightedEstonianText
-              ]}>{word}</Text>,
-              <Text key={`${index}-separator`}>{endSeparator}</Text>
-            ];
+              ]}>{word + endSeparator}</Text>
+            );
+          })
           }
-
-          return (
-            <Text key={index} style={[
-              styles.estonianExample,
-              index === searchStringIndex && styles.highlightedEstonianText
-            ]}>{word + endSeparator}</Text>
-          );
-        })
-        }
-      </Text>
+        </Text>
+      </View>
       <FlatList
         testID="EXAMPLE.CONTAINER.TRANSLATIONS:FLATLIST"
         data={props.russianTranslations}
+        accessibilityLabel={i18n.t("russian_translations", { defaultValue: "Vene tõlked" })}
+        role="list"
         renderItem={({ item, index }) => {
           return <RussianTranslation
             key={index}

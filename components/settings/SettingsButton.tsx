@@ -1,13 +1,11 @@
 import { useCallback } from "react";
 import {
-  StyleSheet
-} from "react-native";
-import {
   useAtom
 } from "jotai";
 import { isSettingsMenuOpenAtom } from "./settingsAtoms";
 import { SettingsIcon } from "../icons/SettingsIcon";
 import CustomIconButton from "../buttons/CustomIconButton";
+import { i18n } from "../store/i18n";
 
 function SettingsButton() {
   const [isSettingsMenuOpen, setIsSettingsMenuOpen] =
@@ -20,10 +18,10 @@ function SettingsButton() {
   return (
     <CustomIconButton
       testID={"SETTINGS_BUTTON.ICON:PRESSABLE"}
+      ariaLabel={i18n.t("settings", { defaultValue: "Sätingud" })}
       onPress={toggleSettings}
     >
-      <SettingsIcon
-      />
+      <SettingsIcon />
     </CustomIconButton>
   )
 }
