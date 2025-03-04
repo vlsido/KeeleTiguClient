@@ -71,7 +71,7 @@ function TranslateWordsGameResults(props: TranslateWordsGameResultsProps) {
         testID="TRANSLATE_WORDS_GAME_RESULTS.SCROLL_CONTAINER.START_AGAIN:PRESSABLE"
         text={i18n.t("start_again", { defaultValue: "Alusta uuesti" })}
         onPress={props.onRestart}
-        label={i18n.t("start_again", { defaultValue: "Alusta uuesti" })}
+        ariaLabel={i18n.t("start_again", { defaultValue: "Alusta uuesti" })}
         style={styles.buttonContainer}
         textStyle={styles.buttonText}
       >
@@ -82,7 +82,7 @@ function TranslateWordsGameResults(props: TranslateWordsGameResultsProps) {
           testID="TRANSLATE_WORDS_GAME_RESULTS.SCROLL_CONTAINER.FIX_MISTAKES:PRESSABLE"
           text={i18n.t("fix_mistakes", { defaultValue: "Paranda vead" })}
           onPress={props.onRestartToFixMistakes}
-          label={i18n.t("fix_mistakes", { defaultValue: "Paranda vead" })}
+          ariaLabel={i18n.t("fix_mistakes", { defaultValue: "Paranda vead" })}
           style={styles.buttonContainer}
           textStyle={styles.buttonText}
         >

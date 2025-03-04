@@ -75,7 +75,7 @@ function SettingsMenu(props: SettingsMenuProps) {
         <CustomIconButton
           testID="SETTINGS_MENU_CONTAINER.MENU.CLOSE:PRESSABLE"
           onPress={() => setIsSettingsOpen(false)}
-          aria-label="Close menu"
+          ariaLabel={i18n.t("close_menu", { defaultValue: "Sulge menüü" })}
           size={32}
           style={styles.closeButtonContainer}
         >

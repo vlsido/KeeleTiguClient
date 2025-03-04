@@ -9,6 +9,7 @@ import {
 } from "jotai";
 import { useMemo } from "react";
 import TextButton from "../../buttons/TextButton";
+import { i18n } from "../../store/i18n";
 
 interface SearchItemProps {
   word: string;
@@ -49,9 +50,8 @@ function SearchItem(props: SearchItemProps) {
         onPress={() => props.onPress(props.word)}
         textStyle={[
           styles.wordText,
-          isHoveredIn === true ? { color: CommonColors.black } : { color: CommonColors.black }
         ]}
-        label={`Word: ${props.word}. Open link.`}
+        ariaLabel={i18n.t("SearchItem_search_word_item", { defaultValue: "Otsi %{word}", word: props.word })}
         onHoverIn={onHoverIn}
         onHoverOut={onHoverOut} />
     </View>
@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
     paddingVertical: 2.5,
   },
   wordText: {
-    color: "white",
+    color: CommonColors.black,
     fontSize: 18,
     fontWeight: "600"
   },

@@ -91,12 +91,15 @@ function AddToDictionaryIconButton(props: AddToDictionaryButtonProps) {
   }
 
   return (
-    <AnimatedPressable onPress={onPress}
+    <AnimatedPressable
+      onPress={onPress}
       style={[
         animatedStyle,
         styles.container,
         { backgroundColor: props.backgroundStyle === "light" ? "#fff" : "#000" }
       ]}
+      accessibilityLabel={i18n.t("add_to_dictionary", { defaultValue: "Lisa sõnastikku" })}
+      role="button"
     >
       <AddToDictionaryIcon color={props.backgroundStyle === "light" ? "#000" : "#fff"} />
     </AnimatedPressable>

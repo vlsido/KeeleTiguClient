@@ -70,7 +70,6 @@ function WordData(props: WordDataProps) {
             testID="WORD_DATA.SCROLL_CONTAINER.WORD:VIEW"
             key={`wordIndex-${wordData.index}`}
             style={styles.wordContainer}
-
           >
             <View style={styles.wordHeader}>
               <Text>
@@ -93,12 +92,17 @@ function WordData(props: WordDataProps) {
                 backgroundStyle="light"
               />
             </View>
-            <Forms key={`wordIndex-${wordData.index}-forms`} forms={wordData.forms} />
-            <Type key={`wordIndex-${wordData.index}-type`} type={wordData.type} />
+            <Forms
+              key={`wordIndex-${wordData.index}-forms`}
+              forms={wordData.forms} />
+            <Type
+              key={`wordIndex-${wordData.index}-type`}
+              type={wordData.type} />
             <FlatList
               testID="WORD_DATA.SCROLL_CONTAINER.WORD.USAGES:FLATLIST"
               data={wordData.usages}
               keyExtractor={(_, index) => index.toString()}
+              accessibilityLabel={i18n.t("usages", { defaultValue: "Kasutamised" })}
               renderItem={({ item, index }) => {
                 return (
                   <Usage

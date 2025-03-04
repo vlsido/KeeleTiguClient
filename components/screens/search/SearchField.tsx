@@ -10,6 +10,7 @@ import {
   StyleSheet,
   TextInput,
   TextInputChangeEventData,
+  TextInputKeyPressEventData,
   View,
   ViewStyle
 } from "react-native";
@@ -78,20 +79,17 @@ function SearchField() {
 
   const searchFieldHeight = useSharedValue<number>(0);
   const searchFieldWidth = useSharedValue<number>(0);
-  const searchListOpacity = useSharedValue<number>(0);
-  const searchListPointerEvents = useSharedValue<"auto" | "none">("none");
+  const searchListDisplay = useSharedValue<"flex" | "none">("none");
 
   const makeResultsUnvisible = useCallback(
     () => {
-      searchListOpacity.value = 0;
-      searchListPointerEvents.value = "none";
+      searchListDisplay.value = "none";
     },
     []
   );
   const makeResultsVisible = useCallback(
     () => {
-      searchListOpacity.value = 1;
-      searchListPointerEvents.value = "auto";
+      searchListDisplay.value = "flex";
     },
     []
   );
@@ -267,7 +265,7 @@ function SearchField() {
       const language = detectLanguage(word);
 
       if (language === "unknown") {
-        alert("Teadmata keel!");
+        alert(i18n.t("unknown_language", { defaultValue: "Teadmata keel!" }));
         return;
       }
 
@@ -294,14 +292,14 @@ function SearchField() {
           setWordsDataArray(response.queryResponse);
 
         } else {
-          alert("Ei leitud!");
+          alert(i18n.t("not_found", { defaultValue: "Ei leitud!" }));
           setWordsDataArray([]);
         }
 
       } catch (error) {
         switch (error.code) {
           case "cloud-function/error":
-            showHint("Server error");
+            showHint(i18n.t("error", { defaultValue: "Tekkis viga!" }));
             break;
           default:
             console.error(
@@ -341,6 +339,7 @@ function SearchField() {
 
   const onChangeText = useCallback(
     (text: string) => {
+      makeResultsVisible();
       if (text.length === 0) {
         setQuery("");
         setResults([]);
@@ -367,6 +366,7 @@ function SearchField() {
       setResults(searchResults);
     },
     [
+      makeResultsVisible,
       words,
     ]
   );
@@ -379,12 +379,17 @@ function SearchField() {
     []
   );
 
+  const onKeyPress = useCallback((e: NativeSyntheticEvent<TextInputKeyPressEventData>) => {
+    if (e.nativeEvent.key === "Escape") {
+      makeResultsUnvisible();
+    }
+  }, [makeResultsUnvisible]);
+
   const flatListAnimatedStyle = useAnimatedStyle<ViewStyle>(() => {
     return {
-      opacity: searchListOpacity.value,
-      pointerEvents: searchListPointerEvents.value,
       top: searchFieldHeight.value,
-      width: searchFieldWidth.value
+      width: searchFieldWidth.value,
+      display: searchListDisplay.value
     };
   });
 
@@ -408,15 +413,18 @@ function SearchField() {
               placeholder={i18n.t("SearchField_search_placeholder", { defaultValue: "Otsi..." })}
               style={styles.searchInput}
               value={query}
-              onChangeText={(text) => onChangeText(text)}
+              onChangeText={onChangeText}
               onFocus={makeResultsVisible}
               onSubmitEditing={(event: NativeSyntheticEvent<TextInputChangeEventData>) => getWordData(event.nativeEvent.text)}
+              role="searchbox"
+              onKeyPress={onKeyPress}
             />
             <Pressable
               testID="SEARCH_FIELD.FIND_WORD:PRESSABLE"
               onPress={() => getWordData(query)}
               style={styles.searchIconContainer}
               aria-label={i18n.t("SearchField_search_word", { defaultValue: "Otsi sõna" })}
+              role="button"
             >
               {isSearching === true
                 ? <LoadingIndicator

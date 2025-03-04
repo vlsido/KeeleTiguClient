@@ -30,7 +30,7 @@ function LoginButton(props: LoginButtonProps) {
       text="Logi sisse"
       style={styles.loginContainer}
       textStyle={styles.loginText}
-      label="Login"
+      ariaLabel="Login"
       onPress={props.onPress}
     />
   );

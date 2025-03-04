@@ -45,7 +45,10 @@ function AddToDictionaryTextButton(props: AddToDictionaryTextButtonProps) {
         { defaultValue: "Lisa sõnastikku" }
       )}
       onPress={addToDictionary}
-      label="Add to dictionary"
+      ariaLabel={i18n.t(
+        "add_to_dictionary",
+        { defaultValue: "Lisa sõnastikku" }
+      )}
     />
   );
 }

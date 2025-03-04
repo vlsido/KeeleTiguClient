@@ -20,6 +20,7 @@ import {
 } from "jotai";
 import CustomIconButton from "../../buttons/CustomIconButton";
 import { CloseIcon } from "../../icons/CloseIcon";
+import { i18n } from "../../store/i18n";
 
 interface DictionaryItemProps extends Word {
   length: number;
@@ -51,6 +52,7 @@ function DictionaryItem(props: DictionaryItemProps) {
               testID="DICTIONARY_ITEM.CONTAINER.REMOVE_ICON:PRESSABLE"
               onPress={onRemoveWord}
               size={32}
+              ariaLabel={i18n.t("remove_word", { defaultValue: "Eemalda sõna" })}
             >
               <CloseIcon />
             </CustomIconButton>

@@ -30,7 +30,7 @@ function RegisterButton(props: RegisterButtonProps) {
       text="Register"
       style={styles.registerContainer}
       textStyle={styles.registerText}
-      label="Register"
+      ariaLabel="Register"
       onPress={props.onPress}
     />
   );

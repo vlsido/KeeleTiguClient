@@ -7,6 +7,7 @@ import {
 import { setLanguage } from "../store/slices/settingsSlice";
 import { Language } from "../../constants/types";
 import { useConfig } from "../../hooks/useConfig";
+import { i18n } from "../store/i18n";
 
 function LanguageDropdown() {
   const { rerender } = useConfig();
@@ -21,6 +22,7 @@ function LanguageDropdown() {
   return (
     <DropdownMenu
       testID="LANGUAGE_DROPDOWN.DROPDOWN:PRESSABLE"
+      ariaLabel={i18n.t("select_language_dropdown", { defaultValue: "Vali keel rippmenüü" })}
       onSelect={onSelect}
       items={[
         "EE",

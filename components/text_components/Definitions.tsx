@@ -6,6 +6,7 @@ import {
 import RussianTranslation from "./RussianTranslation";
 import { CommonColors } from "../../constants/Colors";
 import { useAppSelector } from "../../hooks/storeHooks";
+import { i18n } from "../store/i18n";
 
 interface DefinitionProps {
   definitionData: {
@@ -21,7 +22,11 @@ function Definitions(props: DefinitionProps) {
   const highlightRussianAccentLetters = useAppSelector((state) => state.settings.highlightRussianAccentLetters);
 
   return (
-    <>
+    <View
+      accessible={true}
+      role="list"
+      aria-label={i18n.t("definitions", { defaultValue: "Definitsioonid" })}
+    >
       {props.definitionData.map((
         definition, index
       ) => {
@@ -32,8 +37,16 @@ function Definitions(props: DefinitionProps) {
         const searchStringIndex = splitDefinitionWords?.findIndex((word) => word === props.searchString);
 
         return (
-          <View testID={`DEFINITIONS.CONTAINER:VIEW:ITEM-${index}`} key={index}>
-            <Text style={styles.definitionText}>
+          <View
+            testID={`DEFINITIONS.CONTAINER:VIEW:ITEM-${index}`}
+            key={index}
+            accessible={true}
+            role="listitem"
+            accessibilityLabel={i18n.t("definition", { defaultValue: "Definitsioon" })}
+          >
+            <Text
+              style={styles.definitionText}
+            >
               {definitionMark}
               {splitDefinitionWords?.map((
                 word, wordIndex
@@ -56,34 +69,39 @@ function Definitions(props: DefinitionProps) {
                 )
               })}
             </Text>
-            {definition.russianTranslations.map((
-              translation, index
-            ) => {
-              return (
-                <RussianTranslation
-                  key={index}
-                  translation={translation}
-                  searchString={props.searchString}
-                  textStyle={styles.russianExample}
-                  accentTextStyle={
-                    highlightRussianAccentLetters === true
-                      ? styles.russianAccentText
-                      : styles.russianExample
-                  }
-                  highlightedTextStyle={styles.highlightedRussianText}
-                  highlightedAccentTextStyle={
-                    highlightRussianAccentLetters === true
-                      ? styles.highlightedRussianAccentText
-                      : styles.highlightedRussianText
-                  }
-                />
-              );
-            })}
+            <View
+              accessible={true}
+              aria-label={i18n.t("russian_translations", { defaultValue: "Vene tõlked" })}
+              role="list" >
+              {definition.russianTranslations.map((
+                translation, index
+              ) => {
+                return (
+                  <RussianTranslation
+                    key={index}
+                    translation={translation}
+                    searchString={props.searchString}
+                    textStyle={styles.russianExample}
+                    accentTextStyle={
+                      highlightRussianAccentLetters === true
+                        ? styles.russianAccentText
+                        : styles.russianExample
+                    }
+                    highlightedTextStyle={styles.highlightedRussianText}
+                    highlightedAccentTextStyle={
+                      highlightRussianAccentLetters === true
+                        ? styles.highlightedRussianAccentText
+                        : styles.highlightedRussianText
+                    }
+                  />
+                );
+              })}
+            </View>
           </View>
 
         )
       })}
-    </>
+    </View>
   )
 }
 

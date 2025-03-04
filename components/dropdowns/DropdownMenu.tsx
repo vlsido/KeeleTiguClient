@@ -28,6 +28,7 @@ interface DropdownMenuProps {
   testID: string;
   items: string[];
   onSelect: (item: string) => void;
+  ariaLabel: string;
   defaultItem?: string;
   style?: StyleProp<ViewStyle>
   dropdownStyle?: StyleProp<ViewStyle>
@@ -77,6 +78,9 @@ function DropdownMenu(props: DropdownMenuProps) {
         testID={props.testID}
         onPress={() => setIsDropdownVisible(!isDropdownVisible)}
         style={props.style ?? styles.container}
+        aria-expanded={isDropdownVisible}
+        aria-label={props.ariaLabel}
+        role="button"
       >
         <Text ellipsizeMode="tail">{selectedItem}</Text>
         <Animated.View
@@ -91,12 +95,16 @@ function DropdownMenu(props: DropdownMenuProps) {
             width: containerWidth,
             transform: [{ translateY: containerHeight }]
           }
-        ]}>
+        ]}
+          accessible={true}
+          role="group"
+        >
           {props.items.map((item) => {
             return (
               <Pressable
                 key={item}
                 onPress={() => onSelect(item)}
+                role="menuitem"
               >
                 <Text>{item}</Text>
               </Pressable>

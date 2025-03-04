@@ -7,6 +7,7 @@ import {
 
 interface CustomIconButtonProps extends PressableProps {
   testID: string;
+  ariaLabel: string;
   style?: StyleProp<ViewStyle>;
   size?: number;
 }
@@ -26,7 +27,8 @@ function CustomIconButton(props: CustomIconButtonProps) {
         props.style
       ]}
       onPress={props.onPress}
-      aria-label={props["aria-label"]}
+      aria-label={props.ariaLabel}
+      role="button"
       hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
     >
       {props.children}

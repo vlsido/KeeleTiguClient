@@ -119,6 +119,7 @@ function Dictionary() {
         testID="DICTIONARY.WORDS_LIST:FLATLIST"
         data={myDictionaryState}
         style={styles.list}
+        aria-label={i18n.t("words_from_my_dictionary", { defaultValue: "Minu sõnastiku sõnad" })}
         contentContainerStyle={styles.listContentContainer}
         keyExtractor={(item) => item.index.toString()}
         renderItem={({ item, index }) => <DictionaryItem {...item} length={index + 1} />}

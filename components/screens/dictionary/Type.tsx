@@ -28,7 +28,11 @@ function Type(props: TypeProps) {
   }
 
   return (
-    <Text testID="TYPE.WORD_TYPE:TEXT" style={styles.typeText}>
+    <Text
+      testID="TYPE.WORD_TYPE:TEXT"
+      style={styles.typeText}
+      accessibilityLabel={i18n.t("type", { defaultValue: "Sõnaliik" })}
+    >
       {type()}
     </Text>
   );
