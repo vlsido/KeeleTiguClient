@@ -314,6 +314,7 @@ function SearchField() {
       }
     },
     [
+      query,
       detectLanguage,
       showHint,
       sortWords,
