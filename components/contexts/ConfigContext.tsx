@@ -11,7 +11,7 @@ import {
   useMemo,
 } from "react";
 import { app } from "../util/FirebaseConfig";
-import { useAppDispatch } from "../../hooks/storeHooks";
+import { useAppDispatch, useAppStore } from "../../hooks/storeHooks";
 import { clearDictionary } from "../store/slices/dictionarySlice";
 import {
   atom,
@@ -20,6 +20,7 @@ import {
 } from "jotai";
 import { loadSettings } from "../store/slices/settingsSlice";
 import { i18n } from "../store/i18n";
+import { useSettings } from "../../hooks/useSettings";
 
 interface ConfigContextProps {
   remoteConfig: RemoteConfig | null;
@@ -36,7 +37,10 @@ export const isUnderMaintenanceAtom = atom<boolean>(false);
 function ConfigContextProvider({ children }: { children: React.ReactNode }) {
   const [isRendered, setIsRendered] = useAtom<boolean>(useMemo(() => atom<boolean>(true), []));
 
+
   const remoteConfig = getRemoteConfig(app);
+
+  useAppStore().dispatch(loadSettings());
 
   const dispatch = useAppDispatch();
 
@@ -55,14 +59,8 @@ function ConfigContextProvider({ children }: { children: React.ReactNode }) {
     );
   }
 
-  useLayoutEffect(() => {
-    dispatch(loadSettings());
-
-  }, []);
-
   useEffect(
     () => {
-
       remoteConfig.settings.minimumFetchIntervalMillis = 600000; // 600000ms = 10 minutes
 
       remoteConfig.defaultConfig = {
