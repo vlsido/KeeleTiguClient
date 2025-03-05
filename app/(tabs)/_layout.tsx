@@ -4,11 +4,10 @@ import {
   TabTrigger,
   Tabs
 } from "expo-router/ui";
-import { StyleSheet } from "react-native";
+import { StyleSheet, useWindowDimensions } from "react-native";
 import { CommonColors } from "../../constants/Colors";
 import { ExamIcon } from "../../components/icons/ExamIcon";
 import { DictionaryIcon } from "../../components/icons/DictionaryIcon";
-import Header from "../../components/Header";
 import { useNavigation } from "expo-router";
 import {
   useCallback,
@@ -20,11 +19,14 @@ import {
 } from "jotai";
 import { SearchIcon } from "../../components/icons/SearchIcon";
 import { i18n } from "../../components/store/i18n";
+import { useOrientation } from "../../hooks/useOrientation";
 
 type Tab = "index" | "dictionary" | "search";
 
 function RootLayoutTabs() {
   const navigationState = useNavigation().getState();
+
+  const { isWide } = useOrientation();
 
   const getFocusedTab = useCallback(() => {
     const currentIndex = navigationState?.routes.at(0)?.state?.index;
@@ -52,11 +54,39 @@ function RootLayoutTabs() {
     useMemo(() => atom<Tab>(getFocusedTab()), [navigationState]));
 
   return (
-    <Tabs style={styles.container}>
-      <Header />
+    <Tabs style={[styles.container,
+    isWide
+    && { flexDirection: "row-reverse" }]}>
       <TabSlot style={styles.slot} />
       <TabList
-        style={styles.tabList}
+        style={[styles.tabList,
+        isWide
+          ? {
+            flexDirection: "column",
+            paddingHorizontal: 2.5,
+            paddingVertical: 10,
+            borderTopRightRadius: 15,
+            borderBottomRightRadius: 15,
+            borderRightWidth: 2,
+            borderBottomWidth: 2,
+            borderTopWidth: 2,
+            borderColor: "white",
+            height: "100%",
+            maxHeight: 250
+          }
+          : {
+            paddingHorizontal: 10,
+            paddingVertical: 2.5,
+            borderTopRightRadius: 15,
+            borderTopLeftRadius: 15,
+            borderRightWidth: 2,
+            borderLeftWidth: 2,
+            borderTopWidth: 2,
+            borderColor: "white",
+            width: "100%",
+            maxWidth: 250
+          }
+        ]}
         accessible={true}
         role="tablist"
       >
@@ -111,17 +141,10 @@ const styles = StyleSheet.create({
     borderColor: "white",
   },
   tabList: {
-    width: "100%",
     justifyContent: "space-between",
     backgroundColor: CommonColors.saladGreen,
     alignSelf: "center",
     borderColor: CommonColors.whiteAlternative,
-    borderWidth: 2,
-    borderRadius: 60,
-    paddingHorizontal: 15,
-    paddingVertical: 5,
-    marginBottom: "0.5%",
-    maxWidth: 250,
   },
   buttonContainer: {
     backgroundColor: "rgba(21,22,21,0.8)",

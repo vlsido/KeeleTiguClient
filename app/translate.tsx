@@ -5,6 +5,7 @@ import {
   useRef
 } from "react";
 import {
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
@@ -451,9 +452,9 @@ export default function Translate() {
   }
 
   return (
-    <View
+    <ScrollView
       testID="TRANSLATE.CONTAINER:VIEW"
-      style={styles.container}
+      contentContainerStyle={styles.container}
     >
       <View style={styles.topContainer}>
         {
@@ -507,13 +508,14 @@ export default function Translate() {
       <AnswerStatusOverlay
         correctCount={correctCount}
         incorrectCount={incorrectCount} />
-    </View >
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
+    width: "100%",
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "flex-start",
