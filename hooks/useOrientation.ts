@@ -5,6 +5,6 @@ export function useOrientation() {
 
   return {
     isLandscape: screenWidth > screenHeight,
-    isWide: ((screenHeight * 2) < screenWidth) || screenHeight < 350,
+    isWide: (screenHeight < screenWidth) && screenHeight < 400,
   };
 }
