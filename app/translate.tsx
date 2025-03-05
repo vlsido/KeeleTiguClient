@@ -493,14 +493,17 @@ export default function Translate() {
           <CustomIconButton
             testID="TRANSLATE.CONTAINER.BOTTOM_CONTAINER.SKIP_ICON:PRESSABLE"
             style={styles.buttonBackground}
-            onPress={skipWord}>
+            onPress={skipWord}
+            ariaLabel={i18n.t("skip_word", { defaultValue: "Järgmine sõna" })}
+          >
             <SkipNextIcon />
           </CustomIconButton>
           <CustomIconButton
             testID="TRANSLATE.CONTAINER.BOTTOM_CONTAINER.SHOW_ICON:PRESSABLE"
-
             style={styles.buttonBackground}
-            onPress={showWord}>
+            onPress={showWord}
+            ariaLabel={i18n.t("show_word", { defaultValue: "Näita sõna" })}
+          >
             <VisibilityIcon />
           </CustomIconButton>
         </View>
@@ -508,7 +511,7 @@ export default function Translate() {
       <AnswerStatusOverlay
         correctCount={correctCount}
         incorrectCount={incorrectCount} />
-    </ScrollView>
+    </ScrollView >
   );
 }
 
