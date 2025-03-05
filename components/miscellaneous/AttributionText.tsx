@@ -113,6 +113,7 @@ function AttributionText() {
               Eesti Keele Instituudi
             </Text>
           </Pressable>
+          {" "}
           <Text style={styles.attributionText}>
             loodud sõnastikud
           </Text>

@@ -281,7 +281,11 @@ function TranslateWordsGame() {
         text={i18n.t("TranslateWordsGame_random_words", { defaultValue: "Juhuslikud sõnad" })}
         onPress={() => toggleOption("any")}
         isSelected={gameOptions === "any" || gameOptions === "all"}>
-        <View style={[styles.optionChildren, screenWidth > 250 ? { flexDirection: "row" } : { flexDirection: "column", alignItems: "flex-start" }]}>
+        <View style={[
+          styles.optionChildren,
+          screenWidth > 250
+            ? { flexDirection: "row" }
+            : { flexDirection: "column", alignItems: "flex-start" }]}>
           <AnimatedPressable
             style={[
               styles.languageLevelContainer,
@@ -365,7 +369,8 @@ export default TranslateWordsGame;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
+    gap: 20,
     width: "100%",
     justifyContent: "space-between",
     maxHeight: 500,

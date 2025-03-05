@@ -19,6 +19,7 @@ function SettingsButton() {
     <CustomIconButton
       testID={"SETTINGS_BUTTON.ICON:PRESSABLE"}
       ariaLabel={i18n.t("settings", { defaultValue: "Sätingud" })}
+      style={{ pointerEvents: "auto" }}
       onPress={toggleSettings}
     >
       <SettingsIcon />

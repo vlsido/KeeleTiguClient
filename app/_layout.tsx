@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import ConfigContextProvider, {
   isUnderMaintenanceAtom
 } from "../components/contexts/ConfigContext";
@@ -6,7 +7,6 @@ import { Stack } from "expo-router";
 import { CommonColors } from "../constants/Colors";
 import { Provider } from "react-redux";
 import store from "../components/store/store";
-import { useEffect } from "react";
 import {
   useAppDispatch,
   useAppSelector
@@ -20,7 +20,7 @@ import {
 import { WordAndExamData } from "./(tabs)/dictionary";
 import SettingsMenu from "../components/settings/SettingsMenu";
 import StackHeader from "../components/StackHeader";
-import { Linking } from "react-native";
+import Header from "../components/Header";
 
 export default function RootLayout() {
 
@@ -107,7 +107,10 @@ export function RootLayoutStack() {
       <Stack.Screen
         redirect={isUnderMaintenance}
         name="(tabs)"
-        options={{ headerShown: false }} />
+        options={{
+          header: () => <Header />
+        }}
+      />
       <Stack.Screen
         redirect={!isUnderMaintenance}
         name="maintenance"

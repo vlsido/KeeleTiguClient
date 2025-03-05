@@ -2,6 +2,7 @@ import { useCallback } from "react";
 import {
   Image,
   Linking,
+  ScrollView,
   StyleSheet,
   Text,
   View
@@ -29,7 +30,9 @@ function AboutThisAppHint(props: AboutThisAppHint) {
       isVisible={props.isVisible}
       onClose={props.onClose}
     >
-      <View style={styles.container}>
+      <ScrollView
+        contentContainerStyle={styles.container}
+      >
         <View style={styles.centeringContainer}>
           <View style={styles.appIconContainer}>
             <Image
@@ -67,7 +70,7 @@ function AboutThisAppHint(props: AboutThisAppHint) {
             {i18n.t("tap_to_close", { defaultValue: "Sulgemiseks puudutage." })}
           </Text>
         </View>
-      </View>
+      </ScrollView>
     </OverlayHint>
 
   );
@@ -77,10 +80,11 @@ export default AboutThisAppHint;
 
 const styles = StyleSheet.create({
   container: {
+    flexGrow: 1,
+    justifyContent: "center",
     alignItems: "center",
-    gap: 35,
+    gap: 20,
     paddingHorizontal: 20,
-    maxWidth: 300
   },
   appIconContainer: {
     width: 64,

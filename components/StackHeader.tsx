@@ -1,6 +1,7 @@
 import {
   StyleSheet,
-  View
+  View,
+  useWindowDimensions
 } from "react-native";
 import { router } from "expo-router";
 import { CommonColors } from "../constants/Colors";
@@ -11,6 +12,7 @@ import { ArrowBackIcon } from "./icons/ArrowBackIcon";
 import { useCallback } from "react";
 
 function StackHeader() {
+  const { width: screenWidth, height: screenHeight } = useWindowDimensions();
 
   const goToMainPage = useCallback(() => {
     if (router.canGoBack()) {
@@ -22,12 +24,17 @@ function StackHeader() {
   }, [router]);
 
   return (
-    <View style={styles.container}>
-      <View style={styles.buttonsContainer}>
+    <View
+      style={[styles.container,
+      (screenHeight * 2) < screenWidth && { position: "absolute", backgroundColor: "transparent", pointerEvents: "none" }]}>
+      <View style={[styles.buttonsContainer,
+      (screenHeight * 2) < screenWidth && { position: "absolute", backgroundColor: "transparent", pointerEvents: "none" }
+      ]}>
         <CustomIconButton
           testID="STACK_HEADER.BACK_ICON:PRESSABLE"
           onPress={goToMainPage}
-          aria-label={i18n.t("StackHeader_go_back", { defaultValue: "Tagasi" })}
+          style={{ pointerEvents: "auto" }}
+          ariaLabel={i18n.t("StackHeader_go_back", { defaultValue: "Tagasi" })}
         >
           <ArrowBackIcon />
         </CustomIconButton>

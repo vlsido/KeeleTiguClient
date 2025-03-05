@@ -30,12 +30,14 @@ function TranslateWordsGameResults(props: TranslateWordsGameResultsProps) {
 
 
   return (
-    <View style={styles.container}>
+    <ScrollView
+      contentContainerStyle={styles.container}
+    >
       <TranslateWordsGameResultsHeader
         correctCount={props.correctCount}
         incorrectCount={props.incorrectCount} />
       <View style={styles.listContainer}>
-        <ScrollView contentContainerStyle={styles.listContentContainer}>
+        <View style={styles.listContentContainer}>
           {props.results.map((item, index) => {
             return (
               <View
@@ -65,7 +67,7 @@ function TranslateWordsGameResults(props: TranslateWordsGameResultsProps) {
               </View>
             );
           })}
-        </ScrollView>
+        </View>
       </View>
       <TextButton
         testID="TRANSLATE_WORDS_GAME_RESULTS.SCROLL_CONTAINER.START_AGAIN:PRESSABLE"
@@ -89,7 +91,7 @@ function TranslateWordsGameResults(props: TranslateWordsGameResultsProps) {
           <RestartIcon />
         </TextButton>
       )}
-    </View>
+    </ScrollView>
   )
 }
 
@@ -97,11 +99,12 @@ export default TranslateWordsGameResults;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
+    width: "100%",
+    backgroundColor: CommonColors.black,
     alignItems: "center",
     alignSelf: "center",
     gap: 10,
-    marginVertical: 10
   },
   listContainer: {
     flex: 1,
