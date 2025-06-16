@@ -135,7 +135,7 @@ function Dictionary() {
         <FlatList
           testID="DICTIONARY.WORDS_LIST:FLATLIST"
           data={myDictionaryState}
-          style={[styles.list, !isWide && { paddingBottom: NAV_BOTTOM_PADDING }]}
+          style={[!isWide && { paddingBottom: NAV_BOTTOM_PADDING }, { padding: 15 }]}
           aria-label={i18n.t("words_from_my_dictionary", { defaultValue: "Minu sõnastiku sõnad" })}
           contentContainerStyle={styles.listContentContainer}
           keyExtractor={(item) => item.index.toString()}
@@ -158,7 +158,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 10,
-    borderRadius: 60
   },
   text: {
     color: "white",
@@ -187,13 +186,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     margin: 10,
   },
-  list: {
-    width: "100%",
-    paddingHorizontal: 15
-  },
   listContentContainer: {
-    gap: 10,
     maxWidth: 600,
+    gap: 15,
+    width: "100%",
     alignSelf: "center"
   }
 });

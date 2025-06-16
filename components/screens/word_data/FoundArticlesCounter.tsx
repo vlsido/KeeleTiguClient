@@ -40,7 +40,7 @@ export default FoundArticlesCounter;
 
 const styles = StyleSheet.create({
   wordCount: {
-    marginVertical: 3,
+    marginBottom: 15,
     alignSelf: "center",
   },
   wordCountText: {

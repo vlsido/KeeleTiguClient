@@ -84,13 +84,12 @@ export default memo(DictionaryItem);
 const styles = StyleSheet.create({
   itemContainer: {
     backgroundColor: CommonColors.black,
-    borderColor: "white",
     borderRadius: 20,
     maxWidth: 600,
     width: "100%",
     alignSelf: "center",
-    padding: 20,
-    marginVertical: 5,
+    paddingHorizontal: 10,
+    paddingVertical: 20,
     shadowColor: '#fff',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 1,
