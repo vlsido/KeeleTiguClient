@@ -104,34 +104,45 @@ function Dictionary() {
   }
 
   return (
-    <ScrollView
-      testID="DICTIONARY.CONTAINER:VIEW"
-      style={styles.container}
+    <View
+      style={{
+        flex: 1,
+        width: "100%",
+        alignItems: "center",
+        justifyContent: "center",
+        overflow: "hidden"
+      }}
     >
-      <View style={styles.counter}>
-        <Text
-          testID="DICTIONARY.WORD_COUNT:TEXT"
-          style={styles.text}
-        >
-          {i18n.t(
-            "count_words_in_dictionary",
-            {
-              defaultValue: "Sõnastikus on %{count} sõnad",
-              count: myDictionary.length,
-            }
-          )}
-        </Text>
-      </View>
-      <FlatList
-        testID="DICTIONARY.WORDS_LIST:FLATLIST"
-        data={myDictionaryState}
-        style={[styles.list, !isWide && { paddingBottom: NAV_BOTTOM_PADDING }]}
-        aria-label={i18n.t("words_from_my_dictionary", { defaultValue: "Minu sõnastiku sõnad" })}
-        contentContainerStyle={styles.listContentContainer}
-        keyExtractor={(item) => item.index.toString()}
-        renderItem={({ item, index }) => <DictionaryItem {...item} length={index + 1} />}
-      />
-    </ScrollView>
+      <ScrollView
+        testID="DICTIONARY.CONTAINER:VIEW"
+        style={styles.container}
+        contentContainerStyle={{ flexGrow: 1 }}
+      >
+        <View style={styles.counter}>
+          <Text
+            testID="DICTIONARY.WORD_COUNT:TEXT"
+            style={styles.text}
+          >
+            {i18n.t(
+              "count_words_in_dictionary",
+              {
+                defaultValue: "Sõnastikus on %{count} sõnad",
+                count: myDictionary.length,
+              }
+            )}
+          </Text>
+        </View>
+        <FlatList
+          testID="DICTIONARY.WORDS_LIST:FLATLIST"
+          data={myDictionaryState}
+          style={[styles.list, !isWide && { paddingBottom: NAV_BOTTOM_PADDING }]}
+          aria-label={i18n.t("words_from_my_dictionary", { defaultValue: "Minu sõnastiku sõnad" })}
+          contentContainerStyle={styles.listContentContainer}
+          keyExtractor={(item) => item.index.toString()}
+          renderItem={({ item, index }) => <DictionaryItem {...item} length={index + 1} />}
+        />
+      </ScrollView>
+    </View>
   );
 }
 
@@ -139,7 +150,6 @@ export default Dictionary;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     width: "100%",
     flexDirection: "column",
     backgroundColor: CommonColors.black

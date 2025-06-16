@@ -52,6 +52,7 @@ function WordData(props: WordDataProps) {
       testID="WORD_DATA.SCROLL_CONTAINER:VIEW"
       ref={scrollRef}
       style={styles.container}
+      contentContainerStyle={{ flexGrow: 1 }}
     >
       <FoundArticlesCounter wordData={props.wordDataArray} />
       {props.wordDataArray.map((
@@ -134,7 +135,6 @@ const styles = StyleSheet.create({
     paddingTop: SEARCH_TOP_PADDING + 32,
   },
   container: {
-    flex: 1,
     paddingHorizontal: 15,
     paddingTop: SEARCH_TOP_PADDING + 32,
     paddingBottom: NAV_BOTTOM_PADDING
