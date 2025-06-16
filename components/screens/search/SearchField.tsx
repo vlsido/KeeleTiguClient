@@ -391,7 +391,7 @@ function SearchField() {
 
   const onSearchFieldLayout = useCallback(
     (event: LayoutChangeEvent) => {
-      searchFieldHeight.value = event.nativeEvent.layout.height + 68;
+      searchFieldHeight.value = event.nativeEvent.layout.height + 32;
       searchFieldWidth.value = event.nativeEvent.layout.width - 25;
     },
     []
@@ -485,12 +485,13 @@ const styles = StyleSheet.create({
   },
   searchContainer: {
     position: "absolute",
-    top: 48,
+    top: 10,
+    left: 50,
+    right: 50,
+    marginHorizontal: "auto",
     zIndex: 1000,
     backgroundColor: CommonColors.yellowA50,
     borderRadius: 60,
-    width: "80%",
-    alignSelf: "center",
     maxWidth: 400,
     padding: 10,
   },

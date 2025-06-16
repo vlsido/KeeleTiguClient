@@ -189,6 +189,7 @@ const styles = StyleSheet.create({
   listContentContainer: {
     maxWidth: 600,
     gap: 15,
+    paddingBottom: NAV_BOTTOM_PADDING,
     width: "100%",
     alignSelf: "center"
   }

@@ -44,8 +44,8 @@ export default StackHeader;
 
 const styles = StyleSheet.create({
   container: {
-    position: "absolute",
-    pointerEvents: "none"
+    width: "100%",
+    backgroundColor: CommonColors.black,
   },
   buttonsContainer: {
     width: "100%",
@@ -54,5 +54,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     justifyContent: "space-between",
     alignItems: "center",
+    backgroundColor: CommonColors.black
   }
+
 })

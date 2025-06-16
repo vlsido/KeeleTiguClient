@@ -135,14 +135,13 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     textAlign: "center",
-    paddingTop: SEARCH_TOP_PADDING + 32,
   },
   container: {
     width: "100%",
     padding: 15,
     gap: 10,
-    paddingTop: SEARCH_TOP_PADDING + 32,
-    paddingBottom: NAV_BOTTOM_PADDING
+    paddingTop: SEARCH_TOP_PADDING,
+    paddingBottom: NAV_BOTTOM_PADDING + 15
   },
   wordContainer: {
     backgroundColor: CommonColors.black,

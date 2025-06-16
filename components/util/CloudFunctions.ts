@@ -1,13 +1,13 @@
-import { connectFunctionsEmulator, httpsCallable } from "firebase/functions";
+import { httpsCallable } from "firebase/functions";
 import { functions } from "./FirebaseConfig";
 import { OperationError } from "../errors/OperationError";
 
 // UNCOMMENT TO DEBUG
-connectFunctionsEmulator(
-  functions,
-  "192.168.0.103",
-  5001
-);
+// connectFunctionsEmulator(
+//   functions,
+//   "192.168.0.103",
+//   5001
+// );
 
 export async function callCloudFunction(
   name: string,
