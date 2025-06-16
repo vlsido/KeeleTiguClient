@@ -4,6 +4,7 @@ import {
 } from "react";
 import {
   FlatList,
+  ScrollView,
   StyleSheet,
   Text,
   View
@@ -18,6 +19,8 @@ import {
   useAtom
 } from "jotai";
 import { useFocusEffect } from "expo-router";
+import { useOrientation } from "../../hooks/useOrientation";
+import { HEADER_TOP_PADDING, NAV_BOTTOM_PADDING } from "../../constants/common";
 
 export interface DictionaryRequest {
   page: number;
@@ -66,6 +69,8 @@ export interface DictionaryResponse {
 }
 
 function Dictionary() {
+  const { isWide } = useOrientation();
+
   const myDictionary = useAppSelector((state) => state.dictionary.myDictionary);
 
   const getDictionary = useCallback(() => {
@@ -99,32 +104,34 @@ function Dictionary() {
   }
 
   return (
-    <View
+    <ScrollView
       testID="DICTIONARY.CONTAINER:VIEW"
       style={styles.container}
     >
-      <Text
-        testID="DICTIONARY.WORD_COUNT:TEXT"
-        style={styles.text}
-      >
-        {i18n.t(
-          "count_words_in_dictionary",
-          {
-            defaultValue: "Sõnastikus on %{count} sõnad",
-            count: myDictionary.length,
-          }
-        )}
-      </Text>
+      <View style={styles.counter}>
+        <Text
+          testID="DICTIONARY.WORD_COUNT:TEXT"
+          style={styles.text}
+        >
+          {i18n.t(
+            "count_words_in_dictionary",
+            {
+              defaultValue: "Sõnastikus on %{count} sõnad",
+              count: myDictionary.length,
+            }
+          )}
+        </Text>
+      </View>
       <FlatList
         testID="DICTIONARY.WORDS_LIST:FLATLIST"
         data={myDictionaryState}
-        style={styles.list}
+        style={[styles.list, !isWide && { paddingBottom: NAV_BOTTOM_PADDING }]}
         aria-label={i18n.t("words_from_my_dictionary", { defaultValue: "Minu sõnastiku sõnad" })}
         contentContainerStyle={styles.listContentContainer}
         keyExtractor={(item) => item.index.toString()}
         renderItem={({ item, index }) => <DictionaryItem {...item} length={index + 1} />}
       />
-    </View>
+    </ScrollView>
   );
 }
 
@@ -134,11 +141,18 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: "100%",
-    paddingHorizontal: 10,
-    justifyContent: "center",
-    alignItems: "center",
     flexDirection: "column",
     backgroundColor: CommonColors.black
+  },
+  counter: {
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 10,
+    borderRadius: 60
+  },
+  text: {
+    color: "white",
+    fontSize: 16,
   },
   noWordsContainer: {
     flex: 1,
@@ -163,16 +177,12 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     margin: 10,
   },
-  text: {
-    color: "white",
-    fontSize: 16
-  },
   list: {
-    width: "100%"
+    width: "100%",
+    paddingHorizontal: 15
   },
   listContentContainer: {
     gap: 10,
-    marginVertical: 10,
     maxWidth: 600,
     alignSelf: "center"
   }

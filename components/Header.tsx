@@ -3,19 +3,13 @@ import {
   View,
 } from "react-native";
 import Settings from "./settings/SettingsButton";
-import { CommonColors } from "../constants/Colors";
-import { useOrientation } from "../hooks/useOrientation";
 
 function Header() {
-  const { isWide } = useOrientation();
 
   return (
     <View testID="HEADER.CONTAINER:VIEW"
-      style={[styles.container,
-      isWide && { position: "absolute", backgroundColor: "transparent", pointerEvents: "none" }]}>
-      <View style={[styles.buttonContainer,
-      isWide && { position: "absolute", backgroundColor: "transparent", pointerEvents: "none" }
-      ]}>
+      style={[styles.container]}>
+      <View style={[styles.buttonContainer]}>
         <Settings />
       </View>
     </View>
@@ -26,8 +20,9 @@ export default Header;
 
 const styles = StyleSheet.create({
   container: {
+    position: "absolute",
     width: "100%",
-    backgroundColor: CommonColors.black
+    pointerEvents: "none"
   },
   buttonContainer: {
     width: "100%",
@@ -35,7 +30,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     flexDirection: "row",
     justifyContent: "flex-end",
-    backgroundColor: CommonColors.black
+    pointerEvents: "none"
   },
   linksContainer: {
     flexDirection: "row",

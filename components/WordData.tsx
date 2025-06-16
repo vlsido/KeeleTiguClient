@@ -130,25 +130,28 @@ const styles = StyleSheet.create({
     color: CommonColors.white,
     fontSize: 20,
     fontWeight: "bold",
-    textAlign: "center"
+    textAlign: "center",
+    paddingTop: SEARCH_TOP_PADDING + 32,
   },
   container: {
     flex: 1,
-    backgroundColor: CommonColors.black,
     paddingHorizontal: 15,
     paddingTop: SEARCH_TOP_PADDING + 32,
     paddingBottom: NAV_BOTTOM_PADDING
   },
   wordContainer: {
-    backgroundColor: "black",
-    borderRadius: 5,
-    borderWidth: 1,
+    backgroundColor: CommonColors.black,
     borderColor: "white",
+    borderRadius: 20,
     maxWidth: 600,
     width: "100%",
     alignSelf: "center",
     padding: 20,
     marginVertical: 5,
+    shadowColor: '#fff',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 1,
+    shadowRadius: 4,
   },
   wordHeader: {
     flexDirection: "row",

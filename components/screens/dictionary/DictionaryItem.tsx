@@ -41,11 +41,11 @@ function DictionaryItem(props: DictionaryItemProps) {
       testID="DICTIONARY_ITEM.CONTAINER:VIEW"
       style={[styles.itemContainer, { display: isDisplayed ? "flex" : "none" }]}
     >
-      <Text style={styles.indexText}>{props.length}.</Text>
       <View style={styles.wordContainer}>
         <View>
           <View style={styles.header}>
             <Text style={styles.wordText}>
+              <Text style={styles.indexText}>{props.length}.</Text>
               {props.word}{" "}
             </Text>
             <CustomIconButton
@@ -83,19 +83,22 @@ export default memo(DictionaryItem);
 
 const styles = StyleSheet.create({
   itemContainer: {
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    alignItems: "flex-start",
-    padding: 20,
-    backgroundColor: "black",
-    width: "100%",
-    borderRadius: 45,
-    borderWidth: 1,
+    backgroundColor: CommonColors.black,
     borderColor: "white",
+    borderRadius: 20,
+    maxWidth: 600,
+    width: "100%",
+    alignSelf: "center",
+    padding: 20,
+    marginVertical: 5,
+    shadowColor: '#fff',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 1,
+    shadowRadius: 4,
   },
   header: {
     flexDirection: "row",
-    justifyContent: "space-between"
+    justifyContent: "space-between",
   },
   wordContainer: {
     width: "100%",

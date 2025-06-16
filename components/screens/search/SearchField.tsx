@@ -45,6 +45,7 @@ import SearchItem from "./SearchItem";
 import { CommonColors } from "../../../constants/Colors";
 import { i18n } from "../../store/i18n";
 import LoadingIndicator from "../../indicators/LoadingIndicator";
+import { useOrientation } from "../../../hooks/useOrientation";
 
 interface SearchDataResults {
   queryResponse: WordAndExamData[];
@@ -52,6 +53,8 @@ interface SearchDataResults {
 
 function SearchField() {
   const { showHint } = useHint();
+
+  const { isWide } = useOrientation();
 
   const words = useAppSelector((state) => state.dictionary.words);
 
@@ -388,8 +391,8 @@ function SearchField() {
 
   const onSearchFieldLayout = useCallback(
     (event: LayoutChangeEvent) => {
-      searchFieldHeight.value = event.nativeEvent.layout.height + 15;
-      searchFieldWidth.value = event.nativeEvent.layout.width;
+      searchFieldHeight.value = event.nativeEvent.layout.height + 68;
+      searchFieldWidth.value = event.nativeEvent.layout.width - 25;
     },
     []
   );
@@ -454,6 +457,7 @@ function SearchField() {
         <Animated.View style={[
           flatListAnimatedStyle,
           styles.flatListContainer,
+          { bottom: isWide ? 0 : "25%" }
         ]}>
           <FlatList
             data={results}
@@ -480,6 +484,11 @@ const styles = StyleSheet.create({
     right: 0,
   },
   searchContainer: {
+    position: "absolute",
+    top: 48,
+    zIndex: 1000,
+    backgroundColor: CommonColors.yellowA50,
+    borderRadius: 60,
     width: "80%",
     alignSelf: "center",
     maxWidth: 400,
@@ -514,8 +523,7 @@ const styles = StyleSheet.create({
   flatListContainer: {
     position: "absolute",
     maxWidth: 400,
-    width: "80%",
-    bottom: "50%",
+    width: "100%",
     zIndex: 1,
   },
-});
+})

@@ -93,9 +93,6 @@ export function RootLayoutStack() {
   return (
     <Stack
       screenOptions={{
-        headerStyle: {
-          backgroundColor: CommonColors.black,
-        },
         headerTintColor: "#fff",
         headerTitleStyle: {
           fontWeight: "bold",
