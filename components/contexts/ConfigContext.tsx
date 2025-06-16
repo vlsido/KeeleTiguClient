@@ -7,7 +7,6 @@ import {
 import {
   createContext,
   useEffect,
-  useLayoutEffect,
   useMemo,
 } from "react";
 import { app } from "../util/FirebaseConfig";
@@ -20,7 +19,6 @@ import {
 } from "jotai";
 import { loadSettings } from "../store/slices/settingsSlice";
 import { i18n } from "../store/i18n";
-import { useSettings } from "../../hooks/useSettings";
 
 interface ConfigContextProps {
   remoteConfig: RemoteConfig | null;

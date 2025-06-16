@@ -63,12 +63,10 @@ function Search() {
         style={styles.container}
       >
         <SearchField />
-        <View style={styles.wordsDataContainer}>
-          <WordData
-            wordDataArray={wordsDataArray}
-            searchString={searchString}
-          />
-        </View>
+        <WordData
+          wordDataArray={wordsDataArray}
+          searchString={searchString}
+        />
       </View>
     </GestureDetector>
   );
@@ -81,13 +79,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: "100%",
-    backgroundColor: CommonColors.black,
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
+    overflow: "hidden"
   },
 
   wordsDataContainer: {
     flex: 1,
-    width: "100%"
+    width: "100%",
   },
 });

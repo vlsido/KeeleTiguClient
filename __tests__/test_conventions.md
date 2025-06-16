@@ -4,8 +4,8 @@ These are the conventions for tests.
 
 ## Test Stack
 
-• Jest
-• React Native Testing Library
+• Jest 
+• React Native Testing Library 
 • ESLint
 
 ## General
@@ -18,9 +18,9 @@ These are the conventions for tests.
 
 • {FILE_NAME}.{PARENT_COMPONENT}.{COMPONENT_SPECIFICATION}:{TYPE}
 
-e.g. FOOTER.APP_BUILD:TEXT
-e.g. DICTIONARY.CONTAINER:VIEW
-e.g. DICTIONARY.WORD_COUNT:TEXT
+e.g. FOOTER.APP_BUILD:TEXT 
+e.g. DICTIONARY.CONTAINER:VIEW 
+e.g. DICTIONARY.WORD_COUNT:TEXT 
 e.g. DICTIONARY.WORDS_LIST:FLATLIST
 
 ### Lists

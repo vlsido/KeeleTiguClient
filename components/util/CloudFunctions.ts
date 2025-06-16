@@ -5,7 +5,7 @@ import { OperationError } from "../errors/OperationError";
 // UNCOMMENT TO DEBUG
 // connectFunctionsEmulator(
 //   functions,
-//   "127.0.0.1",
+//   "192.168.0.103",
 //   5001
 // );
 

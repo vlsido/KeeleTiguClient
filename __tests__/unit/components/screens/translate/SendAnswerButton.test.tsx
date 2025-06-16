@@ -21,9 +21,7 @@ describe(
       async () => {
         const user = userEvent.setup();
 
-        renderWithProviders(
-          <SendAnswerButton opacity={mockOpacity} onPress={mockFn} />
-        );
+        renderWithProviders(<SendAnswerButton opacity={mockOpacity} onPress={mockFn} />);
 
         const button = screen.getByTestId("SEND_ANSWER_BUTTON.ICON_CONTAINER:PRESSABLE");
 

@@ -4,7 +4,7 @@ import {
   TabTrigger,
   Tabs
 } from "expo-router/ui";
-import { StyleSheet, useWindowDimensions } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { CommonColors } from "../../constants/Colors";
 import { ExamIcon } from "../../components/icons/ExamIcon";
 import { DictionaryIcon } from "../../components/icons/DictionaryIcon";
@@ -75,13 +75,13 @@ function RootLayoutTabs() {
             maxHeight: 250
           }
           : {
+
+            position: "absolute",
+            bottom: 10,
             paddingHorizontal: 10,
-            paddingVertical: 2.5,
-            borderTopRightRadius: 15,
-            borderTopLeftRadius: 15,
-            borderRightWidth: 2,
-            borderLeftWidth: 2,
-            borderTopWidth: 2,
+            paddingVertical: 5,
+            borderRadius: 60,
+            borderWidth: 2,
             borderColor: "white",
             width: "100%",
             maxWidth: 250
@@ -142,8 +142,8 @@ const styles = StyleSheet.create({
   },
   tabList: {
     justifyContent: "space-between",
-    backgroundColor: CommonColors.saladGreen,
     alignSelf: "center",
+    backgroundColor: CommonColors.yellowA50,
     borderColor: CommonColors.whiteAlternative,
   },
   buttonContainer: {

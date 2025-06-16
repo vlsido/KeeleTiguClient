@@ -12,7 +12,6 @@ import { ArrowBackIcon } from "./icons/ArrowBackIcon";
 import { useCallback } from "react";
 
 function StackHeader() {
-  const { width: screenWidth, height: screenHeight } = useWindowDimensions();
 
   const goToMainPage = useCallback(() => {
     if (router.canGoBack()) {
@@ -25,11 +24,8 @@ function StackHeader() {
 
   return (
     <View
-      style={[styles.container,
-      (screenHeight * 2) < screenWidth && { position: "absolute", backgroundColor: "transparent", pointerEvents: "none" }]}>
-      <View style={[styles.buttonsContainer,
-      (screenHeight * 2) < screenWidth && { position: "absolute", backgroundColor: "transparent", pointerEvents: "none" }
-      ]}>
+      style={[styles.container]}>
+      <View style={[styles.buttonsContainer]}>
         <CustomIconButton
           testID="STACK_HEADER.BACK_ICON:PRESSABLE"
           onPress={goToMainPage}
@@ -60,4 +56,5 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: CommonColors.black
   }
+
 })

@@ -1,4 +1,5 @@
 import {
+  memo,
   useEffect,
   useRef
 } from "react";
@@ -17,6 +18,7 @@ import { Word } from "../app/(tabs)/dictionary";
 import Usage from "./text_components/Usage";
 import AddToDictionaryIconButton from "./buttons/AddToDictionaryIconButton";
 import { i18n } from "./store/i18n";
+import { NAV_BOTTOM_PADDING, SEARCH_TOP_PADDING } from "../constants/common";
 
 interface WordDataProps {
   wordDataArray: Word[] | null;
@@ -50,101 +52,109 @@ function WordData(props: WordDataProps) {
       testID="WORD_DATA.SCROLL_CONTAINER:VIEW"
       ref={scrollRef}
       style={styles.container}
+      contentContainerStyle={{ flexGrow: 1 }}
     >
       <FoundArticlesCounter wordData={props.wordDataArray} />
-      {props.wordDataArray.map((
-        wordData
-      ) => {
+      <View style={{ gap: 15 }}>
+        {props.wordDataArray.map((
+          wordData
+        ) => {
 
-        const composedWord = wordData.word.split("+");
+          const composedWord = wordData.word.split("+");
 
-        let searchStringIndex = composedWord.findIndex((wordPart) => wordPart.toLowerCase() === props.searchString);
+          let searchStringIndex = composedWord.findIndex((wordPart) => wordPart.toLowerCase() === props.searchString);
 
-        if (searchStringIndex === -1) {
-          const joinedWord = composedWord.join("").toLowerCase();
-          searchStringIndex = joinedWord === props.searchString ? -2 : -1;
-        }
+          if (searchStringIndex === -1) {
+            const joinedWord = composedWord.join("").toLowerCase();
+            searchStringIndex = joinedWord === props.searchString ? -2 : -1;
+          }
 
-        return (
-          <View
-            testID="WORD_DATA.SCROLL_CONTAINER.WORD:VIEW"
-            key={`wordIndex-${wordData.index}`}
-            style={styles.wordContainer}
-          >
-            <View style={styles.wordHeader}>
-              <Text>
-                {composedWord.map((
-                  wordPart, index
-                ) => {
-                  const separator = index === 0 ? "" : "+"
+          return (
+            <View
+              testID="WORD_DATA.SCROLL_CONTAINER.WORD:VIEW"
+              key={`wordIndex-${wordData.index}`}
+              style={styles.wordContainer}
+            >
+              <View style={styles.wordHeader}>
+                <Text>
+                  {composedWord.map((
+                    wordPart, index
+                  ) => {
+                    const separator = index === 0 ? "" : "+"
+                    return (
+                      <Text key={`wordIndex-${index}-text`} style={[
+                        styles.wordText,
+                        (index === searchStringIndex || searchStringIndex === -2) && styles.highlightedText
+                      ]}>
+                        {separator}{wordPart}
+                      </Text>)
+                  })}
+                </Text>
+                <AddToDictionaryIconButton
+                  key={`wordIndex-${wordData.index}-add`}
+                  word={wordData}
+                  backgroundStyle="light"
+                />
+              </View>
+              <Forms
+                key={`wordIndex-${wordData.index}-forms`}
+                forms={wordData.forms} />
+              <Type
+                key={`wordIndex-${wordData.index}-type`}
+                type={wordData.type} />
+              <FlatList
+                testID="WORD_DATA.SCROLL_CONTAINER.WORD.USAGES:FLATLIST"
+                data={wordData.usages}
+                keyExtractor={(_, index) => index.toString()}
+                contentContainerStyle={styles.listContentContainer}
+                accessibilityLabel={i18n.t("usages", { defaultValue: "Kasutamised" })}
+                renderItem={({ item, index }) => {
                   return (
-                    <Text key={`wordIndex-${index}-text`} style={[
-                      styles.wordText,
-                      (index === searchStringIndex || searchStringIndex === -2) && styles.highlightedText
-                    ]}>
-                      {separator}{wordPart}
-                    </Text>)
-                })}
-              </Text>
-              <AddToDictionaryIconButton
-                key={`wordIndex-${wordData.index}-add`}
-                word={wordData}
-                backgroundStyle="light"
-              />
+                    <Usage
+                      usageIndex={index}
+                      definitionData={item.definitionData}
+                      examples={item.examples}
+                      searchString={props.searchString}
+                    />
+                  )
+                }
+                } />
             </View>
-            <Forms
-              key={`wordIndex-${wordData.index}-forms`}
-              forms={wordData.forms} />
-            <Type
-              key={`wordIndex-${wordData.index}-type`}
-              type={wordData.type} />
-            <FlatList
-              testID="WORD_DATA.SCROLL_CONTAINER.WORD.USAGES:FLATLIST"
-              data={wordData.usages}
-              keyExtractor={(_, index) => index.toString()}
-              accessibilityLabel={i18n.t("usages", { defaultValue: "Kasutamised" })}
-              renderItem={({ item, index }) => {
-                return (
-                  <Usage
-                    usageIndex={index}
-                    definitionData={item.definitionData}
-                    examples={item.examples}
-                    searchString={props.searchString}
-                  />
-                )
-              }
-              } />
-          </View>
-        );
-      })}
+          );
+        })}
+      </View>
     </ScrollView>
   );
 }
 
-export default WordData;
+export default memo(WordData);
 
 const styles = StyleSheet.create({
   notFoundText: {
     color: CommonColors.white,
     fontSize: 20,
     fontWeight: "bold",
-    textAlign: "center"
+    textAlign: "center",
   },
   container: {
-    flex: 1,
-    backgroundColor: CommonColors.black,
-    paddingHorizontal: 15
+    width: "100%",
+    padding: 15,
+    gap: 10,
+    paddingTop: SEARCH_TOP_PADDING,
+    paddingBottom: NAV_BOTTOM_PADDING + 15
   },
   wordContainer: {
-    backgroundColor: "black",
-    borderRadius: 45,
-    borderWidth: 1,
+    backgroundColor: CommonColors.black,
     borderColor: "white",
+    borderRadius: 20,
     maxWidth: 600,
     width: "100%",
     alignSelf: "center",
     padding: 20,
-    marginVertical: 5
+    shadowColor: '#fff',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 1,
+    shadowRadius: 4,
   },
   wordHeader: {
     flexDirection: "row",
@@ -162,5 +172,9 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     marginRight: "auto",
   },
-
+  listContentContainer: {
+    maxWidth: 600,
+    width: "100%",
+    alignSelf: "center"
+  }
 });

@@ -8,7 +8,7 @@ import {
   useSetAtom
 } from "jotai"
 
-export function atomWithToggle(initialValue?: boolean,): WritableAtom<boolean, [boolean?], void> {
+export function atomWithToggle(initialValue?: boolean): WritableAtom<boolean, [boolean?], void> {
   const anAtom = atom(
     initialValue,
     (

@@ -2,7 +2,7 @@ import React from "react";
 import {
   render,
   RenderOptions
-} from '@testing-library/react-native';
+} from "@testing-library/react-native";
 import { Provider } from 'react-redux';
 import { Provider as JotaiProvider } from "jotai";
 import { useHydrateAtoms } from "jotai/utils";
