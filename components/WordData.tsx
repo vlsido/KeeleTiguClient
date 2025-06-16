@@ -1,4 +1,5 @@
 import {
+  memo,
   useEffect,
   useRef
 } from "react";
@@ -17,6 +18,7 @@ import { Word } from "../app/(tabs)/dictionary";
 import Usage from "./text_components/Usage";
 import AddToDictionaryIconButton from "./buttons/AddToDictionaryIconButton";
 import { i18n } from "./store/i18n";
+import { NAV_BOTTOM_PADDING, SEARCH_TOP_PADDING } from "../constants/common";
 
 interface WordDataProps {
   wordDataArray: Word[] | null;
@@ -121,7 +123,7 @@ function WordData(props: WordDataProps) {
   );
 }
 
-export default WordData;
+export default memo(WordData);
 
 const styles = StyleSheet.create({
   notFoundText: {
@@ -133,18 +135,20 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: CommonColors.black,
-    paddingHorizontal: 15
+    paddingHorizontal: 15,
+    paddingTop: SEARCH_TOP_PADDING + 32,
+    paddingBottom: NAV_BOTTOM_PADDING
   },
   wordContainer: {
     backgroundColor: "black",
-    borderRadius: 45,
+    borderRadius: 5,
     borderWidth: 1,
     borderColor: "white",
     maxWidth: 600,
     width: "100%",
     alignSelf: "center",
     padding: 20,
-    marginVertical: 5
+    marginVertical: 5,
   },
   wordHeader: {
     flexDirection: "row",
